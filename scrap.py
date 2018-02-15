@@ -15,16 +15,32 @@ class TweeterScrapper:
 
     def get_tweets(self, user, count): # cant get more than 200 at once - count=200,max_id=201)
 
-        user_acc = self.api.get_user(user)
-        return user_acc.timeline(count=count)
+        #user_acc = self.api.get_user(user)
+        #return user_acc.timeline(count=count)
+        return self.api.user_timeline(user, count=count)
+
+    def get_status(self, id):
+        return self.api.get_status(id)
 
 # jak CSV: https://gist.github.com/yanofsky/5436496
 
 
 if __name__ == "__main__":
     scrapper = TweeterScrapper()
-    tweets = scrapper.get_tweets("realDonaldTrump", 20)
-    for tweet in tweets:
-        print(tweet.text.encode("utf-8"))
-        print()
+    #tweets = scrapper.get_tweets("realDonaldTrump", 20)
+    #for tweet in tweets:
+    #    print(tweet.text.encode("utf-8"))
+    #    print()
+
+    # poss:
+
+    import csv
+    for id in [604411222906265600]:
+        t = scrapper.get_status(id)
+        print(t.text)
+
+        fields = [t.id_str, t.text.encode("utf8"), t.created_at, 'neg']
+        with open('aaa.csv', 'a', encoding='utf8') as f:
+            writer = csv.writer(f)
+            writer.writerow(fields)
 

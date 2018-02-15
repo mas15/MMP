@@ -33,3 +33,11 @@ tokenizacja: dzielenie na subject, verb, object
 potem bag of words: jak czesto slowo sie pojawia w CZYM?
 potem patrzymy subjectivity kazdego slowa w lexicon - ale my nie chcemy tego
 subkectivity. how much opinial ,. how factual
+
+
+tweety z http://uk.businessinsider.com/trump-tweets-of-the-year-2017-12?r=US&IR=T/#when-he-chastised-so-called-russian-hacking-1
+https://news.sky.com/story/sad-pathetic-a-history-of-donald-trumps-twitter-insults-11123543
+
+919914000959397888,"b'I was recently asked if Crooked Hillary Clinton is going to run in 2020? My answer was, ""I hope so!""'",2017-10-16 13:12:43,pos
+
+KFOLD z http://thelillysblog.com/2017/08/18/machine-learning-k-fold-validation/
