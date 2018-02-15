@@ -25,6 +25,12 @@ def get_tweets_with_sentiment():
         return pos, neg
 
 
+def get_tweet_sentiment(text):
+    pos, neg = get_tweets_with_sentiment()
+    cl = NaiveBayesClassifier(pos+neg)
+    return cl.classify(text)
+
+
 if __name__ == "__main__":
     pos, neg = get_tweets_with_sentiment()
     # pos_test_set, pos_train_set = pos[25:], pos[:13]

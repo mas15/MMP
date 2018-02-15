@@ -41,3 +41,9 @@ https://news.sky.com/story/sad-pathetic-a-history-of-donald-trumps-twitter-insul
 919914000959397888,"b'I was recently asked if Crooked Hillary Clinton is going to run in 2020? My answer was, ""I hope so!""'",2017-10-16 13:12:43,pos
 
 KFOLD z http://thelillysblog.com/2017/08/18/machine-learning-k-fold-validation/
+
+
+-------------
+FLASK
+export FLASK_APP=hello.py
+flask run
