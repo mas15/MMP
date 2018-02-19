@@ -6,9 +6,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    sentiment = ""
+    sentiment, polarity = "", ""
     if request.method == 'POST':
         print("Teraz POST jest")
         print(request.form['tweet_content'])
-        sentiment = get_tweet_sentiment(request.form['tweet_content'])
-    return render_template('index.html', sentiment=sentiment)
+        sentiment, polarity = get_tweet_sentiment(request.form['tweet_content'])
+    return render_template('index.html', sentiment=sentiment, polarity=polarity)
