@@ -1,6 +1,7 @@
 nltk + required its datasets etc
 spacy + Microsoft Visual C++ 14.0 + python -m spacy download en
 msgpack version 0.5.4 - wpierw msgpack-python trzeba
-
+textblob
+rake_nltk
 
 "The Fake News Media has never been so wrong or so dirty. Purposely incorrect stories and phony sources to meet their agenda of hate. Sad! The fake news media about tax cuts"

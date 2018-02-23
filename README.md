@@ -56,3 +56,12 @@ pos
 0.0
 (0.5125457426176581, 0.48745425738356085)
 MAGA was usually good
+
+
+
+using lower + remove stopwords gave 86% on average of 30 but included words like of, the, as
+
+nie dziala dla za dlugich, nie dziala dla can't, brakuje contains false
+zle zrobione bylo te 86% bo to byl ostatni
+
+RAKE: https://www.airpair.com/nlp/keyword-extraction-tutorial
