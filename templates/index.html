@@ -14,13 +14,13 @@
             <form class="form-group" method="post">
             <h4>Put tweet content please</h4>
             <textarea class="form-control" rows="3" name="tweet_content"></textarea><br>
-            <input class="btn btn-primary" type="submit" value="Submit">
+            <input class="btn btn-primary" type="submit" aria-label="Submit">
             </form>
 
             {% if sentiment %}
                 <p>Sentiment : {{ sentiment }}</p>
                 <p>Polarity : {{ polarity }}</p>
-{% endif %}
+            {% endif %}
       </div>
   </div>
   </body>

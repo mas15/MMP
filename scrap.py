@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # poss:
 
     import csv
-    for id in [746895252884164608]:
+    for id in [935883355547160577]:
         t = scrapper.get_status(id)
         print(t.text)
 

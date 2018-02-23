@@ -1,95 +1,29 @@
 from textblob import TextBlob
-from textblob.classifiers import NaiveBayesClassifier, DecisionTreeClassifier
-import csv
-from sklearn.model_selection import KFold
-import numpy as np
-from random import shuffle
-from math import ceil
-
-
+from textblob.classifiers import NaiveBayesClassifier, MaxEntClassifier
+from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk import pos_tag_sents, pos_tag
+import pickle
+from dataset import get_pos_and_neg_tweets_with_sentiment_from_file, get_train_and_test_data_for_k_run, split_pos_and_neg_into_folds
 # from http://textblob.readthedocs.io/en/dev/classifiers.html
+from nltk.corpus import stopwords
+from textrazor import TextRazor
 
-def get_tweets_with_sentiment():
-    pos = []
-    neg = []
-    with open('aaa.csv', 'r', encoding='utf8') as f:
-        reader = csv.reader(f, delimiter=",")
-        try:
-            for line in reader:
-                content, sentiment = line[1], line[3]
-                if sentiment == "pos":
-                    pos.append((content, sentiment))
-                # elif sentiment != "neg":
-                #     print(content)
-                #     print(sentiment)
-                else:
-                    neg.append((content, sentiment))
-        except IndexError:
-            pass
-        return pos, neg
+TEX_RAZOR_KEY = "8286cbb1f58dbb192a6a237f8bc425502cb4cb1cd3edeef6bf7740f9"
+client = TextRazor(TEX_RAZOR_KEY, extractors=["phrases"])
 
+from gensim.models.phrases import Phraser
 
 def get_tweet_sentiment(text):
-    pos, neg = get_tweets_with_sentiment()
-    cl = NaiveBayesClassifier(pos + neg)
-    blob = TextBlob(text, classifier=cl)
-    sent = blob.classify()
-    pol = blob.polarity
+    cl = load_classifier()
+    text = preproces(text)
+
+    text = TextBlob(text, classifier=cl)
+    pol = text.sentiment.polarity
+    sent = cl.classify(text)
     return sent, pol
 
 
-def get_train_and_test(folds, k_run):
-    """
-    >>> get_train_and_test([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]], 1)
-    ([5, 6, 7, 8, 9, 10], [1, 2, 3, 4])
-    >>> get_train_and_test([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]], 3)
-    ([1, 2, 3, 4, 5, 6, 7, 8], [9, 10])
-    """
-    train_data = folds[:]
-    test_data = train_data.pop(k_run - 1)
-    train_data = [item for fold_items in train_data for item in fold_items]
-    return train_data, test_data
-
-
-def split_pos_and_neg_into_folds(pos, neg, n, random=True):
-    """
-    >>> split_pos_and_neg_into_folds(range(1,11), range(21, 31), 3, False)
-    ([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]], [[21, 22, 23, 24], [25, 26, 27, 28], [29, 30]])
-    """
-    pos_folds, neg_folds = [], []
-    set_size = len(pos)
-    fold_size = ceil(set_size / n)
-    indices = list(range(0, set_size))
-    if random:
-        shuffle(indices)
-    while indices:
-        fold_indices, indices = indices[:fold_size], indices[fold_size:]
-        pos_folds.append([pos[x] for x in fold_indices])
-        neg_folds.append([neg[x] for x in fold_indices])
-    return pos_folds, neg_folds
-
-
-def get_train_and_test_data_for_k_run(pos_folds, neg_folds, k_run):
-    """
-    >>> p = [[(1,1)], [(2,2)], [(3,3)]]
-    >>> n = [[(4,4)], [(4,4)], [(4,4)]]
-    >>> get_train_and_test_data_for_k_run(p, n, 1)
-    ([(2, 2), (3, 3), (4, 4), (4, 4)], [(1, 1), (4, 4)])
-    """
-    pos_train, pos_test = get_train_and_test(pos_folds, k_run)
-    neg_train, neg_test = get_train_and_test(neg_folds, k_run)
-    return pos_train + neg_train, pos_test + neg_test
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()
-
-    pos, neg = get_tweets_with_sentiment()
-    print("LEN POS: " + str(len(pos)))
-    print("LEN NEG: " + str(len(neg)))
-
+def perform_k_fold_validation(pos, neg):
     sum = 0
     NUM_OF_FOLDS = 3
     cl = None
@@ -98,23 +32,68 @@ if __name__ == "__main__":
     for k_run in range(NUM_OF_FOLDS):
         train_data, test_data = get_train_and_test_data_for_k_run(pos_folds, neg_folds, k_run)
         cl = NaiveBayesClassifier(train_data)
-        sum += cl.accuracy(test_data)
+        accuracy = cl.accuracy(test_data)
+        sum += accuracy
+        print("ACCU: " + str(accuracy))
+        print(cl.show_informative_features(50))
+        print()
+    print("SUM: " + str(sum/NUM_OF_FOLDS))
+    return cl
 
-    average = sum / 3
-    print("AVERGAE: " + str(average))
-    print(cl.show_informative_features(20))
 
-    print()
-    blob = TextBlob("Make america great again", classifier=cl)
-    print(blob.classify())
-    print(blob.polarity)
-    prob_dist = cl.prob_classify("Make america great again")
-    print((prob_dist.prob('pos'), prob_dist.prob('neg')))
+def preproces(tweet):
+    """
+    >>> t = "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans."
+    >>> preproces(t)
+    'candidate promised would pass massive tax cut everyday working americans'
+    >>> preproces("We love you!\\n\\nGOD BLESS TEXAS & GOD BLESS THE USA")
+    'love ! god bless texas & god bless usa'
+    """
+    words = word_tokenize(tweet)
+    words = [w.lower() for w in words]
+    to_remove = stopwords.words("english") + [",", ".", "\"", "'"] + ["n't"]  # shouldn't be split
+    result = [w for w in words if w not in to_remove]
 
-    print()
-    print()
-    blob = TextBlob("crooked Hilary", classifier=cl)
-    print(blob.classify())
-    print(blob.polarity)
-    prob_dist = cl.prob_classify("crooked Hilary")
-    print((prob_dist.prob('pos'), prob_dist.prob('neg')))
+
+    response = client.analyze(text)
+    for entity in response.entities():
+        print
+        entity
+
+    return " ".join(result)
+
+
+def preproces_tweet_tuples(tweets_with_sentiment):
+    return [(preproces(t[0]), t[1]) for t in tweets_with_sentiment]
+
+
+def save_classifier(cl):
+    with open("classifier.pickle", "wb") as f:
+        pickle.dump(cl, f)
+
+
+def load_classifier():
+    with open("classifier.pickle", "rb") as f:
+        return pickle.load(f)
+
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+
+    pos, neg = get_pos_and_neg_tweets_with_sentiment_from_file()
+    pos = preproces_tweet_tuples(pos)
+    neg = preproces_tweet_tuples(neg)
+    print("LEN POS: " + str(len(pos)))
+    print("LEN NEG: " + str(len(neg)))
+
+    cl = perform_k_fold_validation(pos, neg)
+    save_classifier(cl)
+    print(cl.classify("Make america great again"))
+    print(cl.classify("crooked hilary"))
+    print(cl.classify("bad bad mexico"))
+    print(cl.classify("As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans."))
+
+
+# wywalic to:
+# My warmest condolences and sympathies to the victims and families of the terrible Las Vegas shooting. God bless you!

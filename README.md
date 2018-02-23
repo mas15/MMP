@@ -47,3 +47,12 @@ KFOLD z http://thelillysblog.com/2017/08/18/machine-learning-k-fold-validation/
 FLASK
 export FLASK_APP=hello.py
 flask run
+
+
+Using MaxEntClassifier gave similiar results
+Average accuracy was abnout 75% (0.71, 0.82, 0.83)
+"crooked Hilary" was giving
+pos
+0.0
+(0.5125457426176581, 0.48745425738356085)
+MAGA was usually good
