@@ -14,7 +14,7 @@ def get_pos_and_neg_tweets_with_sentiment_from_file():
                 if sentiment == "pos":
                     pos.append((content, sentiment))
                 elif sentiment != "neg":
-                    print(line)
+                    print("ANI POS/NEG" + line)
                 else:
                     neg.append((content, sentiment))
         except IndexError:

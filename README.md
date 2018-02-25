@@ -58,10 +58,21 @@ pos
 MAGA was usually good
 
 
+TODO------------------------------------------------------
+using lower + remove stopwords gave 83-84% on average of 30 but included words like of, the, as
 
-using lower + remove stopwords gave 86% on average of 30 but included words like of, the, as
-
-nie dziala dla za dlugich, nie dziala dla can't, brakuje contains false
-zle zrobione bylo te 86% bo to byl ostatni
+Phaze któryś tam: nie dziala dla za dlugich(maga), nie dziala dla can't, brakuje contains false, usuwac numery, usuwac U.S
+pousuwac 's
 
 RAKE: https://www.airpair.com/nlp/keyword-extraction-tutorial
+
+sprawdzilem jeszcze ConllExtractor i fastext z http://textblob.readthedocs.io/en/dev/advanced_usage.html
+
+stemming masakra
+lemming : dobrze oprócz, isis - isi, philippines - philippine, pass - pas
+dodac trzeba do tego że jaki POS print(lemmatizer.lemmatize("best", pos="a"))
+ALE TEZ lAS-LA, US-U
+
+ale i tak av byl 78% bo bylo z phrasami
+
+accu na pos i negatywnach?
