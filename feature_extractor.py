@@ -54,18 +54,43 @@ class FeatureExtractor:
         words = [self.lemamatizer.lemmatize(w) for w in words if w]  # tu spradza czy cos zostalo
         return words
 
+    def extract(self, tweet):
+        extracted_phrases = []
+        features = {} # todo copy z def False
+        for s in self.split_sentences(t.lower()):
+            extracted_phrases += self.split_by_stop_words(s)
+        for p in extracted_phrases:
+            if p in self.phrases:
+                features[p] = True
+                # todo remove z extracted
+
+        for phrase in self.phrases:
+            features[phrase] = (phrase in extracted_phrases)
+            tweet = tweet.replace(phrase, "")  # TODO not sure if not spoil tokenizing
+
+        # lower()
+        # self.split_sentences
+        # split_words
+        # remove digits etc
+        # concat
+        # remove phrases
+        # split words
+        # lemamtize
+
+        # check which match
+
     def build(self, dataset):
         tweets = []
         for t, s in dataset:
             tweets += self.split_sentences(t.lower())
-        candidates = self.generate_candidate_keywords(tweets)
-        #words_score = self.calculate_word_scores(candidates)
+        candidates, words = self.generate_candidate_keywords(tweets)
+        #words_score = self.calculate_word_scores(candidates) # TODO zabrac sie za scores
         #candidates_scores = self.generate_candidate_keyword_scores(candidates, words_score)
         #phrases = sorted(candidates_scores.items(), key=lambda x: x[1])
 
-        phrases, words = [], []
+        phrases = []
         for c in candidates:
-            if phrases.count(c) >= self.min_keyword_frequency:
+            if phrases.count(c) >= self.min_keyword_frequency: # todo to bedzie mozna do generate
                 phrases.append(c)
             else:
                 words.extend(c.split())
@@ -112,13 +137,14 @@ class FeatureExtractor:
         return length_ok
 
     def generate_candidate_keywords(self, tweets):
-        phrases = []
+        """ Split tweets by stop words and return phases that match is_acceptable condition and the rest phrases that do not"""
+        acceptable, rest = [], []
         for t in tweets:
-            phrases += self.split_by_stop_words(t)
-        phrases = [p for p in phrases if self.is_acceptable(p)]
+            for p in self.split_by_stop_words(t):
+                acceptable.append(p) if self.is_acceptable(p) else rest.append(p)
 
         # TODO phrases += extract_adjoined_candidates(tweets)
-        return phrases
+        return acceptable, rest
 
     def split_sentences(self, text):
         """
@@ -142,3 +168,4 @@ class FeatureExtractor:
 
         self.phrases, all_words = self.build(dataset)
         self.vocabulary = list(set(all_words))
+        print('VOC LENGTH' + str(len(self.vocabulary)))
