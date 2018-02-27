@@ -23,48 +23,36 @@ import operator
 import six
 from six.moves import range
 from collections import Counter
-
-debug = False
-test = True
-
-
-def is_number(s):
-    try:
-        float(s) if '.' in s else int(s)
-        return True
-    except ValueError:
-        return False
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 
 
-def load_stop_words(stop_word_file):
-    """
-    Utility function to load stop words from a file and return as a list of words
-    @param stop_word_file Path and file name of a file containing stop words.
-    @return list A list of stop words.
-    """
-    stop_words = []
-    for line in open(stop_word_file):
-        if line.strip()[0:1] != "#":
-            for word in line.split():  # in case more than one per line
-                stop_words.append(word)
-    return stop_words
+def load_stop_words(file_name):
+    with open(file_name, "r") as f:
+        return [line.strip() for line in f]
 
+# wyejbac
+words_to_remove = load_stop_words("SmartStoplist.txt") + ["n't", "'s", "...", "w/",
+                                                                       ]  # shouldn't be split
+words_to_remove += list("!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~0123456789’")
 
-def separate_words(text, min_word_return_size):
-    """
-    Utility function to return a list of all words that are have a length greater than a specified number of characters.
-    @param text The text that must be split in to words.
-    @param min_word_return_size The minimum no of characters a word must have to be included.
-    """
-    splitter = re.compile('[^a-zA-Z0-9_\\+\\-/]')
-    words = []
-    for single_word in splitter.split(text):
-        current_word = single_word.strip().lower()
-        # leave numbers in phrase, but don't count as words, since they tend to invalidate scores of their phrases
-        if len(current_word) > min_word_return_size and current_word != '' and not is_number(current_word):
-            words.append(current_word)
+lemamatizer = WordNetLemmatizer()
+
+# wyejbac
+def extract_words_from_tweet(tweet):
+    # todo lower sreipl, current_word != '' and not is_number(current_word): nowe linie
+    def _to_skip(w):
+        return w in words_to_remove or w.replace(".", "").isdigit()
+
+    def _clear(w):
+        return w.replace("`", "").replace("'", "").replace("\"", "").replace("\n", "").replace("\\", "")
+
+    words = word_tokenize(tweet)  # albo split
+    words = [w.lower() for w in words]
+    words = [w for w in words if not _to_skip(w)]
+    words = [_clear(w) for w in words]
+    words = [lemamatizer.lemmatize(w) for w in words if w]  # tu spradza czy cos zostalo
     return words
-
 
 def split_sentences(text):
     """
@@ -74,15 +62,6 @@ def split_sentences(text):
     sentence_delimiters = re.compile(u'[\\[\\]\n.!?,;:\t\\-\\"\\(\\)\\\'\u2019\u2013]')
     sentences = sentence_delimiters.split(text)
     return sentences
-
-
-def build_stop_word_regex(stop_word_list):
-    stop_word_regex_list = []
-    for word in stop_word_list:
-        word_regex = '\\b' + word + '\\b'
-        stop_word_regex_list.append(word_regex)
-    stop_word_pattern = re.compile('|'.join(stop_word_regex_list), re.IGNORECASE)
-    return stop_word_pattern
 
 
 #
@@ -203,7 +182,7 @@ def calculate_word_scores(phraseList):
     word_frequency = {}
     word_degree = {}
     for phrase in phraseList:
-        word_list = separate_words(phrase, 0)
+        word_list = extract_words_from_tweet(phrase)
         word_list_length = len(word_list)
         word_list_degree = word_list_length - 1
         # if word_list_degree > 3: word_list_degree = 3 #exp.
@@ -232,7 +211,7 @@ def generate_candidate_keyword_scores(phrase_list, word_score, min_keyword_frequ
             if phrase_list.count(phrase) < min_keyword_frequency:
                 continue
         keyword_candidates.setdefault(phrase, 0)
-        word_list = separate_words(phrase, 0)
+        word_list = extract_words_from_tweet(phrase)
         candidate_score = 0
         for word in word_list:
             candidate_score += word_score[word]
@@ -270,32 +249,32 @@ class Rake(object):
         return sorted_keywords
 
 
-if test:
-    text = "Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types of systems and systems of mixed types."
-
-    # Split text into sentences
-    sentenceList = split_sentences(text)
-    # stoppath = "FoxStoplist.txt" #Fox stoplist contains "numbers", so it will not find "natural numbers" like in Table 1.1
-    stoppath = "SmartStoplist.txt"  # SMART stoplist misses some of the lower-scoring keywords in Figure 1.5, which means that the top 1/3 cuts off one of the 4.0 score words in Table 1.1
-    stopwordpattern = build_stop_word_regex(stoppath)
-
-    # generate candidate keywords
-    phraseList = generate_candidate_keywords(sentenceList, stopwordpattern, load_stop_words(stoppath))
-
-    # calculate individual word scores
-    wordscores = calculate_word_scores(phraseList)
-
-    # generate candidate keyword scores
-    keywordcandidates = generate_candidate_keyword_scores(phraseList, wordscores)
-    if debug: print(keywordcandidates)
-
-    sortedKeywords = sorted(six.iteritems(keywordcandidates), key=operator.itemgetter(1), reverse=True)
-    if debug: print(sortedKeywords)
-
-    totalKeywords = len(sortedKeywords)
-    if debug: print(totalKeywords)
-    print(sortedKeywords[0:(totalKeywords // 3)])
-
-    rake = Rake("SmartStoplist.txt")
-    keywords = rake.run(text)
-    print(keywords)
+# if False: # TODO test ten?
+#     text = "Compatibility of systems of linear constraints over the set of natural numbers. Criteria of compatibility of a system of linear Diophantine equations, strict inequations, and nonstrict inequations are considered. Upper bounds for components of a minimal set of solutions and algorithms of construction of minimal generating sets of solutions for all types of systems are given. These criteria and the corresponding algorithms for constructing a minimal supporting set of solutions can be used in solving all the considered types of systems and systems of mixed types."
+#
+#     # Split text into sentences
+#     sentenceList = split_sentences(text)
+#     # stoppath = "FoxStoplist.txt" #Fox stoplist contains "numbers", so it will not find "natural numbers" like in Table 1.1
+#     stoppath = "SmartStoplist.txt"  # SMART stoplist misses some of the lower-scoring keywords in Figure 1.5, which means that the top 1/3 cuts off one of the 4.0 score words in Table 1.1
+#     stopwordpattern = build_stop_word_regex(stoppath)
+#
+#     # generate candidate keywords
+#     phraseList = generate_candidate_keywords(sentenceList, stopwordpattern, load_stop_words(stoppath))
+#
+#     # calculate individual word scores
+#     wordscores = calculate_word_scores(phraseList)
+#
+#     # generate candidate keyword scores
+#     keywordcandidates = generate_candidate_keyword_scores(phraseList, wordscores)
+#     if debug: print(keywordcandidates)
+#
+#     sortedKeywords = sorted(six.iteritems(keywordcandidates), key=operator.itemgetter(1), reverse=True)
+#     if debug: print(sortedKeywords)
+#
+#     totalKeywords = len(sortedKeywords)
+#     if debug: print(totalKeywords)
+#     print(sortedKeywords[0:(totalKeywords // 3)])
+#
+#     rake = Rake("SmartStoplist.txt")
+#     keywords = rake.run(text)
+#     print(keywords)

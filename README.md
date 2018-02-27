@@ -58,6 +58,10 @@ pos
 MAGA was usually good
 
 
+# do czegos tam uzylem from http://textblob.readthedocs.io/en/dev/classifiers.html
+
+#stop word list from SMART (Salton,1971).  Available at ftp://ftp.cs.cornell.edu/pub/smart/english.stop
+
 TODO------------------------------------------------------
 using lower + remove stopwords gave 83-84% on average of 30 but included words like of, the, as
 

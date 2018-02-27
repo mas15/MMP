@@ -1,73 +1,8 @@
-from textblob import TextBlob
-# from textblob.classifiers import NaiveBayesClassifier, MaxEntClassifier
 from nltk import NaiveBayesClassifier
-from nltk.tokenize import sent_tokenize, word_tokenize
-from nltk import pos_tag_sents, pos_tag
 import pickle
-from dataset import get_pos_and_neg_tweets_with_sentiment_from_file, get_train_and_test_data_for_k_run, split_pos_and_neg_into_folds
-# from http://textblob.readthedocs.io/en/dev/classifiers.html
-from nltk.corpus import stopwords
-
+from dataset import *
 import nltk
-
-from rake import Rake, load_stop_words
-r = Rake("SmartStoplist.txt", 3, 3, 2)
-
-from nltk.stem import WordNetLemmatizer
-ps = WordNetLemmatizer()
-RESULT = set()
-
-
-class FeatureExtractor:
-    def __init__(self):
-        """ Features set containing unique words"""
-        self.vocabulary = set()
-        self.phrases = []
-        self.words_to_remove = load_stop_words("SmartStoplist.txt") + ["n't", "'s", "..."]  # shouldn't be split
-        self.words_to_remove += list("!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~0123456789")
-
-    def extract_features(self, tweet):
-        words_in_tweet = self.extract_words_from_tweet(tweet)
-        features = {}
-        for word in self.vocabulary:
-            features[word] = (word in words_in_tweet)
-        for phrase in self.phrases:
-            features[phrase] = (phrase in words_in_tweet)
-        return features
-
-    def extract_words_from_tweet(self, tweet):
-        # words_with_score = r.run(tweet)
-        # words_with_score = [w for w in words_with_score if w[1] < 5]
-        [tweet.replace(p, "") for p in self.phrases]  # TODO not sure if not spoil tokenizing
-        words = word_tokenize(tweet)
-        words = [w.lower() for w in words]
-        words = [w for w in words if w not in self.words_to_remove]
-
-        for w in words:
-            if w != ps.lemmatize(w):
-                RESULT.add((w, ps.lemmatize(w)))
-
-        words = [ps.lemmatize(w) for w in words]
-        return words
-
-    def build_vocabulary(self, dataset):
-        all_words = []
-
-        add_tweets_contents = " ".join([t for t, s in dataset])
-        phrases = r.run(add_tweets_contents)
-        # print("PHRASES")
-        # for x in self.phrases:
-        #     if " " in x[0]:
-        #         print(x)
-
-        self.phrases = [phrase for phrase, score in phrases]
-        for tweet, s in dataset:
-            all_words += self.extract_words_from_tweet(tweet)
-        self.vocabulary = list(set(all_words))
-        print()
-        print("LEN OF VOCABULARY:" + str(len(self.vocabulary)))
-        print()
-
+from feature_extractor import FeatureExtractor
 
 extr = FeatureExtractor()
 
@@ -84,7 +19,7 @@ def train_classifier(train_data):
     # todo tutaj jakoś obiekt tworzyć
     extr.build_vocabulary(train_data)
 
-    training_features = nltk.classify.apply_features(extr.extract_features, train_data) #labeled = True
+    training_features = nltk.classify.apply_features(extr.extract_features, train_data)  # labeled = True
     cl = NaiveBayesClassifier.train(training_features)
     return cl
 
@@ -109,13 +44,8 @@ def perform_k_fold_validation(pos, neg):
         print("ACCU: " + str(accuracy))
         print(cl.show_most_informative_features(10))
         print()
-    #print("SUM: " + str(sum/NUM_OF_FOLDS))
-    return cl, sum/NUM_OF_FOLDS
-
-
-
-
-
+    # print("SUM: " + str(sum/NUM_OF_FOLDS))
+    return cl, sum / NUM_OF_FOLDS
 
 
 def save_classifier(cl):
@@ -128,10 +58,7 @@ def load_classifier():
         return pickle.load(f)
 
 
-
 if __name__ == "__main__":
-    #import doctest
-    #doctest.testmod()
 
     pos, neg = get_pos_and_neg_tweets_with_sentiment_from_file()
 
@@ -139,27 +66,37 @@ if __name__ == "__main__":
     for i in range(40):
         cl, aver = perform_k_fold_validation(pos, neg)
         sum += aver
-    print("AV OF 40: " + str(sum/40))
+    print("_________________________ VOCA:")
+    print(extr.vocabulary)
+    print(extr.phrases)
+    print("AV OF 40: " + str(sum / 40))
     save_classifier(cl)
 
-
-
     print(cl.classify(extr.extract_features("Make america great again")))
-    print([f for f, k in extr.extract_features("Make america great again") if k])
-    print(cl.classify(extr.extract_features("crooked hilary")))
-    print([f for f, k in extr.extract_features("crooked hilary") if k])
-    print(cl.classify(extr.extract_features("bad bad mexico")))
-    print([f for f, k in extr.extract_features("bad bad mexico") if k])
-    print(cl.classify(extr.extract_features("As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.")))
-    print([f for f, k in extr.extract_features("As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.") if k])
+    print("TUTEJ _-------------------------------------")
+    d = extr.extract_features("Make america great again")
+    print([f for f, v in d.items() if v])
 
-    print()
-    for r in RESULT:
-        print(r)
+    print(cl.classify(extr.extract_features("bad bad mexico")))
+    print([f for f, v in extr.extract_features("bad bad mexico").items() if v])
+
+    print(cl.classify(extr.extract_features(
+        "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.")))
+    print([f for f, v in extr.extract_features(
+        "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.").items() if
+           v])
+
+
+
+
+
+
+
+
+
 
 # wywalic to:
 # My warmest condolences and sympathies to the victims and families of the terrible Las Vegas shooting. God bless you!
-
 
 
 # def preproces(tweet):
