@@ -50,10 +50,10 @@ class TestFeatureExtractor(unittest.TestCase):
         self.assertEqual(res, exp_res)
 
     def test_is_phrase_acceptable(self):
-        self.assertFalse(self.extr.is_acceptable("Four is too much"))
-        self.assertTrue(self.extr.is_acceptable("Three words ok"))
-        self.assertTrue(self.extr.is_acceptable("Also ok"))
-        self.assertFalse(self.extr.is_acceptable("Bad"))
+        self.assertFalse(self.extr.is_phrase_length_ok("Four is too much"))
+        self.assertTrue(self.extr.is_phrase_length_ok("Three words ok"))
+        self.assertTrue(self.extr.is_phrase_length_ok("Also ok"))
+        self.assertFalse(self.extr.is_phrase_length_ok("Bad"))
 
     def test_split_by_stop_words_2(self):
         text = "Taxes and people are bad decisions then stupid people $1.2 blame 45% and nothing"

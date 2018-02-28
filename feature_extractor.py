@@ -74,7 +74,7 @@ class FeatureExtractor:
         phrases = [p.strip() for p in phrases]
         return [p for p in phrases if p]
 
-    def is_acceptable(self, p):
+    def is_phrase_length_ok(self, p):
         words = p.split()
         length_ok = self.min_words_in_feature <= len(words) <= self.max_words_in_feature
         return length_ok
@@ -82,6 +82,14 @@ class FeatureExtractor:
     def lemamatize_many(self, words):
         return [self.lemamatizer.lemmatize(w) for w in words]
 
+    def extract_not_matching_candidates(self, phrase):
+        candidates, rest = set(), []
+        for p in phrase:
+            if phrase.count(p) >= self.min_keyword_frequency and self.is_phrase_length_ok(p):
+                candidates.add(p)
+            else:
+                rest.extend(p.split())
+        return candidates, rest
 
     def generate_candidate_keywords(self, tweets):
         phrases = []
@@ -91,20 +99,7 @@ class FeatureExtractor:
                 if p:
                     phrases.append(p)
 
-        acceptable, rest = [], []
-        for p in phrases:
-            if self.is_acceptable(p):
-                acceptable.append(p)
-            elif p:
-                rest.extend(p.split())
-
-        candidates = set()
-        for p in acceptable:
-            if acceptable.count(p) >= self.min_keyword_frequency:
-                candidates.add(p)
-            else:
-                rest.extend(p.split())
-
+        candidates, rest = self.extract_not_matching_candidates(phrases)
         # candidates.update(self.extract_adjoined_candidates(tweets))
         return candidates, rest
 
