@@ -27,9 +27,6 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
 
-def load_stop_words(file_name):
-    with open(file_name, "r") as f:
-        return [line.strip() for line in f]
 
 # wyejbac
 words_to_remove = load_stop_words("SmartStoplist.txt") + ["n't", "'s", "...", "w/",

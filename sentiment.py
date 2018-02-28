@@ -42,7 +42,7 @@ def perform_k_fold_validation(pos, neg):
 
         sum += accuracy
         print("ACCU: " + str(accuracy))
-        print(cl.show_most_informative_features(10))
+        print(cl.show_most_informative_features(20))
         print()
     # print("SUM: " + str(sum/NUM_OF_FOLDS))
     return cl, sum / NUM_OF_FOLDS

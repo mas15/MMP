@@ -1,8 +1,14 @@
-from rake import Rake, load_stop_words
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
-from collections import defaultdict
 import re
+import string
+
+punct_remove_translator = str.maketrans('', '', string.punctuation)
+
+
+def load_stop_words(file_name):
+    with open(file_name, "r") as f:
+        return [line.strip() for line in f]
 
 
 # rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
@@ -10,10 +16,9 @@ import re
 class FeatureExtractor:
     def __init__(self):
         self.lemamatizer = WordNetLemmatizer()
-        self.r = Rake("SmartStoplist.txt", 3, 3, 2)  # todo
         """ Features set containing unique words"""
-        self.vocabulary = set()
-        self.phrases = []
+        self.vocabulary = set()  # sorted set by MAG, AG, Great
+        self.phrases = set()  # todo na set
 
         self.stop_word_regex = self._create_stopwords_regex()
 
@@ -23,149 +28,201 @@ class FeatureExtractor:
         self.min_word_length = 3
 
     def _create_stopwords_regex(self):  # todo usunac self
-        self.words_to_remove = load_stop_words("SmartStoplist.txt") + ["n't", "'s", "\.\.\."]  # shouldn't be split
-        words_to_remove_with_reg = [r"\b" + w + r"\b" for w in self.words_to_remove]
-        words_to_remove_with_reg += r"[!\"#$%&'()\*\+,\-\.:;<=>?@\^_`{|}~’]"  # todo jak to ogarnac? i to wyzej tez
+        self.stop_words = load_stop_words("SmartStoplist.txt")
+        words_to_remove_with_reg = [r"\b" + w + r"\b" for w in self.stop_words]
+        words_to_remove_with_reg.append("\$?\d+(\.?\d+)?%?")  # match number, $, %
         return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)
 
-    def extract_features(self, tweet):  # todo to zostaje bo nie bylo wgl rake tutaj
-        features = {}
-        for phrase in self.phrases:
-            features[phrase] = (phrase in tweet.lower())
-            tweet = tweet.replace(phrase, "")  # TODO not sure if not spoil tokenizing
+    def extract_features(self, tweet):
+        def _extract_phrase(text, phrase):
+            text, is_found = re.subn(phrase, '', text)
+            return text, bool(is_found)
 
-        words_in_tweet = self.extract_words_from_tweet(tweet)
-        for word in self.vocabulary:
-            features[word] = (word in words_in_tweet)
+        features = {}
+        sentences = preprocess(tweet)
+
+        words = set()
+        for s in sentences:
+            for p in self.phrases:
+                s, features[p] = _extract_phrase(s, p)
+            # S has no feature phrases now
+            chunks = self.split_by_stop_words(s)
+            for c in chunks:
+                lemmatized = self.lemamatize_many(c.split())
+                words.update(lemmatized)
+
+        for w in self.vocabulary:
+            features[w] = (w in words)
         return features
 
-    def extract_words_from_tweet(self, tweet):
-        # todo lower sreipl, current_word != '' and not is_number(current_word): nowe linie
-        def _to_skip(w):
-            return w in self.words_to_remove or w.replace(".", "").isdigit()
-
-        def _clear(w):
-            return w.replace("`", "").replace("'", "").replace("\"", "").replace("\n", "").replace("\\", "")
-
-        words = word_tokenize(tweet)  # albo split
-        words = [w.lower() for w in words]
-        words = [w for w in words if not _to_skip(w)]
-        words = [_clear(w) for w in words]
-        words = [self.lemamatizer.lemmatize(w) for w in words if w]  # tu spradza czy cos zostalo
-        return words
-
-    def extract(self, tweet):
-        extracted_phrases = []
-        features = {} # todo copy z def False
-        for s in self.split_sentences(t.lower()):
-            extracted_phrases += self.split_by_stop_words(s)
-        for p in extracted_phrases:
-            if p in self.phrases:
-                features[p] = True
-                # todo remove z extracted
-
-        for phrase in self.phrases:
-            features[phrase] = (phrase in extracted_phrases)
-            tweet = tweet.replace(phrase, "")  # TODO not sure if not spoil tokenizing
-
-        # lower()
-        # self.split_sentences
-        # split_words
-        # remove digits etc
-        # concat
-        # remove phrases
-        # split words
-        # lemamtize
-
-        # check which match
-
     def build(self, dataset):
-        tweets = []
-        for t, s in dataset:
-            tweets += self.split_sentences(t.lower())
-        candidates, words = self.generate_candidate_keywords(tweets)
-        #words_score = self.calculate_word_scores(candidates) # TODO zabrac sie za scores
-        #candidates_scores = self.generate_candidate_keyword_scores(candidates, words_score)
-        #phrases = sorted(candidates_scores.items(), key=lambda x: x[1])
+        all_tweets = [t for t, s in dataset]
+        sentences = preprocess_many(all_tweets)
+        candidates, words = self.generate_candidate_keywords(sentences)
+        words = self.lemamatize_many(words)
+        return candidates, words
 
-        phrases = []
-        for c in candidates:
-            if phrases.count(c) >= self.min_keyword_frequency: # todo to bedzie mozna do generate
-                phrases.append(c)
-            else:
-                words.extend(c.split())
-        return phrases, words
-
-
-    # def generate_candidate_keyword_scores(self, phrases, words_scores):
-    #     keyword_candidates = defaultdict(int)
-    #     for phrase in phrases:
-    #         if phrases.count(phrase) >= self.min_keyword_frequency:  # todo czemu dopiero tutaj?
-    #             phase_score = [words_scores[word] for word in
-    #                            phrase.split()]  # todo co inaczej niz extract from tweets?
-    #             keyword_candidates[phrase] = phase_score
-    #     return keyword_candidates
-
-    def calculate_word_scores(self, phrases):
-        word_frequency = defaultdict(int)
-        word_degree = defaultdict(int)
-        for p in phrases:
-            words = p.split()
-            words_degree = len(words) - 1  # todo usunac 1 i z dolu + feq
-            # if word_list_degree > 3: word_list_degree = 3 #exp.
-            for word in words:
-                word_frequency[word] += 1
-                word_degree[word] += words_degree  # orig.
-                # word_degree[word] += 1/(word_list_length*1.0) #exp.
-
-        # Calculate Word scores = deg(w)/freq(w) # todo zmienilem na deg(w)+freq(w) bo i tak dodawlo do freq/freq(w)
-        words_score = defaultdict(int)
-        for word in word_frequency:
-            words_score[word] = word_degree[word] + word_frequency[word] / (word_frequency[word] * 1.0)  # orig.
-            # word_score[item] = word_frequency[item]/(word_degree[item] * 1.0) #exp.
-        return words_score
+    def split_by_stop_words_many(self, texts):
+        result = []
+        for t in texts:
+            result += self.split_by_stop_words(t)
+        return result
 
     def split_by_stop_words(self, text):
         tmp = re.sub(self.stop_word_regex, '|', text.strip())
         phrases = tmp.split("|")
-        return [p.strip() for p in phrases]
+        phrases = [p.strip() for p in phrases]
+        return [p for p in phrases if p]
 
     def is_acceptable(self, p):
         words = p.split()
         length_ok = self.min_words_in_feature <= len(words) <= self.max_words_in_feature
-        # each_word_length = czy kazde > 3 # todo też z cyframi co jesli?
         return length_ok
 
+    def lemamatize_many(self, words):
+        return [self.lemamatizer.lemmatize(w) for w in words]
+
+
     def generate_candidate_keywords(self, tweets):
-        """ Split tweets by stop words and return phases that match is_acceptable condition and the rest phrases that do not"""
-        acceptable, rest = [], []
+        phrases = []
         for t in tweets:
             for p in self.split_by_stop_words(t):
-                acceptable.append(p) if self.is_acceptable(p) else rest.append(p)
+                p = clear_from_punct(p)
+                if p:
+                    phrases.append(p)
 
-        # TODO phrases += extract_adjoined_candidates(tweets)
-        return acceptable, rest
+        acceptable, rest = [], []
+        for p in phrases:
+            if self.is_acceptable(p):
+                acceptable.append(p)
+            elif p:
+                rest.extend(p.split())
 
-    def split_sentences(self, text):
-        """
-        Utility function to return a list of sentences.
-        @param text The text that must be split in to sentences.
-        """
+        candidates = set()
+        for p in acceptable:
+            if acceptable.count(p) >= self.min_keyword_frequency:
+                candidates.add(p)
+            else:
+                rest.extend(p.split())
+
+        # candidates.update(self.extract_adjoined_candidates(tweets))
+        return candidates, rest
+
+    def build_vocabulary(self, dataset):
+        self.phrases, all_words = self.build(dataset)
+        self.vocabulary = list(set(all_words))
+        print('VOC LENGTH' + str(len(self.vocabulary)))
+        print('PHr LENGTH' + str(len(self.phrases)))
+
+    # def extract_adjoined_candidates(self, tweets):  # only one that is found is "build the wall"
+    #     candidates = []
+    #     for t in tweets:
+    #         words = t.split()
+    #         words_len = len(words)
+    #         if words_len > 3:
+    #             for i in range(words_len - 2):
+    #                 if not self.is_stopword(words[i]) \
+    #                         and self.is_stopword(words[i+1]) \
+    #                         and not self.is_stopword(words[i+2]):
+    #                     candidates.append(" ".join(words[i:i+3]))
+    #
+    #     result = set()
+    #     for c in candidates:
+    #         if candidates.count(c) >= self.min_keyword_frequency:
+    #             result.add(c)
+    #     return result
+
+    def is_stopword(self, w):
+        return w in self.stop_words
+
+
+def clear_from_punct(phrase):
+    """ # todo usuwa tez se środka
+    >>> clear_from_punct("Hello!")
+    'Hello'
+    >>> clear_from_punct(".")
+    ''
+    """
+    return phrase.translate(punct_remove_translator)
+
+
+def preprocess_many(tweets):
+    """
+    Lowers all text and splits into parts delimited by . or , or ? etc.
+    >>> preprocess_many(["One. Two", "Next tweet: abc"])
+    ['one', 'two', 'next tweet', 'abc']
+    """
+    result = []
+    for t in tweets:
+        result += preprocess(t)
+    return result
+
+
+def preprocess(tweet):
+    """
+    Lowers all text and splits into parts delimited by . or , or ? etc.
+    >>> preprocess("One sentence. Another Part, and one more?")
+    ['one sentence', 'another part', 'and one more']
+    """
+
+    def _split_sentences(text):
         sentence_delimiters = re.compile(u'[\\[\\]\n.!?,;:\t\\-\\"\\(\\)\\\'\u2019\u2013]')
         sentences = sentence_delimiters.split(text)
         sentences = [s.strip() for s in sentences]
         return sentences
 
-    def build_vocabulary(self, dataset):
-        # all_words = []
-        # phrases = self.build(dataset)  # todo czy one juz lower sa?
-        #
-        # self.phrases = [phrase for phrase, score in phrases if " " in phrase]
-        #
-        # for tweet, s in dataset:
-        #     all_words += self.extract_words_from_tweet(tweet)
-        # self.vocabulary = list(set(all_words))
+    return _split_sentences(tweet.lower())
 
-        self.phrases, all_words = self.build(dataset)
-        self.vocabulary = list(set(all_words))
-        print('VOC LENGTH' + str(len(self.vocabulary)))
+
+if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
+
+# PO generate_candidate_keywords
+# temp = candidates + [w for w in words if ' ' in w]
+# words_score = self.calculate_word_scores(temp)  # TODO zabrac sie za scores
+# candidates_scores = self.generate_candidate_keyword_scores(temp, words_score)
+# print(sorted(candidates_scores.items(), key=lambda x: x[1]))
+#
+# def build(self, dataset):
+#     all_tweets = [t for t, s in dataset]
+#     sentences = preprocess_many(all_tweets)
+#     candidates, words = self.generate_candidate_keywords(sentences)
+#
+#     phrases = set()
+#     for c in candidates:
+#         if candidates.count(c) >= self.min_keyword_frequency:  # todo to bedzie mozna do generate
+#             phrases.add(c)
+#         else:
+#             words.extend(c.split())
+#     words = self.lemamatize_many(words)
+#     return phrases, words
+#
+#     def generate_candidate_keyword_scores(self, phrases, words_scores):
+#         keyword_candidates = defaultdict(int)
+#         for phrase in phrases:
+#             if phrases.count(phrase) >= self.min_keyword_frequency:  # todo czemu dopiero tutaj?
+#                 phase_score = sum(words_scores[word] for word in
+#                                phrase.split())  # todo co inaczej niz extract from tweets?
+#                 keyword_candidates[phrase] = phase_score
+#         return keyword_candidates
+#
+#     def calculate_word_scores(self, phrases):
+#         word_frequency = defaultdict(int)
+#         word_degree = defaultdict(int)
+#         for p in phrases:
+#             words = p.split()
+#             words_degree = len(words) - 1  # todo usunac 1 i z dolu + feq
+#             # if word_list_degree > 3: word_list_degree = 3 #exp.
+#             for word in words:
+#                 word_frequency[word] += 1
+#                 word_degree[word] += words_degree  # orig.
+#                 # word_degree[word] += 1/(word_list_length*1.0) #exp.
+#
+#         # Calculate Word scores = deg(w)/freq(w) # todo zmienilem na deg(w)+freq(w) bo i tak dodawlo do freq/freq(w)
+#         words_score = defaultdict(int)
+#         for word in word_frequency:
+#             words_score[word] = word_degree[word] + word_frequency[word] / (word_frequency[word] * 1.0)  # orig.
+#             # word_score[item] = word_frequency[item]/(word_degree[item] * 1.0) #exp.
+#         return words_score
