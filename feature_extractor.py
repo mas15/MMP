@@ -45,11 +45,13 @@ class FeatureExtractor:
         features = {}
         sentences = preprocess(tweet)
 
+        # TODO tutaj np sprawdzanie phrsaes czy spelniaja wymogi
+
         words = set()
         for s in sentences:
             for p in self.phrases:
                 s, features[p] = _extract_phrase(s, p)
-            # S has no feature phrases now
+            # sentence has no feature phrases now
             chunks = self.split_by_stop_words(s)
             for c in chunks:
                 lemmatized = self.lemamatize_many(c.split())
@@ -62,8 +64,9 @@ class FeatureExtractor:
     def build(self, dataset):
         all_tweets = [t for t, s in dataset]
         sentences = preprocess_many(all_tweets)
-        candidates, words = self.generate_candidate_keywords(sentences)
+        candidates, words = self.generate_phrases(sentences)
         words = self.lemamatize_many(words)
+        words = [w for w in words if len(w) >= self.min_word_length]
         return candidates, words
 
     def split_by_stop_words_many(self, texts):
@@ -86,15 +89,15 @@ class FeatureExtractor:
         return [self.lemamatizer.lemmatize(w) for w in words]
 
     def extract_not_matching_candidates(self, phrase):
-        candidates, rest = set(), []
+        candidates, rest = set(), set()
         for p in phrase:
             if phrase.count(p) >= self.min_keyword_frequency and self.is_phrase_length_ok(p):
                 candidates.add(p)
             else:
-                rest.extend(p.split())
+                rest.update(p.split())
         return candidates, rest
 
-    def generate_candidate_keywords(self, tweets):
+    def generate_phrases(self, tweets):
         phrases = []
         for t in tweets:
             for p in self.split_by_stop_words(t):

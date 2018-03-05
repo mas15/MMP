@@ -72,7 +72,7 @@ class TestFeatureExtractor(unittest.TestCase):
         exp_cands = set(['Make america great', 'lowest level', 'Hillary Clinton'])
         exp_rest = ['unemployment', 'years', 'base', 'stronger', 'prosecuted', 'jail']
 
-        cands, rest = self.extr.generate_candidate_keywords(tweets)
+        cands, rest = self.extr.generate_phrases(tweets)
         self.assertEqual(cands, exp_cands)
         self.assertEqual(rest, exp_rest)
 

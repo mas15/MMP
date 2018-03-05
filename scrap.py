@@ -44,17 +44,18 @@ class TweeterScrapper:
 
 
 if __name__ == "__main__":
-    #scrapper = TweeterScrapper()
-    #scrapper.get_all_since(datetime(2017,1,1,0,0,0))
-
+    # scrapper = TweeterScrapper()
+    # scrapper.get_all_since(datetime(2017,1,1,0,0,0))
+    #
     # for id in [816260343391514624]:
     #     t = scrapper.get_status(id)
-    #     print(t.text)
+    #     print(t.full_text)
     #
-    #     fields = [t.id_str, t.text.encode("utf8"), t.created_at, 'neg']
-    #, newline=''
-    #         writer = csv.writer(f)
+    #     fields = [t.id_str, t.full_text, t.created_at, 'neg']
+    #     with open('aaa.csv', 'a', encoding='utf8') as f:
+    #         writer = csv.writer(f, newline='')
     #         writer.writerow(fields)
+
     import re
     i=0
     with open('temp.csv', 'w', encoding='utf-8', newline='') as fw:

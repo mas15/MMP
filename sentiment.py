@@ -33,7 +33,7 @@ class SentimentAnalyser:
         problem_features = self.extr.extract_features(tweet)
         return self.cl.classify(problem_features)
 
-    def run_k_fold(self, pos, neg, nr_folds=3):
+    def run_k_fold(self, pos, neg, nr_folds=5):
         sum = 0
         pos_folds, neg_folds = split_pos_and_neg_into_folds(pos, neg, nr_folds)
 
@@ -47,6 +47,9 @@ class SentimentAnalyser:
         print(self.cl.show_most_informative_features(20))
         print()
         return sum / nr_folds
+
+    def train_on_all(self, pos, neg):
+        self.train(pos + neg)
 
 
 if __name__ == "__main__":
@@ -63,20 +66,22 @@ if __name__ == "__main__":
     print(sent.extr.phrases)
     print("AV OF 40: " + str(sum / 40))
 
-    #save_classifier(cl)
+    print("TRAINING ON ALL")
+    sent.train_on_all(pos, neg)
+    sent.save()
 
-    print(sent.analyse("Make america great again"))
-    print("TUTEJ _-------------------------------------")
-    d = sent.extr.extract_features("Make america great again")
-    print([f for f, v in d.items() if v])
-
-    print(sent.analyse("bad bad mexico"))
-    print([f for f, v in sent.extr.extract_features("bad bad mexico").items() if v])
-
-    print(sent.analyse("As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans."))
-    print([f for f, v in sent.extr.extract_features(
-        "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.").items() if
-           v])
+    # print(sent.analyse("Make america great again"))
+    # print("TUTEJ _-------------------------------------")
+    # d = sent.extr.extract_features("Make america great again")
+    # print([f for f, v in d.items() if v])
+    #
+    # print(sent.analyse("bad bad mexico"))
+    # print([f for f, v in sent.extr.extract_features("bad bad mexico").items() if v])
+    #
+    # print(sent.analyse("As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans."))
+    # print([f for f, v in sent.extr.extract_features(
+    #     "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.").items() if
+    #        v])
 
 
 

@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
-import matplotlib.pyplot as plt
-import matplotlib
+from sentiment import SentimentAnalyser
+from feature_extractor import FeatureExtractor
 
 def read_stock():
     result = []
@@ -20,20 +20,24 @@ def read_stock():
 
 def read_tweets():
     res =[]
-    with open('aaa.csv', 'r', encoding='utf8') as f:
+    with open('all_tweets.csv', 'r', encoding='utf8') as f:
         reader = csv.reader(f, delimiter=",")
         try:
             for line in reader:
-                date, content, sentiment = line[2], line[1], line[3]
-                date = datetime.strptime(date.split()[0], '%Y-%m-%d')
-                res.append((content, sentiment, date))
+                id, content, created_at = line
+                date = datetime.strptime(created_at, '%Y-%m-%d %H:%M:%S')
+                res.append((content, date))
         except IndexError:
             pass
         return res
 
 
 
-for t in read_tweets():
-    _, s, d = t
-    for s in read_stock():
-        if s[0] == d:
+tweets = read_tweets()
+ex = FeatureExtractor()
+ex.build_vocabulary(tweets)
+print("VOCABULARY:")
+print(len(ex.vocabulary))
+[print(w) for w in ex.vocabulary]
+print(len(ex.phrases))
+print(ex.phrases)

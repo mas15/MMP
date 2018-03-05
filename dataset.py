@@ -66,6 +66,7 @@ def get_train_and_test_data_for_k_run(pos_folds, neg_folds, k_run):
     neg_train, neg_test = get_train_and_test(neg_folds, k_run)
     return pos_train + neg_train, pos_test + neg_test
 
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
