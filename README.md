@@ -80,3 +80,14 @@ ALE TEZ lAS-LA, US-U
 ale i tak av byl 78% bo bylo z phrasami
 
 accu na pos i negatywnach?
+
+
+
+
+
+-------------------------
+CZESC DRUGA wszystkie tweety
+zebralismy tweety XXX tweetow
+usunelismy linki i chinskie tweety
+polaczone w jeden tam gdzie ....
+&amp -> and , ✔💜 ➡✅
