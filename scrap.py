@@ -35,12 +35,12 @@ if __name__ == "__main__":
     # poss:
 
     import csv
-    for id in [935883355547160577]:
+    for id in [816260343391514624]:
         t = scrapper.get_status(id)
         print(t.text)
 
-        fields = [t.id_str, t.text.encode("utf8"), t.created_at, 'pos']
-        with open('aaa.csv', 'a', encoding='utf8') as f:
+        fields = [t.id_str, t.text.encode("utf8"), t.created_at, 'neg']
+        with open('mark.csv', 'a', encoding='utf8') as f:
             writer = csv.writer(f)
             writer.writerow(fields)
 

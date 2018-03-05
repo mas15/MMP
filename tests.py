@@ -1,5 +1,7 @@
 from feature_extractor import FeatureExtractor
+from sentiment import SentimentAnalyser
 import unittest
+
 
 class TestFeatureExtractor(unittest.TestCase):
     def setUp(self):
@@ -33,7 +35,7 @@ class TestFeatureExtractor(unittest.TestCase):
                    ("Very proud of my Executive Order which will allow greatly expanded "
                     "access and far lower costs for HealthCare. Fake news media and Hillary Clinton again", "pos")
                    ]
-        self.extr.build_vocabulary(dataset) # TODO czy clinton powinna byc w words?
+        self.extr.build_vocabulary(dataset)  # TODO czy clinton powinna byc w words?
         exp_vocabulary = ['access', 'america', 'clinton', 'cost', 'crooked', 'cut',
                           'executive', 'expanded', 'great', 'greatly', 'healthcare',
                           'hillary', 'lower', 'make', 'mexico', 'order',
@@ -56,8 +58,8 @@ class TestFeatureExtractor(unittest.TestCase):
         self.assertFalse(self.extr.is_phrase_length_ok("Bad"))
 
     def test_split_by_stop_words_2(self):
-        text = "Taxes and people are bad decisions then stupid people $1.2 blame 45% and nothing"
-        exp_res = ["Taxes", "people", "bad decisions", "stupid people", "blame"]
+        text = "Taxes and people are bad decisions then stupid people $1.2 blame 45% and nothing 1st. time"
+        exp_res = ["Taxes", "people", "bad decisions", "stupid people", "blame", "time"]
         res = self.extr.split_by_stop_words(text)
         self.assertEqual(res, exp_res)
 
@@ -65,9 +67,12 @@ class TestFeatureExtractor(unittest.TestCase):
         tweets = ["Make america great again.",
                   "unemployment at lowest level in years and our base has never been stronger!",
                   "Hillary Clinton should have been prosecuted and should be in jail."]
-        cands, rest = self.extr.generate_candidate_keywords(tweets)
-        exp_cands = ['Make america great', 'lowest level', 'Hillary Clinton']
+        self.extr.min_keyword_frequency = 1
+
+        exp_cands = set(['Make america great', 'lowest level', 'Hillary Clinton'])
         exp_rest = ['unemployment', 'years', 'base', 'stronger', 'prosecuted', 'jail']
+
+        cands, rest = self.extr.generate_candidate_keywords(tweets)
         self.assertEqual(cands, exp_cands)
         self.assertEqual(rest, exp_rest)
 

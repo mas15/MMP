@@ -1,8 +1,7 @@
-from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 import re
 import string
-
+from sortedcontainers import SortedSet
 punct_remove_translator = str.maketrans('', '', string.punctuation)
 
 
@@ -10,15 +9,20 @@ def load_stop_words(file_name):
     with open(file_name, "r") as f:
         return [line.strip() for line in f]
 
+def len_words(text):
+    return len(text.split())
 
 # rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
+
+# TODO jakies doesn
+
 
 class FeatureExtractor:
     def __init__(self):
         self.lemamatizer = WordNetLemmatizer()
         """ Features set containing unique words"""
-        self.vocabulary = set()  # sorted set by MAG, AG, Great
-        self.phrases = set()  # todo na set
+        self.vocabulary = set()
+        self.phrases = set()
 
         self.stop_word_regex = self._create_stopwords_regex()
 
@@ -30,7 +34,7 @@ class FeatureExtractor:
     def _create_stopwords_regex(self):  # todo usunac self
         self.stop_words = load_stop_words("SmartStoplist.txt")
         words_to_remove_with_reg = [r"\b" + w + r"\b" for w in self.stop_words]
-        words_to_remove_with_reg.append("\$?\d+(\.?\d+)?%?")  # match number, $, %
+        words_to_remove_with_reg.append("\$?\d+[^\s]*")  # match number, $, %
         return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)
 
     def extract_features(self, tweet):
@@ -75,8 +79,7 @@ class FeatureExtractor:
         return [p for p in phrases if p]
 
     def is_phrase_length_ok(self, p):
-        words = p.split()
-        length_ok = self.min_words_in_feature <= len(words) <= self.max_words_in_feature
+        length_ok = self.min_words_in_feature <= len_words(p) <= self.max_words_in_feature
         return length_ok
 
     def lemamatize_many(self, words):
@@ -105,7 +108,7 @@ class FeatureExtractor:
 
     def build_vocabulary(self, dataset):
         self.phrases, all_words = self.build(dataset)
-        self.vocabulary = list(set(all_words))
+        self.vocabulary = set(all_words)
         print('VOC LENGTH' + str(len(self.vocabulary)))
         print('PHr LENGTH' + str(len(self.phrases)))
 
