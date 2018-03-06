@@ -1,7 +1,6 @@
 from nltk.stem import WordNetLemmatizer
 import re
 import string
-from sortedcontainers import SortedSet
 punct_remove_translator = str.maketrans('', '', string.punctuation)
 
 
@@ -21,7 +20,7 @@ class FeatureExtractor:
     def __init__(self):
         self.lemamatizer = WordNetLemmatizer()
         """ Features set containing unique words"""
-        self.vocabulary = set()
+        self.vocabulary = set() # TODO return sorted
         self.phrases = set()
 
         self.stop_word_regex = self._create_stopwords_regex()
