@@ -34,10 +34,32 @@ def read_tweets():
 
 
 tweets = read_tweets()
+# tweets = [t for t, d in tweets_with_dates] # todo use dates
 ex = FeatureExtractor()
-ex.build_vocabulary(tweets)
+ex.build_vocabulary(tweets) # todo uzywac tylko tweets bez sent/dates
 print("VOCABULARY:")
 print(len(ex.vocabulary))
-[print(w) for w in ex.vocabulary]
+# print(ex.vocabulary)
 print(len(ex.phrases))
-print(ex.phrases)
+# print(ex.phrases)
+
+
+sent = SentimentAnalyser()
+sent.load()
+
+from collections import OrderedDict
+
+with open('temp.csv', 'w', encoding='utf-8') as fw:
+        writer = csv.writer(fw)
+        first = True
+        for t, _ in tweets:
+            features = ex.extract_features(t)
+            features = OrderedDict(sorted(features.items()))
+
+            sentiment = sent.analyse(t)
+            line = [sentiment] + [v for v in features.values()]
+
+            if first:
+                writer.writerow(["sentiment"] + [k for k in features.keys()])
+            writer.writerow(line)
+            first = False
