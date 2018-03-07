@@ -70,11 +70,11 @@ class TestFeatureExtractor(unittest.TestCase):
         self.extr.min_keyword_frequency = 1
 
         exp_cands = set(['Make america great', 'lowest level', 'Hillary Clinton'])
-        exp_rest = ['unemployment', 'years', 'base', 'stronger', 'prosecuted', 'jail']
+        exp_rest = ['base', 'jail', 'prosecuted', 'stronger', 'unemployment', 'years']
 
         cands, rest = self.extr.generate_phrases(tweets)
         self.assertEqual(cands, exp_cands)
-        self.assertEqual(rest, exp_rest)
+        self.assertEqual(sorted(rest), exp_rest)
 
 
 if __name__ == '__main__':
