@@ -8,6 +8,7 @@ def load_stop_words(file_name):
     with open(file_name, "r") as f:
         return [line.strip() for line in f]
 
+
 def len_words(text):
     return len(text.split())
 
@@ -178,51 +179,3 @@ if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
-
-# PO generate_candidate_keywords
-# temp = candidates + [w for w in words if ' ' in w]
-# words_score = self.calculate_word_scores(temp)  # TODO zabrac sie za scores
-# candidates_scores = self.generate_candidate_keyword_scores(temp, words_score)
-# print(sorted(candidates_scores.items(), key=lambda x: x[1]))
-#
-# def build(self, dataset):
-#     all_tweets = [t for t, s in dataset]
-#     sentences = preprocess_many(all_tweets)
-#     candidates, words = self.generate_candidate_keywords(sentences)
-#
-#     phrases = set()
-#     for c in candidates:
-#         if candidates.count(c) >= self.min_keyword_frequency:  # todo to bedzie mozna do generate
-#             phrases.add(c)
-#         else:
-#             words.extend(c.split())
-#     words = self.lemamatize_many(words)
-#     return phrases, words
-#
-#     def generate_candidate_keyword_scores(self, phrases, words_scores):
-#         keyword_candidates = defaultdict(int)
-#         for phrase in phrases:
-#             if phrases.count(phrase) >= self.min_keyword_frequency:  # todo czemu dopiero tutaj?
-#                 phase_score = sum(words_scores[word] for word in
-#                                phrase.split())  # todo co inaczej niz extract from tweets?
-#                 keyword_candidates[phrase] = phase_score
-#         return keyword_candidates
-#
-#     def calculate_word_scores(self, phrases):
-#         word_frequency = defaultdict(int)
-#         word_degree = defaultdict(int)
-#         for p in phrases:
-#             words = p.split()
-#             words_degree = len(words) - 1  # todo usunac 1 i z dolu + feq
-#             # if word_list_degree > 3: word_list_degree = 3 #exp.
-#             for word in words:
-#                 word_frequency[word] += 1
-#                 word_degree[word] += words_degree  # orig.
-#                 # word_degree[word] += 1/(word_list_length*1.0) #exp.
-#
-#         # Calculate Word scores = deg(w)/freq(w) # todo zmienilem na deg(w)+freq(w) bo i tak dodawlo do freq/freq(w)
-#         words_score = defaultdict(int)
-#         for word in word_frequency:
-#             words_score[word] = word_degree[word] + word_frequency[word] / (word_frequency[word] * 1.0)  # orig.
-#             # word_score[item] = word_frequency[item]/(word_degree[item] * 1.0) #exp.
-#         return words_score
