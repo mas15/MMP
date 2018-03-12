@@ -1,27 +1,17 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Trump Tweets vs The Markets</title>
-  </head>
-  <body>
-  <div class="jumbotron">
-      <div class="container">
-            <form class="form-group" method="post">
-            <h4>Put tweet content please</h4>
-            <textarea class="form-control" rows="3" name="tweet_content"></textarea><br>
-            <input class="btn btn-primary" type="submit" aria-label="Submit">
-            </form>
+{% extends "base.html" %}
 
-            {% if sentiment %}
-                <p>Sentiment : {{ sentiment }}</p>
-                <p>Polarity : {{ polarity }}</p>
-            {% endif %}
-      </div>
-  </div>
-  </body>
-</html>
+{% block content %}
+<div class="container">
+    <form class="form-group" method="POST">
+        <h4>Put tweet content please</h4>
+        {{ form.csrf_token }}
+        {{ form.tweet_content(class_="form-control", rows="3") }}
+        <input class="btn btn-outline-success my-2 my-sm-0" type="submit" aria-label="Submit">
+    </form>
+
+    {% if sentiment %}
+    <p>Sentiment : {{ sentiment }}</p>
+    <p>Polarity : {{ polarity }}</p>
+    {% endif %}
+</div>
+{% endblock %}

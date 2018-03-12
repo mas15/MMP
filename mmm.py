@@ -27,40 +27,44 @@ def get_date_to_check_affect(d):
     return res.normalize()
 
 
-all_tweets = read_all_tweets()
-dollar_prices = read_dollar_prices()
-sent = SentimentAnalyser()
-sent.load()
-
-all_tweets["Date_with_affect"] = all_tweets["Date"].apply(get_date_to_check_affect)
-all_tweets.sort_values(by='Date_with_affect', inplace=True)
-all_tweets.drop(columns=['Id', 'Date'], inplace=True)
-
-dollar_prices.sort_values(by='Date', inplace=True)  # nie sa takie same?
-
-tweets_with_affect = pd.merge_asof(all_tweets, dollar_prices, left_on='Date_with_affect', right_on='Date',
-                                   direction='forward')
-tweets_with_affect.drop(columns=['Price', 'Open', 'High', 'Low', 'Date', 'Date_with_affect'], inplace=True)
-
-
-# tweets_with_affect["Sentiment"] = tweets_with_affect["Text"].apply(sent.analyse)
-print(tweets_with_affect.head())
-
-for feature in sent.extr.phrases + sent.extr.vocabulary:
-    tweets_with_affect[feature] = False
-
-
 def mark_features(row):
     features = sent.extr.extract_features(row['Text'])
     for f, is_in_tweet in features.items():
         if is_in_tweet:
             row[f] = True
+    return row
 
 
-tweets_with_affect.apply(mark_features, axis=1)
-features_with_affect = tweets_with_affect.drop(columns=['Text'])
+if __name__ == "__main__":
+    all_tweets = read_all_tweets()
+    dollar_prices = read_dollar_prices()
+    sent = SentimentAnalyser()
+    sent.load()
 
-print("RESULT--------------------------------------")
-print(features_with_affect.head())
-print(features_with_affect.bill.sum())
-print(features_with_affect.person.sum())
+    all_tweets["Date_with_affect"] = all_tweets["Date"].apply(get_date_to_check_affect)
+    all_tweets.sort_values(by='Date_with_affect', inplace=True)
+    all_tweets.drop(columns=['Id', 'Date'], inplace=True)
+
+    dollar_prices.sort_values(by='Date', inplace=True)  # nie sa takie same?
+    # Text, Date with affect
+
+    result = pd.merge_asof(all_tweets, dollar_prices, left_on='Date_with_affect', right_on='Date', direction='forward')
+
+    result.to_csv("tweets_with_prices.csv", index=False)
+    result.drop(columns=['Price', 'Open', 'High', 'Low', 'Date', 'Date_with_affect'], inplace=True)
+
+    result["Sentiment"] = result["Text"].apply(sent.analyse)
+
+    features = list(sent.extr.phrases) + list(sent.extr.vocabulary)
+    for f in features:
+        result[f] = False
+
+    # move mark which features are in a tweet
+    result = result.apply(lambda x: mark_features(x), axis=1)
+
+    # Change the change into True/False (dollar up, down)
+    result["Dollar_up"] = result["Change"].apply(lambda x: x > 0)
+    result.drop(columns=['Text', 'Change'], inplace=True)
+    print(result.head())
+
+    result.to_csv("features_with_effect.csv", index=False)

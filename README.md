@@ -12,7 +12,7 @@ Access Token	962374758783471616-KZtDMvJkmJigxZWUr3EI8x5iOgguRQB
 Access Token Secret	hLtD8RMXyT2kcUDR9oLg7P7MtXSkrlgBWgsZk4u8GJY84
 
 KOD Z http://tweepy.readthedocs.io/en/v3.5.0/getting_started.html
-
+IMAGE Z http://www.pngmart.com/image/28615
 
 Sentiment anysis:
 -Split corpus na test i trainig

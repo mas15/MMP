@@ -1,0 +1,3574 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.bayes.NaiveBayes 
+Relation:     features_with_effect
+Instances:    2928
+Attributes:   720
+              [list of attributes omitted]
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+Naive Bayes Classifier
+
+                           Class
+Attribute                   True  False
+                          (0.47) (0.53)
+========================================
+Sentiment
+  pos                      1054.0 1253.0
+  neg                       312.0  313.0
+  [total]                  1366.0 1566.0
+
+fake news media
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+republican party
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+hillary clinton
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+fake news
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+great work
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+united states embassy
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+great state
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+god bless
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+amazing staff
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+crooked hillary
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+crooked hillary clinton
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+time high
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+totally biased
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+united states
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+north korea
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+making america great
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+stock market
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+make america great
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+coming back
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+failing nytimes
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+great meeting
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+false story
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+dishonest media
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+white house
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+bad
+  False                    1323.0 1528.0
+  True                       43.0   38.0
+  [total]                  1366.0 1566.0
+
+bastilleday
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+respect
+  False                    1352.0 1555.0
+  True                       14.0   11.0
+  [total]                  1366.0 1566.0
+
+tom
+  False                    1360.0 1564.0
+  True                        6.0    2.0
+  [total]                  1366.0 1566.0
+
+future
+  False                    1356.0 1550.0
+  True                       10.0   16.0
+  [total]                  1366.0 1566.0
+
+pakistan
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+wife
+  False                    1362.0 1561.0
+  True                        4.0    5.0
+  [total]                  1366.0 1566.0
+
+ebola
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+general
+  False                    1345.0 1543.0
+  True                       21.0   23.0
+  [total]                  1366.0 1566.0
+
+msnbc
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+woman
+  False                    1340.0 1533.0
+  True                       26.0   33.0
+  [total]                  1366.0 1566.0
+
+parade
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+sleep
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+cuban
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+track
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+television
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+greatly
+  False                    1359.0 1564.0
+  True                        7.0    2.0
+  [total]                  1366.0 1566.0
+
+bill
+  False                    1333.0 1522.0
+  True                       33.0   44.0
+  [total]                  1366.0 1566.0
+
+pas
+  False                    1358.0 1548.0
+  True                        8.0   18.0
+  [total]                  1366.0 1566.0
+
+expected
+  False                    1361.0 1560.0
+  True                        5.0    6.0
+  [total]                  1366.0 1566.0
+
+fund
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+quality
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+bleached
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+cut
+  False                    1307.0 1488.0
+  True                       59.0   78.0
+  [total]                  1366.0 1566.0
+
+prevail
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+stronger
+  False                    1361.0 1554.0
+  True                        5.0   12.0
+  [total]                  1366.0 1566.0
+
+forgotten
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+stage
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+working
+  False                    1318.0 1519.0
+  True                       48.0   47.0
+  [total]                  1366.0 1566.0
+
+michael
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+sloppy
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+worst
+  False                    1354.0 1560.0
+  True                       12.0    6.0
+  [total]                  1366.0 1566.0
+
+lot
+  False                    1360.0 1550.0
+  True                        6.0   16.0
+  [total]                  1366.0 1566.0
+
+deal
+  False                    1329.0 1525.0
+  True                       37.0   41.0
+  [total]                  1366.0 1566.0
+
+headquarters
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+cost
+  False                    1359.0 1559.0
+  True                        7.0    7.0
+  [total]                  1366.0 1566.0
+
+patriotism
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+immigrant
+  False                    1363.0 1559.0
+  True                        3.0    7.0
+  [total]                  1366.0 1566.0
+
+americafirst
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+special
+  False                    1356.0 1550.0
+  True                       10.0   16.0
+  [total]                  1366.0 1566.0
+
+called
+  False                    1357.0 1552.0
+  True                        9.0   14.0
+  [total]                  1366.0 1566.0
+
+stop
+  False                    1345.0 1552.0
+  True                       21.0   14.0
+  [total]                  1366.0 1566.0
+
+area
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+don
+  False                    1338.0 1513.0
+  True                       28.0   53.0
+  [total]                  1366.0 1566.0
+
+totally
+  False                    1347.0 1543.0
+  True                       19.0   23.0
+  [total]                  1366.0 1566.0
+
+fake
+  False                    1350.0 1547.0
+  True                       16.0   19.0
+  [total]                  1366.0 1566.0
+
+bob
+  False                    1364.0 1554.0
+  True                        2.0   12.0
+  [total]                  1366.0 1566.0
+
+spoke
+  False                    1352.0 1553.0
+  True                       14.0   13.0
+  [total]                  1366.0 1566.0
+
+usa
+  False                    1358.0 1551.0
+  True                        8.0   15.0
+  [total]                  1366.0 1566.0
+
+unwatchable
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+support
+  False                    1340.0 1544.0
+  True                       26.0   22.0
+  [total]                  1366.0 1566.0
+
+dem
+  False                    1351.0 1559.0
+  True                       15.0    7.0
+  [total]                  1366.0 1566.0
+
+public
+  False                    1351.0 1555.0
+  True                       15.0   11.0
+  [total]                  1366.0 1566.0
+
+granted
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+lavar
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+today
+  False                    1275.0 1458.0
+  True                       91.0  108.0
+  [total]                  1366.0 1566.0
+
+court
+  False                    1344.0 1550.0
+  True                       22.0   16.0
+  [total]                  1366.0 1566.0
+
+worse
+  False                    1353.0 1560.0
+  True                       13.0    6.0
+  [total]                  1366.0 1566.0
+
+blame
+  False                    1361.0 1558.0
+  True                        5.0    8.0
+  [total]                  1366.0 1566.0
+
+isi
+  False                    1356.0 1553.0
+  True                       10.0   13.0
+  [total]                  1366.0 1566.0
+
+month
+  False                    1348.0 1550.0
+  True                       18.0   16.0
+  [total]                  1366.0 1566.0
+
+important
+  False                    1351.0 1547.0
+  True                       15.0   19.0
+  [total]                  1366.0 1566.0
+
+build
+  False                    1361.0 1551.0
+  True                        5.0   15.0
+  [total]                  1366.0 1566.0
+
+terrible
+  False                    1345.0 1551.0
+  True                       21.0   15.0
+  [total]                  1366.0 1566.0
+
+wasn
+  False                    1360.0 1561.0
+  True                        6.0    5.0
+  [total]                  1366.0 1566.0
+
+based
+  False                    1356.0 1555.0
+  True                       10.0   11.0
+  [total]                  1366.0 1566.0
+
+give
+  False                    1353.0 1542.0
+  True                       13.0   24.0
+  [total]                  1366.0 1566.0
+
+longer
+  False                    1355.0 1553.0
+  True                       11.0   13.0
+  [total]                  1366.0 1566.0
+
+pride
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+leader
+  False                    1339.0 1543.0
+  True                       27.0   23.0
+  [total]                  1366.0 1566.0
+
+president
+  False                    1282.0 1450.0
+  True                       84.0  116.0
+  [total]                  1366.0 1566.0
+
+korea
+  False                    1358.0 1549.0
+  True                        8.0   17.0
+  [total]                  1366.0 1566.0
+
+book
+  False                    1354.0 1558.0
+  True                       12.0    8.0
+  [total]                  1366.0 1566.0
+
+untruthful
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+retail
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+created
+  False                    1362.0 1561.0
+  True                        4.0    5.0
+  [total]                  1366.0 1566.0
+
+washington
+  False                    1348.0 1546.0
+  True                       18.0   20.0
+  [total]                  1366.0 1566.0
+
+jong
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+warmest
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+people
+  False                    1248.0 1435.0
+  True                      118.0  131.0
+  [total]                  1366.0 1566.0
+
+largely
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+study
+  False                    1359.0 1563.0
+  True                        7.0    3.0
+  [total]                  1366.0 1566.0
+
+high
+  False                    1350.0 1541.0
+  True                       16.0   25.0
+  [total]                  1366.0 1566.0
+
+quinnipiac
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+ineffective
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+seldom
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+cheater
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+supreme
+  False                    1357.0 1557.0
+  True                        9.0    9.0
+  [total]                  1366.0 1566.0
+
+boring
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+gear
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+mark
+  False                    1362.0 1561.0
+  True                        4.0    5.0
+  [total]                  1366.0 1566.0
+
+cruze
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+andrew
+  False                    1361.0 1558.0
+  True                        5.0    8.0
+  [total]                  1366.0 1566.0
+
+terror
+  False                    1356.0 1562.0
+  True                       10.0    4.0
+  [total]                  1366.0 1566.0
+
+republic
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+crazy
+  False                    1359.0 1559.0
+  True                        7.0    7.0
+  [total]                  1366.0 1566.0
+
+tainted
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+camp
+  False                    1361.0 1557.0
+  True                        5.0    9.0
+  [total]                  1366.0 1566.0
+
+cia
+  False                    1362.0 1562.0
+  True                        4.0    4.0
+  [total]                  1366.0 1566.0
+
+expensing
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+voluntarily
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+thomas
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+congratulation
+  False                    1342.0 1532.0
+  True                       24.0   34.0
+  [total]                  1366.0 1566.0
+
+russia
+  False                    1321.0 1528.0
+  True                       45.0   38.0
+  [total]                  1366.0 1566.0
+
+full
+  False                    1353.0 1542.0
+  True                       13.0   24.0
+  [total]                  1366.0 1566.0
+
+smart
+  False                    1354.0 1551.0
+  True                       12.0   15.0
+  [total]                  1366.0 1566.0
+
+thousand
+  False                    1360.0 1559.0
+  True                        6.0    7.0
+  [total]                  1366.0 1566.0
+
+happier
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+khan
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+size
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+democrat
+  False                    1301.0 1474.0
+  True                       65.0   92.0
+  [total]                  1366.0 1566.0
+
+hold
+  False                    1359.0 1563.0
+  True                        7.0    3.0
+  [total]                  1366.0 1566.0
+
+live
+  False                    1344.0 1552.0
+  True                       22.0   14.0
+  [total]                  1366.0 1566.0
+
+bernie
+  False                    1358.0 1564.0
+  True                        8.0    2.0
+  [total]                  1366.0 1566.0
+
+philippine
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+candidate
+  False                    1359.0 1555.0
+  True                        7.0   11.0
+  [total]                  1366.0 1566.0
+
+morningjoe
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+australia
+  False                    1362.0 1562.0
+  True                        4.0    4.0
+  [total]                  1366.0 1566.0
+
+beginning
+  False                    1355.0 1554.0
+  True                       11.0   12.0
+  [total]                  1366.0 1566.0
+
+weak
+  False                    1351.0 1558.0
+  True                       15.0    8.0
+  [total]                  1366.0 1566.0
+
+david
+  False                    1357.0 1557.0
+  True                        9.0    9.0
+  [total]                  1366.0 1566.0
+
+disrespectful
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+built
+  False                    1362.0 1558.0
+  True                        4.0    8.0
+  [total]                  1366.0 1566.0
+
+brilliant
+  False                    1362.0 1565.0
+  True                        4.0    1.0
+  [total]                  1366.0 1566.0
+
+border
+  False                    1327.0 1519.0
+  True                       39.0   47.0
+  [total]                  1366.0 1566.0
+
+shining
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+scope
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+behalf
+  False                    1357.0 1554.0
+  True                        9.0   12.0
+  [total]                  1366.0 1566.0
+
+unemployment
+  False                    1348.0 1551.0
+  True                       18.0   15.0
+  [total]                  1366.0 1566.0
+
+msm
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+wow
+  False                    1354.0 1552.0
+  True                       12.0   14.0
+  [total]                  1366.0 1566.0
+
+domestic
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+impact
+  False                    1363.0 1559.0
+  True                        3.0    7.0
+  [total]                  1366.0 1566.0
+
+mind
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+cbs
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+paying
+  False                    1363.0 1555.0
+  True                        3.0   11.0
+  [total]                  1366.0 1566.0
+
+total
+  False                    1342.0 1549.0
+  True                       24.0   17.0
+  [total]                  1366.0 1566.0
+
+dump
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+hope
+  False                    1355.0 1556.0
+  True                       11.0   10.0
+  [total]                  1366.0 1566.0
+
+express
+  False                    1362.0 1562.0
+  True                        4.0    4.0
+  [total]                  1366.0 1566.0
+
+excuse
+  False                    1357.0 1560.0
+  True                        9.0    6.0
+  [total]                  1366.0 1566.0
+
+presidential
+  False                    1355.0 1555.0
+  True                       11.0   11.0
+  [total]                  1366.0 1566.0
+
+material
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+fantastic
+  False                    1359.0 1553.0
+  True                        7.0   13.0
+  [total]                  1366.0 1566.0
+
+paid
+  False                    1357.0 1553.0
+  True                        9.0   13.0
+  [total]                  1366.0 1566.0
+
+amazing
+  False                    1353.0 1555.0
+  True                       13.0   11.0
+  [total]                  1366.0 1566.0
+
+car
+  False                    1361.0 1560.0
+  True                        5.0    6.0
+  [total]                  1366.0 1566.0
+
+joe
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+illegal
+  False                    1346.0 1542.0
+  True                       20.0   24.0
+  [total]                  1366.0 1566.0
+
+bless
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+spending
+  False                    1363.0 1559.0
+  True                        3.0    7.0
+  [total]                  1366.0 1566.0
+
+conjunction
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+goofy
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+fast
+  False                    1352.0 1557.0
+  True                       14.0    9.0
+  [total]                  1366.0 1566.0
+
+level
+  False                    1356.0 1544.0
+  True                       10.0   22.0
+  [total]                  1366.0 1566.0
+
+disgusting
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+untrue
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+eye
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+turningaround
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+charlotte
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+agenda
+  False                    1356.0 1560.0
+  True                       10.0    6.0
+  [total]                  1366.0 1566.0
+
+cea
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+hunt
+  False                    1353.0 1553.0
+  True                       13.0   13.0
+  [total]                  1366.0 1566.0
+
+africa
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+chevy
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+campaigned
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+thanksgiving
+  False                    1365.0 1560.0
+  True                        1.0    6.0
+  [total]                  1366.0 1566.0
+
+term
+  False                    1360.0 1559.0
+  True                        6.0    7.0
+  [total]                  1366.0 1566.0
+
+lie
+  False                    1351.0 1555.0
+  True                       15.0   11.0
+  [total]                  1366.0 1566.0
+
+congress
+  False                    1344.0 1541.0
+  True                       22.0   25.0
+  [total]                  1366.0 1566.0
+
+sunday
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+led
+  False                    1359.0 1563.0
+  True                        7.0    3.0
+  [total]                  1366.0 1566.0
+
+hurricane
+  False                    1353.0 1551.0
+  True                       13.0   15.0
+  [total]                  1366.0 1566.0
+
+jail
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+isn
+  False                    1358.0 1564.0
+  True                        8.0    2.0
+  [total]                  1366.0 1566.0
+
+appreciated
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+perez
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+information
+  False                    1354.0 1555.0
+  True                       12.0   11.0
+  [total]                  1366.0 1566.0
+
+sooooo
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+infested
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+nation
+  False                    1341.0 1522.0
+  True                       25.0   44.0
+  [total]                  1366.0 1566.0
+
+primary
+  False                    1354.0 1563.0
+  True                       12.0    3.0
+  [total]                  1366.0 1566.0
+
+city
+  False                    1359.0 1553.0
+  True                        7.0   13.0
+  [total]                  1366.0 1566.0
+
+crowd
+  False                    1356.0 1555.0
+  True                       10.0   11.0
+  [total]                  1366.0 1566.0
+
+politically
+  False                    1360.0 1562.0
+  True                        6.0    4.0
+  [total]                  1366.0 1566.0
+
+nbc
+  False                    1357.0 1555.0
+  True                        9.0   11.0
+  [total]                  1366.0 1566.0
+
+guilty
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+care
+  False                    1347.0 1551.0
+  True                       19.0   15.0
+  [total]                  1366.0 1566.0
+
+estimate
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+misrepresents
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+philadelphia
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+echo
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+nice
+  False                    1357.0 1554.0
+  True                        9.0   12.0
+  [total]                  1366.0 1566.0
+
+sell
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+missed
+  False                    1362.0 1561.0
+  True                        4.0    5.0
+  [total]                  1366.0 1566.0
+
+unfair
+  False                    1358.0 1561.0
+  True                        8.0    5.0
+  [total]                  1366.0 1566.0
+
+agreed
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+terrorist
+  False                    1354.0 1554.0
+  True                       12.0   12.0
+  [total]                  1366.0 1566.0
+
+free
+  False                    1356.0 1557.0
+  True                       10.0    9.0
+  [total]                  1366.0 1566.0
+
+spent
+  False                    1357.0 1559.0
+  True                        9.0    7.0
+  [total]                  1366.0 1566.0
+
+passed
+  False                    1359.0 1557.0
+  True                        7.0    9.0
+  [total]                  1366.0 1566.0
+
+frank
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+emmanuelmacron
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+ovation
+  False                    1365.0 1562.0
+  True                        1.0    4.0
+  [total]                  1366.0 1566.0
+
+backed
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+military
+  False                    1335.0 1502.0
+  True                       31.0   64.0
+  [total]                  1366.0 1566.0
+
+mental
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+beautiful
+  False                    1354.0 1547.0
+  True                       12.0   19.0
+  [total]                  1366.0 1566.0
+
+winner
+  False                    1359.0 1560.0
+  True                        7.0    6.0
+  [total]                  1366.0 1566.0
+
+effect
+  False                    1361.0 1563.0
+  True                        5.0    3.0
+  [total]                  1366.0 1566.0
+
+aid
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+person
+  False                    1356.0 1559.0
+  True                       10.0    7.0
+  [total]                  1366.0 1566.0
+
+faster
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+business
+  False                    1347.0 1541.0
+  True                       19.0   25.0
+  [total]                  1366.0 1566.0
+
+massively
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+dawn
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+sake
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+standing
+  False                    1362.0 1560.0
+  True                        4.0    6.0
+  [total]                  1366.0 1566.0
+
+number
+  False                    1352.0 1534.0
+  True                       14.0   32.0
+  [total]                  1366.0 1566.0
+
+crime
+  False                    1344.0 1547.0
+  True                       22.0   19.0
+  [total]                  1366.0 1566.0
+
+impersonation
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+quarter
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+fan
+  False                    1360.0 1561.0
+  True                        6.0    5.0
+  [total]                  1366.0 1566.0
+
+patriot
+  False                    1360.0 1562.0
+  True                        6.0    4.0
+  [total]                  1366.0 1566.0
+
+wolff
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+fool
+  False                    1364.0 1556.0
+  True                        2.0   10.0
+  [total]                  1366.0 1566.0
+
+charge
+  False                    1361.0 1560.0
+  True                        5.0    6.0
+  [total]                  1366.0 1566.0
+
+state
+  False                    1341.0 1536.0
+  True                       25.0   30.0
+  [total]                  1366.0 1566.0
+
+stock
+  False                    1360.0 1560.0
+  True                        6.0    6.0
+  [total]                  1366.0 1566.0
+
+gratitude
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+cruz
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+excited
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+hero
+  False                    1351.0 1552.0
+  True                       15.0   14.0
+  [total]                  1366.0 1566.0
+
+india
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+wrong
+  False                    1358.0 1547.0
+  True                        8.0   19.0
+  [total]                  1366.0 1566.0
+
+lowest
+  False                    1354.0 1554.0
+  True                       12.0   12.0
+  [total]                  1366.0 1566.0
+
+benefit
+  False                    1360.0 1560.0
+  True                        6.0    6.0
+  [total]                  1366.0 1566.0
+
+guy
+  False                    1357.0 1557.0
+  True                        9.0    9.0
+  [total]                  1366.0 1566.0
+
+schwarzenegger
+  False                    1362.0 1565.0
+  True                        4.0    1.0
+  [total]                  1366.0 1566.0
+
+turn
+  False                    1358.0 1562.0
+  True                        8.0    4.0
+  [total]                  1366.0 1566.0
+
+kelly
+  False                    1362.0 1556.0
+  True                        4.0   10.0
+  [total]                  1366.0 1566.0
+
+victim
+  False                    1354.0 1556.0
+  True                       12.0   10.0
+  [total]                  1366.0 1566.0
+
+officer
+  False                    1359.0 1558.0
+  True                        7.0    8.0
+  [total]                  1366.0 1566.0
+
+gdp
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+move
+  False                    1355.0 1561.0
+  True                       11.0    5.0
+  [total]                  1366.0 1566.0
+
+broke
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+pouring
+  False                    1361.0 1558.0
+  True                        5.0    8.0
+  [total]                  1366.0 1566.0
+
+brady
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+prayer
+  False                    1347.0 1547.0
+  True                       19.0   19.0
+  [total]                  1366.0 1566.0
+
+hyderabad
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+dumb
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+meet
+  False                    1354.0 1556.0
+  True                       12.0   10.0
+  [total]                  1366.0 1566.0
+
+anticipated
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+remembered
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+democratic
+  False                    1360.0 1561.0
+  True                        6.0    5.0
+  [total]                  1366.0 1566.0
+
+dollar
+  False                    1343.0 1540.0
+  True                       23.0   26.0
+  [total]                  1366.0 1566.0
+
+protruding
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+shirt
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+man
+  False                    1350.0 1556.0
+  True                       16.0   10.0
+  [total]                  1366.0 1566.0
+
+career
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+steve
+  False                    1361.0 1561.0
+  True                        5.0    5.0
+  [total]                  1366.0 1566.0
+
+deadliest
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+dishonesty
+  False                    1361.0 1565.0
+  True                        5.0    1.0
+  [total]                  1366.0 1566.0
+
+value
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+pay
+  False                    1356.0 1552.0
+  True                       10.0   14.0
+  [total]                  1366.0 1566.0
+
+misrepresent
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+motor
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+proud
+  False                    1351.0 1545.0
+  True                       15.0   21.0
+  [total]                  1366.0 1566.0
+
+hosting
+  False                    1360.0 1564.0
+  True                        6.0    2.0
+  [total]                  1366.0 1566.0
+
+trend
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+weekend
+  False                    1362.0 1560.0
+  True                        4.0    6.0
+  [total]                  1366.0 1566.0
+
+inform
+  False                    1361.0 1563.0
+  True                        5.0    3.0
+  [total]                  1366.0 1566.0
+
+blue
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+foolishly
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+decision
+  False                    1347.0 1554.0
+  True                       19.0   12.0
+  [total]                  1366.0 1566.0
+
+heading
+  False                    1354.0 1548.0
+  True                       12.0   18.0
+  [total]                  1366.0 1566.0
+
+expanded
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+civil
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+menace
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+hate
+  False                    1362.0 1557.0
+  True                        4.0    9.0
+  [total]                  1366.0 1566.0
+
+tragedy
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+football
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+purposely
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+spend
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+tonight
+  False                    1343.0 1549.0
+  True                       23.0   17.0
+  [total]                  1366.0 1566.0
+
+enthusiasm
+  False                    1361.0 1557.0
+  True                        5.0    9.0
+  [total]                  1366.0 1566.0
+
+plague
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+shawn
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+london
+  False                    1358.0 1562.0
+  True                        8.0    4.0
+  [total]                  1366.0 1566.0
+
+trained
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+packed
+  False                    1365.0 1560.0
+  True                        1.0    6.0
+  [total]                  1366.0 1566.0
+
+everyday
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+native
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+writes
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+america
+  False                    1309.0 1492.0
+  True                       57.0   74.0
+  [total]                  1366.0 1566.0
+
+starting
+  False                    1356.0 1557.0
+  True                       10.0    9.0
+  [total]                  1366.0 1566.0
+
+minister
+  False                    1340.0 1552.0
+  True                       26.0   14.0
+  [total]                  1366.0 1566.0
+
+tapp
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+told
+  False                    1359.0 1556.0
+  True                        7.0   10.0
+  [total]                  1366.0 1566.0
+
+toyota
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+work
+  True                       22.0   35.0
+  False                    1344.0 1531.0
+  [total]                  1366.0 1566.0
+
+respected
+  False                    1361.0 1557.0
+  True                        5.0    9.0
+  [total]                  1366.0 1566.0
+
+fixing
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+lemon
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+voice
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+clinton
+  False                    1347.0 1552.0
+  True                       19.0   14.0
+  [total]                  1366.0 1566.0
+
+yesterday
+  False                    1346.0 1540.0
+  True                       20.0   26.0
+  [total]                  1366.0 1566.0
+
+“agent
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+growth
+  False                    1361.0 1554.0
+  True                        5.0   12.0
+  [total]                  1366.0 1566.0
+
+understood
+  False                    1365.0 1562.0
+  True                        1.0    4.0
+  [total]                  1366.0 1566.0
+
+hammer
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+samsung
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+crooked
+  False                    1351.0 1555.0
+  True                       15.0   11.0
+  [total]                  1366.0 1566.0
+
+watch
+  False                    1348.0 1544.0
+  True                       18.0   22.0
+  [total]                  1366.0 1566.0
+
+trade
+  False                    1348.0 1536.0
+  True                       18.0   30.0
+  [total]                  1366.0 1566.0
+
+foolish
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+million
+  False                    1347.0 1546.0
+  True                       19.0   20.0
+  [total]                  1366.0 1566.0
+
+loser
+  False                    1360.0 1560.0
+  True                        6.0    6.0
+  [total]                  1366.0 1566.0
+
+fun
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+syria
+  False                    1358.0 1560.0
+  True                        8.0    6.0
+  [total]                  1366.0 1566.0
+
+reporting
+  False                    1355.0 1554.0
+  True                       11.0   12.0
+  [total]                  1366.0 1566.0
+
+nearing
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+great
+  False                    1164.0 1321.0
+  True                      202.0  245.0
+  [total]                  1366.0 1566.0
+
+election
+  False                    1309.0 1507.0
+  True                       57.0   59.0
+  [total]                  1366.0 1566.0
+
+american
+  True                       79.0   94.0
+  False                    1287.0 1472.0
+  [total]                  1366.0 1566.0
+
+clown
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+started
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+bible
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+magnificent
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+thought
+  False                    1343.0 1546.0
+  True                       23.0   20.0
+  [total]                  1366.0 1566.0
+
+world
+  False                    1341.0 1527.0
+  True                       25.0   39.0
+  [total]                  1366.0 1566.0
+
+review
+  False                    1359.0 1560.0
+  True                        7.0    6.0
+  [total]                  1366.0 1566.0
+
+tax
+  False                    1280.0 1464.0
+  True                       86.0  102.0
+  [total]                  1366.0 1566.0
+
+report
+  False                    1338.0 1551.0
+  True                       28.0   15.0
+  [total]                  1366.0 1566.0
+
+cleared
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+company
+  False                    1342.0 1540.0
+  True                       24.0   26.0
+  [total]                  1366.0 1566.0
+
+healthcare
+  False                    1328.0 1530.0
+  True                       38.0   36.0
+  [total]                  1366.0 1566.0
+
+plant
+  False                    1361.0 1557.0
+  True                        5.0    9.0
+  [total]                  1366.0 1566.0
+
+victory
+  False                    1352.0 1551.0
+  True                       14.0   15.0
+  [total]                  1366.0 1566.0
+
+dirty
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+elizabeth
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+model
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+vet
+  False                    1360.0 1559.0
+  True                        6.0    7.0
+  [total]                  1366.0 1566.0
+
+bigotry
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+record
+  False                    1345.0 1528.0
+  True                       21.0   38.0
+  [total]                  1366.0 1566.0
+
+angry
+  False                    1363.0 1557.0
+  True                        3.0    9.0
+  [total]                  1366.0 1566.0
+
+bring
+  False                    1361.0 1555.0
+  True                        5.0   11.0
+  [total]                  1366.0 1566.0
+
+beat
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+outlook
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+opinion
+  False                    1361.0 1564.0
+  True                        5.0    2.0
+  [total]                  1366.0 1566.0
+
+learning
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+time
+  False                    1301.0 1483.0
+  True                       65.0   83.0
+  [total]                  1366.0 1566.0
+
+hater
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+watching
+  False                    1359.0 1554.0
+  True                        7.0   12.0
+  [total]                  1366.0 1566.0
+
+close
+  False                    1357.0 1557.0
+  True                        9.0    9.0
+  [total]                  1366.0 1566.0
+
+kim
+  False                    1363.0 1559.0
+  True                        3.0    7.0
+  [total]                  1366.0 1566.0
+
+alarmed
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+mexico
+  False                    1355.0 1546.0
+  True                       11.0   20.0
+  [total]                  1366.0 1566.0
+
+dopey
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+hillary
+  False                    1357.0 1561.0
+  True                        9.0    5.0
+  [total]                  1366.0 1566.0
+
+big
+  False                    1287.0 1456.0
+  True                       79.0  110.0
+  [total]                  1366.0 1566.0
+
+putin
+  False                    1356.0 1564.0
+  True                       10.0    2.0
+  [total]                  1366.0 1566.0
+
+prosperity
+  False                    1361.0 1557.0
+  True                        5.0    9.0
+  [total]                  1366.0 1566.0
+
+lordsugar
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+regs
+  False                    1361.0 1564.0
+  True                        5.0    2.0
+  [total]                  1366.0 1566.0
+
+kraft
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+meeting
+  False                    1330.0 1521.0
+  True                       36.0   45.0
+  [total]                  1366.0 1566.0
+
+falsely
+  False                    1364.0 1561.0
+  True                        2.0    5.0
+  [total]                  1366.0 1566.0
+
+gorsuch
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+email
+  False                    1361.0 1556.0
+  True                        5.0   10.0
+  [total]                  1366.0 1566.0
+
+represent
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+rice
+  False                    1365.0 1562.0
+  True                        1.0    4.0
+  [total]                  1366.0 1566.0
+
+macron
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+recorded
+  False                    1360.0 1563.0
+  True                        6.0    3.0
+  [total]                  1366.0 1566.0
+
+france
+  False                    1361.0 1555.0
+  True                        5.0   11.0
+  [total]                  1366.0 1566.0
+
+sadiq
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+action
+  False                    1355.0 1552.0
+  True                       11.0   14.0
+  [total]                  1366.0 1566.0
+
+source
+  False                    1357.0 1554.0
+  True                        9.0   12.0
+  [total]                  1366.0 1566.0
+
+bilateral
+  False                    1360.0 1562.0
+  True                        6.0    4.0
+  [total]                  1366.0 1566.0
+
+shape
+  False                    1362.0 1562.0
+  True                        4.0    4.0
+  [total]                  1366.0 1566.0
+
+taking
+  False                    1353.0 1553.0
+  True                       13.0   13.0
+  [total]                  1366.0 1566.0
+
+system
+  False                    1349.0 1551.0
+  True                       17.0   15.0
+  [total]                  1366.0 1566.0
+
+falling
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+make
+  False                    1335.0 1533.0
+  True                       31.0   33.0
+  [total]                  1366.0 1566.0
+
+olympics
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+won
+  False                    1355.0 1548.0
+  True                       11.0   18.0
+  [total]                  1366.0 1566.0
+
+obama
+  False                    1320.0 1537.0
+  True                       46.0   29.0
+  [total]                  1366.0 1566.0
+
+westervillepd
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+destroyed
+  False                    1359.0 1563.0
+  True                        7.0    3.0
+  [total]                  1366.0 1566.0
+
+foxandfriends
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+hour
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+rating
+  False                    1348.0 1548.0
+  True                       18.0   18.0
+  [total]                  1366.0 1566.0
+
+emmanuel
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+john
+  False                    1354.0 1551.0
+  True                       12.0   15.0
+  [total]                  1366.0 1566.0
+
+breakdown
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+year
+  False                    1286.0 1463.0
+  True                       80.0  103.0
+  [total]                  1366.0 1566.0
+
+dems
+  False                    1327.0 1514.0
+  True                       39.0   52.0
+  [total]                  1366.0 1566.0
+
+long
+  False                    1336.0 1531.0
+  True                       30.0   35.0
+  [total]                  1366.0 1566.0
+
+access
+  False                    1359.0 1563.0
+  True                        7.0    3.0
+  [total]                  1366.0 1566.0
+
+sheriff
+  False                    1360.0 1564.0
+  True                        6.0    2.0
+  [total]                  1366.0 1566.0
+
+mention
+  False                    1360.0 1561.0
+  True                        6.0    5.0
+  [total]                  1366.0 1566.0
+
+moment
+  False                    1362.0 1562.0
+  True                        4.0    4.0
+  [total]                  1366.0 1566.0
+
+place
+  False                    1347.0 1547.0
+  True                       19.0   19.0
+  [total]                  1366.0 1566.0
+
+collude
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+honor
+  False                    1324.0 1512.0
+  True                       42.0   54.0
+  [total]                  1366.0 1566.0
+
+hard
+  False                    1331.0 1518.0
+  True                       35.0   48.0
+  [total]                  1366.0 1566.0
+
+district
+  False                    1362.0 1560.0
+  True                        4.0    6.0
+  [total]                  1366.0 1566.0
+
+dealer
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+fired
+  False                    1357.0 1558.0
+  True                        9.0    8.0
+  [total]                  1366.0 1566.0
+
+shift
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+sugar
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+abc
+  False                    1359.0 1559.0
+  True                        7.0    7.0
+  [total]                  1366.0 1566.0
+
+product
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+probe
+  False                    1362.0 1565.0
+  True                        4.0    1.0
+  [total]                  1366.0 1566.0
+
+ranked
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+fail
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+verify
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+win
+  False                    1341.0 1522.0
+  True                       25.0   44.0
+  [total]                  1366.0 1566.0
+
+nixonwatergate
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+grandstand
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+cried
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+peril
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+reform
+  False                    1343.0 1545.0
+  True                       23.0   21.0
+  [total]                  1366.0 1566.0
+
+texas
+  False                    1355.0 1549.0
+  True                       11.0   17.0
+  [total]                  1366.0 1566.0
+
+rollout
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+begged
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+politician
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+condoleezza
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+“dumbest
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+arnold
+  False                    1362.0 1565.0
+  True                        4.0    1.0
+  [total]                  1366.0 1566.0
+
+fact
+  False                    1347.0 1543.0
+  True                       19.0   23.0
+  [total]                  1366.0 1566.0
+
+market
+  False                    1359.0 1561.0
+  True                        7.0    5.0
+  [total]                  1366.0 1566.0
+
+north
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+mexican
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+character
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+jon
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+positive
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+vega
+  False                    1358.0 1562.0
+  True                        8.0    4.0
+  [total]                  1366.0 1566.0
+
+nashville
+  False                    1364.0 1561.0
+  True                        2.0    5.0
+  [total]                  1366.0 1566.0
+
+forever
+  False                    1359.0 1562.0
+  True                        7.0    4.0
+  [total]                  1366.0 1566.0
+
+nipple
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+warm
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+real
+  False                    1353.0 1549.0
+  True                       13.0   17.0
+  [total]                  1366.0 1566.0
+
+war
+  False                    1361.0 1560.0
+  True                        5.0    6.0
+  [total]                  1366.0 1566.0
+
+spirit
+  False                    1361.0 1557.0
+  True                        5.0    9.0
+  [total]                  1366.0 1566.0
+
+statement
+  False                    1352.0 1553.0
+  True                       14.0   13.0
+  [total]                  1366.0 1566.0
+
+bowl
+  False                    1362.0 1565.0
+  True                        4.0    1.0
+  [total]                  1366.0 1566.0
+
+looked
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+arizona
+  False                    1356.0 1559.0
+  True                       10.0    7.0
+  [total]                  1366.0 1566.0
+
+incredible
+  False                    1347.0 1548.0
+  True                       19.0   18.0
+  [total]                  1366.0 1566.0
+
+money
+  False                    1343.0 1551.0
+  True                       23.0   15.0
+  [total]                  1366.0 1566.0
+
+chucktodd
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+morningmika
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+house
+  False                    1348.0 1539.0
+  True                       18.0   27.0
+  [total]                  1366.0 1566.0
+
+emmy
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+hell
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+condolence
+  False                    1357.0 1561.0
+  True                        9.0    5.0
+  [total]                  1366.0 1566.0
+
+call
+  False                    1352.0 1554.0
+  True                       14.0   12.0
+  [total]                  1366.0 1566.0
+
+lightweight
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+colluded
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+police
+  False                    1357.0 1559.0
+  True                        9.0    7.0
+  [total]                  1366.0 1566.0
+
+comeback
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+rust
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+aseansummit
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+countless
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+apprentice
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+gross
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+protect
+  False                    1354.0 1552.0
+  True                       12.0   14.0
+  [total]                  1366.0 1566.0
+
+difficult
+  False                    1363.0 1559.0
+  True                        3.0    7.0
+  [total]                  1366.0 1566.0
+
+starving
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+stewart
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+economy
+  False                    1347.0 1537.0
+  True                       19.0   29.0
+  [total]                  1366.0 1566.0
+
+warren
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+puerto
+  False                    1345.0 1556.0
+  True                       21.0   10.0
+  [total]                  1366.0 1566.0
+
+excellent
+  False                    1362.0 1563.0
+  True                        4.0    3.0
+  [total]                  1366.0 1566.0
+
+boy
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+kind
+  False                    1359.0 1563.0
+  True                        7.0    3.0
+  [total]                  1366.0 1566.0
+
+twist
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+taiwan
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+luck
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+super
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+saturday
+  False                    1362.0 1560.0
+  True                        4.0    6.0
+  [total]                  1366.0 1566.0
+
+helping
+  False                    1359.0 1560.0
+  True                        7.0    6.0
+  [total]                  1366.0 1566.0
+
+rally
+  False                    1357.0 1552.0
+  True                        9.0   14.0
+  [total]                  1366.0 1566.0
+
+foxnews
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+responder
+  False                    1352.0 1552.0
+  True                       14.0   14.0
+  [total]                  1366.0 1566.0
+
+nstock
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+ill
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+marco
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+flunky
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+politics
+  False                    1358.0 1558.0
+  True                        8.0    8.0
+  [total]                  1366.0 1566.0
+
+belt
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+dishonest
+  False                    1353.0 1558.0
+  True                       13.0    8.0
+  [total]                  1366.0 1566.0
+
+enjoy
+  False                    1347.0 1552.0
+  True                       19.0   14.0
+  [total]                  1366.0 1566.0
+
+true
+  False                    1353.0 1552.0
+  True                       13.0   14.0
+  [total]                  1366.0 1566.0
+
+ted
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+dead
+  False                    1354.0 1554.0
+  True                       12.0   12.0
+  [total]                  1366.0 1566.0
+
+drug
+  False                    1355.0 1552.0
+  True                       11.0   14.0
+  [total]                  1366.0 1566.0
+
+rocket
+  False                    1361.0 1563.0
+  True                        5.0    3.0
+  [total]                  1366.0 1566.0
+
+administration
+  False                    1333.0 1536.0
+  True                       33.0   30.0
+  [total]                  1366.0 1566.0
+
+job
+  False                    1277.0 1470.0
+  True                       89.0   96.0
+  [total]                  1366.0 1566.0
+
+deceit
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+united
+  False                    1355.0 1557.0
+  True                       11.0    9.0
+  [total]                  1366.0 1566.0
+
+fix
+  False                    1361.0 1553.0
+  True                        5.0   13.0
+  [total]                  1366.0 1566.0
+
+speak
+  False                    1362.0 1556.0
+  True                        4.0   10.0
+  [total]                  1366.0 1566.0
+
+judgement
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+jackson
+  False                    1361.0 1563.0
+  True                        5.0    3.0
+  [total]                  1366.0 1566.0
+
+made
+  False                    1336.0 1516.0
+  True                       30.0   50.0
+  [total]                  1366.0 1566.0
+
+nba
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+running
+  False                    1355.0 1557.0
+  True                       11.0    9.0
+  [total]                  1366.0 1566.0
+
+wall
+  False                    1346.0 1531.0
+  True                       20.0   35.0
+  [total]                  1366.0 1566.0
+
+quickly
+  False                    1365.0 1557.0
+  True                        1.0    9.0
+  [total]                  1366.0 1566.0
+
+interested
+  False                    1361.0 1563.0
+  True                        5.0    3.0
+  [total]                  1366.0 1566.0
+
+show
+  False                    1339.0 1551.0
+  True                       27.0   15.0
+  [total]                  1366.0 1566.0
+
+lower
+  False                    1357.0 1559.0
+  True                        9.0    7.0
+  [total]                  1366.0 1566.0
+
+afghanistan
+  False                    1364.0 1561.0
+  True                        2.0    5.0
+  [total]                  1366.0 1566.0
+
+building
+  False                    1361.0 1555.0
+  True                        5.0   11.0
+  [total]                  1366.0 1566.0
+
+god
+  False                    1356.0 1555.0
+  True                       10.0   11.0
+  [total]                  1366.0 1566.0
+
+growing
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+rico
+  False                    1345.0 1556.0
+  True                       21.0   10.0
+  [total]                  1366.0 1566.0
+
+enemy
+  False                    1361.0 1560.0
+  True                        5.0    6.0
+  [total]                  1366.0 1566.0
+
+miss
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+veteran
+  False                    1355.0 1557.0
+  True                       11.0    9.0
+  [total]                  1366.0 1566.0
+
+process
+  False                    1360.0 1557.0
+  True                        6.0    9.0
+  [total]                  1366.0 1566.0
+
+reversing
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+back
+  False                    1335.0 1518.0
+  True                       31.0   48.0
+  [total]                  1366.0 1566.0
+
+role
+  False                    1361.0 1564.0
+  True                        5.0    2.0
+  [total]                  1366.0 1566.0
+
+fbi
+  False                    1335.0 1544.0
+  True                       31.0   22.0
+  [total]                  1366.0 1566.0
+
+haven
+  False                    1365.0 1562.0
+  True                        1.0    4.0
+  [total]                  1366.0 1566.0
+
+decade
+  False                    1360.0 1558.0
+  True                        6.0    8.0
+  [total]                  1366.0 1566.0
+
+love
+  False                    1341.0 1541.0
+  True                       25.0   25.0
+  [total]                  1366.0 1566.0
+
+ban
+  False                    1351.0 1560.0
+  True                       15.0    6.0
+  [total]                  1366.0 1566.0
+
+word
+  False                    1356.0 1558.0
+  True                       10.0    8.0
+  [total]                  1366.0 1566.0
+
+winning
+  False                    1357.0 1558.0
+  True                        9.0    8.0
+  [total]                  1366.0 1566.0
+
+base
+  False                    1362.0 1557.0
+  True                        4.0    9.0
+  [total]                  1366.0 1566.0
+
+ngod
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+end
+  False                    1349.0 1542.0
+  True                       17.0   24.0
+  [total]                  1366.0 1566.0
+
+chrysler
+  False                    1364.0 1560.0
+  True                        2.0    6.0
+  [total]                  1366.0 1566.0
+
+phony
+  False                    1353.0 1549.0
+  True                       13.0   17.0
+  [total]                  1366.0 1566.0
+
+bright
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+grateful
+  False                    1362.0 1560.0
+  True                        4.0    6.0
+  [total]                  1366.0 1566.0
+
+tennessee
+  False                    1363.0 1557.0
+  True                        3.0    9.0
+  [total]                  1366.0 1566.0
+
+feel
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+increase
+  False                    1352.0 1554.0
+  True                       14.0   12.0
+  [total]                  1366.0 1566.0
+
+party
+  False                    1357.0 1556.0
+  True                        9.0   10.0
+  [total]                  1366.0 1566.0
+
+false
+  False                    1359.0 1559.0
+  True                        7.0    7.0
+  [total]                  1366.0 1566.0
+
+naive
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+biggest
+  False                    1347.0 1554.0
+  True                       19.0   12.0
+  [total]                  1366.0 1566.0
+
+rigged
+  False                    1359.0 1562.0
+  True                        7.0    4.0
+  [total]                  1366.0 1566.0
+
+lose
+  False                    1364.0 1561.0
+  True                        2.0    5.0
+  [total]                  1366.0 1566.0
+
+sale
+  False                    1363.0 1560.0
+  True                        3.0    6.0
+  [total]                  1366.0 1566.0
+
+justice
+  False                    1345.0 1555.0
+  True                       21.0   11.0
+  [total]                  1366.0 1566.0
+
+writer
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+joke
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+steel
+  False                    1361.0 1557.0
+  True                        5.0    9.0
+  [total]                  1366.0 1566.0
+
+correct
+  False                    1360.0 1560.0
+  True                        6.0    6.0
+  [total]                  1366.0 1566.0
+
+ohio
+  False                    1363.0 1557.0
+  True                        3.0    9.0
+  [total]                  1366.0 1566.0
+
+talk
+  False                    1350.0 1541.0
+  True                       16.0   25.0
+  [total]                  1366.0 1566.0
+
+overrated
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+family
+  False                    1339.0 1536.0
+  True                       27.0   30.0
+  [total]                  1366.0 1566.0
+
+complaining
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+horrible
+  False                    1363.0 1556.0
+  True                        3.0   10.0
+  [total]                  1366.0 1566.0
+
+eagle
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+baldwin
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+congressman
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+named
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+secretary
+  False                    1353.0 1555.0
+  True                       13.0   11.0
+  [total]                  1366.0 1566.0
+
+safe
+  False                    1351.0 1544.0
+  True                       15.0   22.0
+  [total]                  1366.0 1566.0
+
+heard
+  False                    1358.0 1561.0
+  True                        8.0    5.0
+  [total]                  1366.0 1566.0
+
+watched
+  False                    1364.0 1560.0
+  True                        2.0    6.0
+  [total]                  1366.0 1566.0
+
+poll
+  False                    1353.0 1554.0
+  True                       13.0   12.0
+  [total]                  1366.0 1566.0
+
+husband
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+result
+  False                    1358.0 1550.0
+  True                        8.0   16.0
+  [total]                  1366.0 1566.0
+
+medium
+  False                    1326.0 1531.0
+  True                       40.0   35.0
+  [total]                  1366.0 1566.0
+
+rubio
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+delay
+  False                    1360.0 1564.0
+  True                        6.0    2.0
+  [total]                  1366.0 1566.0
+
+forced
+  False                    1361.0 1556.0
+  True                        5.0   10.0
+  [total]                  1366.0 1566.0
+
+leadership
+  False                    1357.0 1560.0
+  True                        9.0    6.0
+  [total]                  1366.0 1566.0
+
+stolen
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+humor
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+low
+  False                    1354.0 1549.0
+  True                       12.0   17.0
+  [total]                  1366.0 1566.0
+
+contra
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+wage
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+life
+  False                    1340.0 1543.0
+  True                       26.0   23.0
+  [total]                  1366.0 1566.0
+
+talking
+  False                    1351.0 1559.0
+  True                       15.0    7.0
+  [total]                  1366.0 1566.0
+
+dangerous
+  False                    1359.0 1553.0
+  True                        7.0   13.0
+  [total]                  1366.0 1566.0
+
+doesn
+  False                    1351.0 1548.0
+  True                       15.0   18.0
+  [total]                  1366.0 1566.0
+
+order
+  False                    1346.0 1536.0
+  True                       20.0   30.0
+  [total]                  1366.0 1566.0
+
+admit
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+daca
+  False                    1353.0 1533.0
+  True                       13.0   33.0
+  [total]                  1366.0 1566.0
+
+madman
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+mess
+  False                    1362.0 1556.0
+  True                        4.0   10.0
+  [total]                  1366.0 1566.0
+
+evening
+  False                    1361.0 1551.0
+  True                        5.0   15.0
+  [total]                  1366.0 1566.0
+
+promised
+  False                    1362.0 1560.0
+  True                        4.0    6.0
+  [total]                  1366.0 1566.0
+
+strong
+  False                    1343.0 1543.0
+  True                       23.0   23.0
+  [total]                  1366.0 1566.0
+
+country
+  False                    1260.0 1471.0
+  True                      106.0   95.0
+  [total]                  1366.0 1566.0
+
+soldier
+  False                    1362.0 1561.0
+  True                        4.0    5.0
+  [total]                  1366.0 1566.0
+
+joyvilla
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+thinking
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+died
+  False                    1361.0 1561.0
+  True                        5.0    5.0
+  [total]                  1366.0 1566.0
+
+allowed
+  False                    1358.0 1558.0
+  True                        8.0    8.0
+  [total]                  1366.0 1566.0
+
+home
+  False                    1358.0 1550.0
+  True                        8.0   16.0
+  [total]                  1366.0 1566.0
+
+sacred
+  False                    1361.0 1565.0
+  True                        5.0    1.0
+  [total]                  1366.0 1566.0
+
+choker
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+son
+  False                    1359.0 1558.0
+  True                        7.0    8.0
+  [total]                  1366.0 1566.0
+
+hit
+  False                    1349.0 1549.0
+  True                       17.0   17.0
+  [total]                  1366.0 1566.0
+
+shame
+  False                    1362.0 1565.0
+  True                        4.0    1.0
+  [total]                  1366.0 1566.0
+
+neil
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+china
+  False                    1350.0 1534.0
+  True                       16.0   32.0
+  [total]                  1366.0 1566.0
+
+highest
+  False                    1356.0 1547.0
+  True                       10.0   19.0
+  [total]                  1366.0 1566.0
+
+nomination
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+put
+  False                    1348.0 1539.0
+  True                       18.0   27.0
+  [total]                  1366.0 1566.0
+
+staff
+  False                    1362.0 1562.0
+  True                        4.0    4.0
+  [total]                  1366.0 1566.0
+
+tested
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+cnn
+  False                    1356.0 1551.0
+  True                       10.0   15.0
+  [total]                  1366.0 1566.0
+
+leaving
+  False                    1353.0 1554.0
+  True                       13.0   12.0
+  [total]                  1366.0 1566.0
+
+obstruction
+  False                    1354.0 1563.0
+  True                       12.0    3.0
+  [total]                  1366.0 1566.0
+
+johnkasich
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+regulation
+  False                    1354.0 1551.0
+  True                       12.0   15.0
+  [total]                  1366.0 1566.0
+
+sander
+  False                    1360.0 1564.0
+  True                        6.0    2.0
+  [total]                  1366.0 1566.0
+
+phone
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+killing
+  False                    1363.0 1556.0
+  True                        3.0   10.0
+  [total]                  1366.0 1566.0
+
+prosecuted
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+forward
+  True                       23.0   31.0
+  False                    1343.0 1535.0
+  [total]                  1366.0 1566.0
+
+pardon
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+announce
+  False                    1363.0 1559.0
+  True                        3.0    7.0
+  [total]                  1366.0 1566.0
+
+stupid
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+knew
+  False                    1359.0 1556.0
+  True                        7.0   10.0
+  [total]                  1366.0 1566.0
+
+funny
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+night
+  False                    1345.0 1543.0
+  True                       21.0   23.0
+  [total]                  1366.0 1566.0
+
+sound
+  False                    1364.0 1563.0
+  True                        2.0    3.0
+  [total]                  1366.0 1566.0
+
+dreamt
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+wish
+  False                    1362.0 1565.0
+  True                        4.0    1.0
+  [total]                  1366.0 1566.0
+
+start
+  False                    1355.0 1553.0
+  True                       11.0   13.0
+  [total]                  1366.0 1566.0
+
+nytimes
+  False                    1365.0 1563.0
+  True                        1.0    3.0
+  [total]                  1366.0 1566.0
+
+press
+  False                    1354.0 1553.0
+  True                       12.0   13.0
+  [total]                  1366.0 1566.0
+
+presidency
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+speed
+  False                    1364.0 1565.0
+  True                        2.0    1.0
+  [total]                  1366.0 1566.0
+
+happy
+  False                    1340.0 1537.0
+  True                       26.0   29.0
+  [total]                  1366.0 1566.0
+
+arpaio
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+lewis
+  False                    1365.0 1562.0
+  True                        1.0    4.0
+  [total]                  1366.0 1566.0
+
+executive
+  False                    1360.0 1554.0
+  True                        6.0   12.0
+  [total]                  1366.0 1566.0
+
+wonderful
+  True                       32.0   28.0
+  False                    1334.0 1538.0
+  [total]                  1366.0 1566.0
+
+chairman
+  False                    1361.0 1565.0
+  True                        5.0    1.0
+  [total]                  1366.0 1566.0
+
+travel
+  False                    1355.0 1560.0
+  True                       11.0    6.0
+  [total]                  1366.0 1566.0
+
+wounded
+  False                    1361.0 1563.0
+  True                        5.0    3.0
+  [total]                  1366.0 1566.0
+
+good
+  False                    1320.0 1509.0
+  True                       46.0   57.0
+  [total]                  1366.0 1566.0
+
+pathetic
+  False                    1363.0 1564.0
+  True                        3.0    2.0
+  [total]                  1366.0 1566.0
+
+bannon
+  False                    1363.0 1563.0
+  True                        3.0    3.0
+  [total]                  1366.0 1566.0
+
+enter
+  False                    1363.0 1562.0
+  True                        3.0    4.0
+  [total]                  1366.0 1566.0
+
+massive
+  False                    1344.0 1529.0
+  True                       22.0   37.0
+  [total]                  1366.0 1566.0
+
+excluding
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+pleased
+  False                    1364.0 1562.0
+  True                        2.0    4.0
+  [total]                  1366.0 1566.0
+
+lost
+  False                    1355.0 1549.0
+  True                       11.0   17.0
+  [total]                  1366.0 1566.0
+
+reimbursement
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+story
+  False                    1333.0 1533.0
+  True                       33.0   33.0
+  [total]                  1366.0 1566.0
+
+judge
+  False                    1351.0 1561.0
+  True                       15.0    5.0
+  [total]                  1366.0 1566.0
+
+shooting
+  False                    1358.0 1555.0
+  True                        8.0   11.0
+  [total]                  1366.0 1566.0
+
+fortune
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+maga
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+corolla
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+failing
+  False                    1348.0 1547.0
+  True                       18.0   19.0
+  [total]                  1366.0 1566.0
+
+entire
+  False                    1356.0 1556.0
+  True                       10.0   10.0
+  [total]                  1366.0 1566.0
+
+news
+  False                    1342.0 1524.0
+  True                       24.0   42.0
+  [total]                  1366.0 1566.0
+
+coming
+  False                    1349.0 1548.0
+  True                       17.0   18.0
+  [total]                  1366.0 1566.0
+
+run
+  False                    1356.0 1554.0
+  True                       10.0   12.0
+  [total]                  1366.0 1566.0
+
+easy
+  False                    1360.0 1560.0
+  True                        6.0    6.0
+  [total]                  1366.0 1566.0
+
+sick
+  False                    1362.0 1562.0
+  True                        4.0    4.0
+  [total]                  1366.0 1566.0
+
+policy
+  False                    1356.0 1551.0
+  True                       10.0   15.0
+  [total]                  1366.0 1566.0
+
+sad
+  False                    1352.0 1556.0
+  True                       14.0   10.0
+  [total]                  1366.0 1566.0
+
+trip
+  False                    1361.0 1555.0
+  True                        5.0   11.0
+  [total]                  1366.0 1566.0
+
+mayor
+  False                    1355.0 1564.0
+  True                       11.0    2.0
+  [total]                  1366.0 1566.0
+
+coach
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+attack
+  False                    1351.0 1551.0
+  True                       15.0   15.0
+  [total]                  1366.0 1566.0
+
+sending
+  False                    1362.0 1564.0
+  True                        4.0    2.0
+  [total]                  1366.0 1566.0
+
+dnc
+  False                    1352.0 1556.0
+  True                       14.0   10.0
+  [total]                  1366.0 1566.0
+
+sympathy
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+dog
+  False                    1364.0 1564.0
+  True                        2.0    2.0
+  [total]                  1366.0 1566.0
+
+barney
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+day
+  False                    1307.0 1495.0
+  True                       59.0   71.0
+  [total]                  1366.0 1566.0
+
+baja
+  False                    1365.0 1564.0
+  True                        1.0    2.0
+  [total]                  1366.0 1566.0
+
+create
+  False                    1363.0 1561.0
+  True                        3.0    5.0
+  [total]                  1366.0 1566.0
+
+dumped
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+reason
+  False                    1355.0 1553.0
+  True                       11.0   13.0
+  [total]                  1366.0 1566.0
+
+saved
+  False                    1360.0 1558.0
+  True                        6.0    8.0
+  [total]                  1366.0 1566.0
+
+billion
+  False                    1348.0 1542.0
+  True                       18.0   24.0
+  [total]                  1366.0 1566.0
+
+happen
+  False                    1357.0 1556.0
+  True                        9.0   10.0
+  [total]                  1366.0 1566.0
+
+pol
+  False                    1363.0 1565.0
+  True                        3.0    1.0
+  [total]                  1366.0 1566.0
+
+nbcnews
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+incorrect
+  False                    1365.0 1562.0
+  True                        1.0    4.0
+  [total]                  1366.0 1566.0
+
+whitehouse
+  False                    1365.0 1565.0
+  [total]                  1365.0 1565.0
+
+foreign
+  False                    1362.0 1557.0
+  True                        4.0    9.0
+  [total]                  1366.0 1566.0
+
+opportunity
+  False                    1360.0 1557.0
+  True                        6.0    9.0
+  [total]                  1366.0 1566.0
+
+agent
+  False                    1361.0 1562.0
+  True                        5.0    4.0
+  [total]                  1366.0 1566.0
+
+
+
+Time taken to build model: 0.07 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        1584               54.0984 %
+Incorrectly Classified Instances      1344               45.9016 %
+Kappa statistic                          0.0636
+Mean absolute error                      0.4818
+Root mean squared error                  0.523 
+Relative absolute error                 96.805  %
+Root relative squared error            104.8527 %
+Total Number of Instances             2928     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,390    0,327    0,510      0,390    0,442      0,065    0,543     0,515     True
+                 0,673    0,610    0,558      0,673    0,610      0,065    0,543     0,557     False
+Weighted Avg.    0,541    0,478    0,536      0,541    0,532      0,065    0,543     0,538     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+  532  832 |    a = True
+  512 1052 |    b = False
+
