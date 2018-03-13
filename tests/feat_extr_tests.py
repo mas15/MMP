@@ -1,5 +1,4 @@
-from feature_extractor import FeatureExtractor
-from sentiment import SentimentAnalyser
+from markets.feature_extractor import FeatureExtractor
 import unittest
 
 

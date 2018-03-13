@@ -1,6 +1,9 @@
 from nltk.stem import WordNetLemmatizer
 import re
 import string
+import os
+
+STOP_LIST_FILE = os.path.join(os.path.dirname(__file__), "data/SmartStoplist.txt")
 punct_remove_translator = str.maketrans('', '', string.punctuation)
 
 
@@ -12,16 +15,14 @@ def load_stop_words(file_name):
 def len_words(text):
     return len(text.split())
 
+
 # rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
-
-# TODO jakies doesn
-
 
 class FeatureExtractor:
     def __init__(self):
         self.lemamatizer = WordNetLemmatizer()
         """ Features set containing unique words"""
-        self.vocabulary = set() # TODO return sorted
+        self.vocabulary = set()  # TODO return sorted
         self.phrases = set()
 
         self.stop_word_regex = self._create_stopwords_regex()
@@ -32,7 +33,7 @@ class FeatureExtractor:
         self.min_word_length = 3
 
     def _create_stopwords_regex(self):  # todo usunac self
-        self.stop_words = load_stop_words("SmartStoplist.txt")
+        self.stop_words = load_stop_words(STOP_LIST_FILE)
         words_to_remove_with_reg = [r"\b" + w + r"\b" for w in self.stop_words]
         words_to_remove_with_reg.append("\$?\d+[^\s]*")  # match number, $, %
         return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)

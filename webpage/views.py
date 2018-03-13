@@ -1,17 +1,10 @@
-from flask import Flask, render_template, request, flash
+from flask import render_template, request
+from markets.mmm import get_date_to_check_affect
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired, Length
 from wtforms.widgets import TextArea
-from sentiment import SentimentAnalyser
-from mmm import get_date_to_check_affect
-
-app = Flask(__name__, static_url_path='/static')
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = b'\xdfP\xdb\xc9\xe4K\x0fc\x10\x06\xca\xaf\x1f\xb3\x00x\xc6\xd2\x96 lg\xf7\xad'
-
-app.sent = SentimentAnalyser()
+from webpage import app
 
 
 class TweetTextForm(FlaskForm):
@@ -45,7 +38,7 @@ def euro_page():
 
 
 def get_graph_data():
-    from mmm import read_all_tweets, read_dollar_prices
+    from markets.mmm import read_all_tweets, read_dollar_prices
 
     all_tweets = read_all_tweets()
     dollar_prices = read_dollar_prices()
@@ -60,7 +53,3 @@ def get_graph_data():
     vals = [x for x in dollar_prices["Open"].values]
 
     return labels, vals, tweets_per_date
-
-
-if __name__ == "__main__":
-    app.run()

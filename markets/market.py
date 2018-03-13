@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
-from sentiment import SentimentAnalyser
-from feature_extractor import FeatureExtractor
+from markets.sentiment import SentimentAnalyser
+from markets.feature_extractor import FeatureExtractor
 
 def read_stock():
     result = []

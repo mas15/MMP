@@ -1,21 +1,24 @@
 from datetime import timedelta
-
 import pandas as pd
-
-from sentiment import SentimentAnalyser
+import os
+from markets.sentiment import SentimentAnalyser
 
 pd.set_option('display.width', 1500)
 
+ALL_TWEETS_FILE = os.path.join(os.path.dirname(__file__), "data/all_tweets.csv")
+USD_INDEX_FILE = os.path.join(os.path.dirname(__file__), "data/USDIndex.csv")
+FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
+
 
 def read_all_tweets():
-    all_tweets = pd.read_csv("all_tweets.csv")
+    all_tweets = pd.read_csv(ALL_TWEETS_FILE)
     all_tweets['Date'] = pd.to_datetime(all_tweets['Date'], format='%Y-%m-%d %H:%M:%S')
     # all_tweets.set_index('Id', inplace=True)   
     return all_tweets
 
 
 def read_dollar_prices():
-    dollar_prices = pd.read_csv("USDIndex.csv")
+    dollar_prices = pd.read_csv(USD_INDEX_FILE)
     dollar_prices['Date'] = pd.to_datetime(dollar_prices['Date'], format='%b %d, %Y')
     # dollar_prices.set_index('Date', inplace=True)
     dollar_prices.drop(columns=['Vol.'], inplace=True)
@@ -67,4 +70,4 @@ if __name__ == "__main__":
     result.drop(columns=['Text', 'Change'], inplace=True)
     print(result.head())
 
-    result.to_csv("features_with_effect.csv", index=False)
+    result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)
