@@ -52,7 +52,7 @@ if __name__ == "__main__":
     #     print(t.full_text)
     #
     #     fields = [t.id_str, t.full_text, t.created_at, 'neg']
-    #     with open('aaa.csv', 'a', encoding='utf8') as f:
+    #     with open('sentimental_tweets.csv', 'a', encoding='utf8') as f:
     #         writer = csv.writer(f, newline='')
     #         writer.writerow(fields)
 

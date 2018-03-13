@@ -69,7 +69,7 @@ if __name__ == "__main__":
     print(sent.extr.phrases)
     print("AV OF 40: " + str(sum / 40))
 
-    print("TRAINING ON ALL")
+    print("TRAINING ON ALL AND SAVING CL")
     sent.train_on_all(pos, neg)
     sent.save()
 

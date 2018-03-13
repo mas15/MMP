@@ -1,12 +1,14 @@
-
+import os
 import csv
 from random import shuffle
 from math import ceil
 
+CORPUS_FILE = os.path.join(os.path.dirname(__file__), "data/sentimental_tweets.csv")
+
 
 def get_pos_and_neg_tweets_with_sentiment_from_file():
     pos, neg = [], []
-    with open('aaa.csv', 'r', encoding='utf8') as f:
+    with open(CORPUS_FILE, 'r', encoding='utf8') as f:
         reader = csv.reader(f, delimiter=",")
         try:
             for line in reader:
@@ -14,7 +16,7 @@ def get_pos_and_neg_tweets_with_sentiment_from_file():
                 if sentiment == "pos":
                     pos.append((content, sentiment))
                 elif sentiment != "neg":
-                    print("ANI POS/NEG" + line)
+                    raise Exception("Error while reading sentiment in line: {}", line) # TODO test it
                 else:
                     neg.append((content, sentiment))
         except IndexError:
@@ -69,4 +71,5 @@ def get_train_and_test_data_for_k_run(pos_folds, neg_folds, k_run):
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
