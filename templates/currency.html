@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form class="form-group" method="POST">
+    <h4>Put tweet content please</h4>
+    {% with errors = form.tweet_content.errors %}
+        {% if errors %}
+            <div class="alert alert-warning" role="alert">  {{errors|join("\n")}} </div>
+        {% endif %}
+    {% endwith %}
+
+    {{ form.csrf_token }}
+    {{ form.tweet_content(class_="form-control", rows="3") }}
+    <input class="btn btn-outline-success my-2 my-sm-0" type="submit" aria-label="Submit" style="margin-top: 5px">
+</form>
+
+{% if sentiment %}
+<p>Sentiment : {{ sentiment }}</p>
+{% endif %}
+
+<h3>Tweets affect on {{ currency }} </h3>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js'></script>
+<script type="text/javascript">
+      {% include "mychart.js" %}
+</script>
+
+<canvas id="myChart" width="1500" height="500"></canvas>
+
+
+
+{% endblock %}

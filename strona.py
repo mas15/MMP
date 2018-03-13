@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash
 from flask_wtf import FlaskForm
 from wtforms import StringField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 from wtforms.widgets import TextArea
 from sentiment import SentimentAnalyser
 from mmm import get_date_to_check_affect
@@ -15,21 +15,36 @@ app.sent = SentimentAnalyser()
 
 
 class TweetTextForm(FlaskForm):
-    tweet_content = StringField('tweet_content', validators=[DataRequired()], widget=TextArea())
+    tweet_content = StringField('tweet_content', validators=[DataRequired(), Length(3, 300)], widget=TextArea())
 
 
 @app.route('/', methods=['POST', 'GET'])
-def index():
+@app.route('/index', methods=['POST', 'GET'])
+@app.route('/dollar', methods=['POST', 'GET'])
+def dollar_page():
     form = TweetTextForm()
-    sentiment, polarity, = "", ""
+    sentiment = ""
     if form.validate_on_submit():
         print(request.form["tweet_content"])
         sentiment = app.sent.analyse(request.form["tweet_content"])
-    return render_template('index.html', sentiment=sentiment, polarity=polarity, form=form)
+    labels, values, tweets = get_graph_data()
+    return render_template('currency.html', sentiment=sentiment, currency="dollar",
+                           form=form, labels=labels, values=values, tweets=tweets)
 
 
-@app.route('/graph')
-def graph():
+@app.route('/euro', methods=['POST', 'GET'])
+def euro_page():
+    form = TweetTextForm()
+    sentiment = ""
+    if form.validate_on_submit():
+        print(request.form["tweet_content"])
+        sentiment = app.sent.analyse(request.form["tweet_content"])
+    labels, values, tweets = get_graph_data()
+    return render_template('currency.html', sentiment=sentiment, currency="euro",
+                           form=form, labels=labels, values=values, tweets=tweets)
+
+
+def get_graph_data():
     from mmm import read_all_tweets, read_dollar_prices
 
     all_tweets = read_all_tweets()
@@ -41,10 +56,10 @@ def graph():
     dollar_prices["Date"] = dollar_prices["Date"].dt.strftime('%Y-%m-%d')
 
     tweets_per_date = dict(zip(all_tweets.Date, all_tweets.Text))
-    d = [x for x in dollar_prices["Date"].values]
-    v = [x for x in dollar_prices["Open"].values]
+    labels = [x for x in dollar_prices["Date"].values]
+    vals = [x for x in dollar_prices["Open"].values]
 
-    return render_template('wykres.html', labels=d[:50], values=v[:50], tweets=tweets_per_date)
+    return labels, vals, tweets_per_date
 
 
 if __name__ == "__main__":
