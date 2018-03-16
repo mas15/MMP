@@ -2,6 +2,7 @@ from datetime import timedelta
 import pandas as pd
 import os
 from markets.sentiment import SentimentAnalyser
+from markets.feature_extractor import FeatureExtractor
 
 pd.set_option('display.width', 1500)
 
@@ -30,8 +31,8 @@ def get_date_to_check_affect(d):
     return res.normalize()
 
 
-def mark_features(row):
-    features = sent.extr.extract_features(row['Text'])
+def mark_features(row, extr):
+    features = extr.extract_features(row['Text'])
     for f, is_in_tweet in features.items():
         if is_in_tweet:
             row[f] = True
@@ -57,13 +58,16 @@ if __name__ == "__main__":
     result.drop(columns=['Price', 'Open', 'High', 'Low', 'Date', 'Date_with_affect'], inplace=True)
 
     result["Sentiment"] = result["Text"].apply(sent.analyse)
+    print("Sentiment calculated")
 
-    features = list(sent.extr.phrases) + list(sent.extr.vocabulary)
-    for f in features:
+    extr = FeatureExtractor()
+    extr.build_vocabulary(result["Text"].tolist())
+    for f in extr.features:
         result[f] = False
 
     # move mark which features are in a tweet
-    result = result.apply(lambda x: mark_features(x), axis=1)
+    result = result.apply(lambda x: mark_features(x, extr), axis=1)
+    print("Features marked")
 
     # Change the change into True/False (dollar up, down)
     result["Dollar_up"] = result["Change"].apply(lambda x: x > 0)
@@ -71,3 +75,7 @@ if __name__ == "__main__":
     print(result.head())
 
     result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)
+
+    for col in result:
+        if not (True in result[col]):
+            print(col)

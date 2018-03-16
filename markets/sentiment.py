@@ -24,7 +24,8 @@ class SentimentAnalyser:
             self.extr = pickle.load(f)
 
     def train(self, train_data):
-        self.extr.build_vocabulary(train_data)
+        only_tweets = [t for t, s in train_data]
+        self.extr.build_vocabulary(only_tweets)
         training_features = nltk.classify.apply_features(self.extr.extract_features, train_data)  # labeled = True
         self.cl = NaiveBayesClassifier.train(training_features)
 
@@ -60,7 +61,7 @@ if __name__ == "__main__":
     sent = SentimentAnalyser()
 
     # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
-
+    # TODO pojawia doesn....
     sum = 0
     for i in range(40):
         sum += sent.run_k_fold(pos, neg)

@@ -1,4 +1,6 @@
+from nltk.tokenize import sent_tokenize
 from nltk.stem import WordNetLemmatizer
+from sortedcontainers import SortedSet
 import re
 import string
 import os
@@ -22,8 +24,8 @@ class FeatureExtractor:
     def __init__(self):
         self.lemamatizer = WordNetLemmatizer()
         """ Features set containing unique words"""
-        self.vocabulary = set()  # TODO return sorted
-        self.phrases = set()
+        self.vocabulary = set()
+        self.phrases = SortedSet(key=phrases_sorting_key)
 
         self.stop_word_regex = self._create_stopwords_regex()
 
@@ -32,6 +34,10 @@ class FeatureExtractor:
         self.min_keyword_frequency = 2
         self.min_word_length = 3
 
+    @property
+    def features(self):
+        return list(self.phrases) + list(self.vocabulary)
+
     def _create_stopwords_regex(self):  # todo usunac self
         self.stop_words = load_stop_words(STOP_LIST_FILE)
         words_to_remove_with_reg = [r"\b" + w + r"\b" for w in self.stop_words]
@@ -39,36 +45,32 @@ class FeatureExtractor:
         return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)
 
     def extract_features(self, tweet):
-        def _extract_phrase(text, phrase):
-            text, is_found = re.subn(phrase, '', text)
-            return text, bool(is_found)
-
-        features = {}
+        features = dict.fromkeys(self.phrases, False)
         sentences = preprocess(tweet)
 
         # TODO tutaj np sprawdzanie phrsaes czy spelniaja wymogi
 
-        words = set()
+        extracted_words = set()
         for s in sentences:
-            for p in self.phrases:
-                s, features[p] = _extract_phrase(s, p)
+            s, found_phrases = extract_phrases_from_text(s, self.phrases)
+            for p in found_phrases:
+                features[p] = True
             # sentence has no feature phrases now
             chunks = self.split_by_stop_words(s)
             for c in chunks:
                 lemmatized = self.lemamatize_many(c.split())
-                words.update(lemmatized)
+                extracted_words.update(lemmatized)
 
         for w in self.vocabulary:
-            features[w] = (w in words)
+            features[w] = (w in extracted_words)
         return features
 
-    def build(self, dataset):
-        all_tweets = [t for t, s in dataset]
-        sentences = preprocess_many(all_tweets)
-        candidates, words = self.generate_phrases(sentences)
+    def build(self, tweets):
+        sentences = preprocess_many(tweets)
+        phrases, words = self.generate_phrases(sentences)
         words = self.lemamatize_many(words)
         words = [w for w in words if len(w) >= self.min_word_length]
-        return candidates, words
+        return phrases, words
 
     def split_by_stop_words_many(self, texts):
         result = []
@@ -82,21 +84,29 @@ class FeatureExtractor:
         phrases = [p.strip() for p in phrases]
         return [p for p in phrases if p]
 
-    def is_phrase_length_ok(self, p):
-        length_ok = self.min_words_in_feature <= len_words(p) <= self.max_words_in_feature
-        return length_ok
-
     def lemamatize_many(self, words):
         return [self.lemamatizer.lemmatize(w) for w in words]
 
-    def extract_not_matching_candidates(self, phrase):
-        candidates, rest = set(), set()
-        for p in phrase:
-            if phrase.count(p) >= self.min_keyword_frequency and self.is_phrase_length_ok(p):
-                candidates.add(p)
+    def is_phrase_acceptable(self, candidate, candidates):
+        has_occured_enough = candidates.count(candidate) >= self.min_keyword_frequency
+        is_phrase_length_ok = self.min_words_in_feature <= len_words(candidate) <= self.max_words_in_feature
+        return has_occured_enough and is_phrase_length_ok
+
+    def extract_not_matching_candidates(self, candidates):
+        phrases = SortedSet(key=phrases_sorting_key)
+        rest = set()
+
+        for c in candidates:
+            if self.is_phrase_acceptable(c, candidates):
+                phrases.add(c)
             else:
-                rest.update(p.split())
-        return candidates, rest
+                rest.add(c)
+
+        rest_with_removed_phrases = set()  # remove phrases from non matching candidates
+        for r in rest:
+            r, _ = extract_phrases_from_text(r, phrases)
+            rest_with_removed_phrases.update(r.split())
+        return phrases, rest_with_removed_phrases
 
     def generate_phrases(self, tweets):
         phrases = []
@@ -111,10 +121,11 @@ class FeatureExtractor:
         return candidates, rest
 
     def build_vocabulary(self, dataset):
-        self.phrases, all_words = self.build(dataset)
+        found_phrases, all_words = self.build(dataset)
+        self.phrases.update(found_phrases)
         self.vocabulary = set(all_words)
         print('VOC LENGTH' + str(len(self.vocabulary)))
-        print('PHr LENGTH' + str(len(self.phrases)))
+        print('PHRASES LENGTH' + str(len(self.phrases)))
 
     # def extract_adjoined_candidates(self, tweets):  # only one that is found is "build the wall"
     #     candidates = []
@@ -136,6 +147,23 @@ class FeatureExtractor:
 
     def is_stopword(self, w):
         return w in self.stop_words
+
+
+def phrases_sorting_key(text):
+    """
+    >>> phrases_sorting_key("Big winner"), phrases_sorting_key("Big win")
+    ((-2, -10), (-2, -7))
+    """
+    return -len(text.split()), -len(text)
+
+
+def extract_phrases_from_text(text, phrases):
+    found = []
+    for p in phrases:
+        text, is_found = re.subn(p, '', text)
+        if is_found:
+            found.append(p)
+    return text, found
 
 
 def clear_from_punct(phrase):
@@ -167,9 +195,11 @@ def preprocess(tweet):
     ['one sentence', 'another part', 'and one more']
     """
 
-    def _split_sentences(text):
-        sentence_delimiters = re.compile(u'[\\[\\]\n.!?,;:\t\\-\\"\\(\\)\\\'\u2019\u2013]')
+    def _split_sentences(text): # to jest z rake zajebane
+        sentence_delimiters = re.compile(u'[\[\]\n\.!\?,;\/:\t\"\(\)\u2019\u2013]|\s[\-]|[\-]\s')
         sentences = sentence_delimiters.split(text)
+        #sentences = sent_tokenize(text)
+        #sentences = [s.rstrip('?:!.,;') for s in sentences]
         sentences = [s.strip() for s in sentences]
         return sentences
 

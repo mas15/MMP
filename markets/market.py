@@ -3,6 +3,7 @@ from datetime import datetime
 from markets.sentiment import SentimentAnalyser
 from markets.feature_extractor import FeatureExtractor
 
+
 def read_stock():
     result = []
     with open('USDIndex.csv', 'r', encoding='utf8') as f:
@@ -19,7 +20,7 @@ def read_stock():
 
 
 def read_tweets():
-    res =[]
+    res = []
     with open('all_tweets.csv', 'r', encoding='utf8') as f:
         reader = csv.reader(f, delimiter=",")
         try:
@@ -32,11 +33,10 @@ def read_tweets():
         return res
 
 
-
-tweets = read_tweets()
+tweets = [t for t, s in read_tweets()]
 # tweets = [t for t, d in tweets_with_dates] # todo use dates
 ex = FeatureExtractor()
-ex.build_vocabulary(tweets) # todo uzywac tylko tweets bez sent/dates
+ex.build_vocabulary(tweets)  # todo uzywac tylko tweets bez sent/dates
 print("VOCABULARY:")
 print(len(ex.vocabulary))
 # print(ex.vocabulary)
@@ -50,16 +50,16 @@ sent.load()
 from collections import OrderedDict
 
 with open('temp.csv', 'w', encoding='utf-8') as fw:
-        writer = csv.writer(fw)
-        first = True
-        for t, _ in tweets:
-            features = ex.extract_features(t)
-            features = OrderedDict(sorted(features.items()))
+    writer = csv.writer(fw)
+    first = True
+    for t, _ in tweets:
+        features = ex.extract_features(t)
+        features = OrderedDict(sorted(features.items()))
 
-            sentiment = sent.analyse(t)
-            line = [sentiment] + [v for v in features.values()]
+        sentiment = sent.analyse(t)
+        line = [sentiment] + [v for v in features.values()]
 
-            if first:
-                writer.writerow(["sentiment"] + [k for k in features.keys()])
-            writer.writerow(line)
-            first = False
+        if first:
+            writer.writerow(["sentiment"] + [k for k in features.keys()])
+        writer.writerow(line)
+        first = False
