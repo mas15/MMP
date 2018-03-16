@@ -1,5 +1,5 @@
 pandas
 flask
-wtforms
+flask_wtf
 nltk
 sortedcontainers

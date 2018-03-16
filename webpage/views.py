@@ -49,7 +49,7 @@ def get_graph_data():
     dollar_prices["Date"] = dollar_prices["Date"].dt.strftime('%Y-%m-%d')
 
     tweets_per_date = dict(zip(all_tweets.Date, all_tweets.Text))
-    labels = [x for x in dollar_prices["Date"].values]
-    vals = [x for x in dollar_prices["Open"].values]
+    labels = dollar_prices["Date"].values.tolist()
+    vals = dollar_prices["Open"].values.tolist()
 
     return labels, vals, tweets_per_date

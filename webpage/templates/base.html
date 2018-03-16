@@ -12,9 +12,9 @@
 <body>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="{{url_for('dollar_page')}}">
-        <img src="{{url_for('static', filename='dollar_logo.png')}}" width="30" height="30"
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ url_for('dollar_page') }}">
+        <img src="{{ url_for('static', filename='dollar_logo.png') }}" width="30" height="30"
              class="d-inline-block align-top" alt="">
         Trump Tweets vs The Markets
     </a>
@@ -25,13 +25,14 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="{{url_for('dollar_page')}}">Dollar <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ url_for('dollar_page') }}">Dollar <span
+                        class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('euro_page')}}">Euro</a>
+                <a class="nav-link" href="{{ url_for('euro_page') }}">Euro</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{url_for('euro_page')}}">Pound</a>
+                <a class="nav-link" href="{{ url_for('euro_page') }}">Pound</a>
             </li>
         </ul>
     </div>
@@ -41,7 +42,6 @@
 <div class="jumbotron">
 
     <div class="container">
-
         {% block content %}
         {% endblock %}
     </div>

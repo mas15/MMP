@@ -21,6 +21,7 @@ def read_all_tweets():
 def read_dollar_prices():
     dollar_prices = pd.read_csv(USD_INDEX_FILE)
     dollar_prices['Date'] = pd.to_datetime(dollar_prices['Date'], format='%b %d, %Y')
+    dollar_prices = dollar_prices[(dollar_prices['Date'].dt.year >= 2017)]
     # dollar_prices.set_index('Date', inplace=True)
     dollar_prices.drop(columns=['Vol.'], inplace=True)
     return dollar_prices
