@@ -1,5 +1,5 @@
 from flask import render_template, request
-from markets.mmm import get_date_to_check_affect
+from markets.association import get_date_to_check_affect
 from flask_wtf import FlaskForm
 from wtforms import StringField
 from wtforms.validators import DataRequired, Length
@@ -38,7 +38,7 @@ def euro_page():
 
 
 def get_graph_data():
-    from markets.mmm import read_all_tweets, read_dollar_prices
+    from markets.association import read_all_tweets, read_dollar_prices
 
     all_tweets = read_all_tweets()
     dollar_prices = read_dollar_prices()

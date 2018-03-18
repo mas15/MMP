@@ -120,11 +120,11 @@ class TestFeatureExtractor(unittest.TestCase):
         self.assertEqual(['madman', 'mind', 'starving'], sorted(rest))
 
     def test_splitting_sentences(self):
-        sent = "Business is looking better than ever with business enthusiasm at record levels. " \
+        sent = "@DRUDGE_REPORT: Business is looking #better than ever with @business enthusiasm at record levels. " \
             "Stock Market at an all-time high. That doesn't just happen! Mexico, wall"
         result = preprocess(sent)
-        exp_result = ['business is looking better than ever with business enthusiasm at record levels',
-                      'stock market at an all-time high', "that doesn't just happen", 'mexico', 'wall']
+        exp_result = ['drudge report', 'business is looking better than ever with business enthusiasm at record levels',
+                      'stock market at an alltime high', "that doesn't just happen", 'mexico', 'wall']
         self.assertEqual(exp_result, result)
 
 

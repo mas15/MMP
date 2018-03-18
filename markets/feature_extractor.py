@@ -21,7 +21,7 @@ def len_words(text):
 # rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
 
 class FeatureExtractor:
-    def __init__(self):
+    def __init__(self, min_keyword_frequency=2):
         self.lemamatizer = WordNetLemmatizer()
         """ Features set containing unique words"""
         self.vocabulary = set()
@@ -31,7 +31,7 @@ class FeatureExtractor:
 
         self.max_words_in_feature = 3
         self.min_words_in_feature = 2
-        self.min_keyword_frequency = 2
+        self.min_keyword_frequency = min_keyword_frequency
         self.min_word_length = 3
 
     @property
@@ -124,8 +124,8 @@ class FeatureExtractor:
         found_phrases, all_words = self.build(dataset)
         self.phrases.update(found_phrases)
         self.vocabulary = set(all_words)
-        print('VOC LENGTH' + str(len(self.vocabulary)))
-        print('PHRASES LENGTH' + str(len(self.phrases)))
+        print('VOCABULARY LEN ' + str(len(self.vocabulary)))
+        print('PHRASES LENGTH ' + str(len(self.phrases)))
 
     # def extract_adjoined_candidates(self, tweets):  # only one that is found is "build the wall"
     #     candidates = []
@@ -191,19 +191,22 @@ def preprocess_many(tweets):
 def preprocess(tweet):
     """
     Lowers all text and splits into parts delimited by . or , or ? etc.
-    >>> preprocess("One sentence. Another Part, and one more?")
-    ['one sentence', 'another part', 'and one more']
+    >>> preprocess("One #sentence. Another Part, and one mo-re? @DRUDGE_REPORT: aaa")
+    ['one sentence', 'another part', 'and one more', 'drudge report', 'aaa']
     """
 
-    def _split_sentences(text): # to jest z rake zajebane
-        sentence_delimiters = re.compile(u'[\[\]\n\.!\?,;\/:\t\"\(\)\u2019\u2013]|\s[\-]|[\-]\s')
-        sentences = sentence_delimiters.split(text)
-        #sentences = sent_tokenize(text)
-        #sentences = [s.rstrip('?:!.,;') for s in sentences]
-        sentences = [s.strip() for s in sentences]
-        return sentences
+    sentence_delimiters = re.compile(u'[\[\]\n\.!\?,;\/:\t\"\(\)\u2019\u2013]|\s[\-]|[\-]\s')
+    chars_to_remove = re.compile('[@#\-]')
+    chars_to_replace = re.compile('[_]')
 
-    return _split_sentences(tweet.lower())
+    tweet = tweet.lower()
+    sentences = sentence_delimiters.split(tweet)
+    # sentences = sent_tokenize(text)
+    # sentences = [s.rstrip('?:!.,;') for s in sentences]
+    sentences = [s.strip() for s in sentences]
+    sentences = [re.sub(chars_to_remove, "", s) for s in sentences] # todo czy da sie szybciej?
+    sentences = [re.sub(chars_to_replace, " ", s) for s in sentences]
+    return sentences
 
 
 if __name__ == "__main__":

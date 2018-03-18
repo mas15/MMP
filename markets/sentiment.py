@@ -60,8 +60,8 @@ if __name__ == "__main__":
     pos, neg = get_pos_and_neg_tweets_with_sentiment_from_file()
     sent = SentimentAnalyser()
 
+    # todo lemmatize phrases
     # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
-    # TODO pojawia doesn....
     sum = 0
     for i in range(40):
         sum += sent.run_k_fold(pos, neg)
