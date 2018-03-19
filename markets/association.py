@@ -99,7 +99,21 @@ def drop_infrequent_features(result):
     return result
 
 
+def drop_instances_without_features(df):
+    df = df[(df.drop(columns=["Change", "Sentiment"]).T != 0).any()]
+    return df
+
+
+def calculate_treshold(df):
+    from matplotlib import pyplot as plt
+    print(df.head())
+    s = df["Change"]
+    s.plot.kde()
+    plt.show()
+
+
 if __name__ == "__main__":
+
     all_tweets = read_all_tweets()
     dollar_prices = read_dollar_prices()
     sent = SentimentAnalyser()
@@ -108,22 +122,26 @@ if __name__ == "__main__":
     result = set_date_with_effect(all_tweets, dollar_prices)
     #result.to_csv("data/tweets_with_prices.csv", index=False)
 
+    # treshold = calculate_treshold(dollar_prices)
+
+
     result = calculate_sentiment(result)
     print("Sentiment calculated")
 
     result = extract_features_from_text(result)
     print("Features marked")
 
-    result = set_currency_change(result)
+    result = set_currency_change(result) #, treshold)
     print("Dollar change set")
     print(result.head())
 
     result = drop_infrequent_features(result)
 
-    # cols_to_leave = [line.strip() for line in open("data/attr_after_6_wr_nb_bf", 'r')]
-    # cols_to_leave += ["Sentiment", "Change"]
-    # cols_to_drop = [c for c in list(result) if c not in cols_to_leave]
-    # result.drop(columns=cols_to_drop, axis=1, inplace=True)
+    cols_to_leave = [line.strip() for line in open("data/attr_after_6_wr_nb_bf", 'r')]
+    cols_to_leave += ["Sentiment", "Change"]
+    cols_to_drop = [c for c in list(result) if c not in cols_to_leave]
+    result.drop(columns=cols_to_drop, axis=1, inplace=True)
 
+    result = drop_instances_without_features(result)
     # save to file
     result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)
