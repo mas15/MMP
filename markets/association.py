@@ -82,6 +82,9 @@ def set_currency_change(result):
             return "NC"
 
     result["Change"] = result["Change"].apply(get_change)
+    cols = list(result)
+    cols.append(cols.pop(cols.index('Change')))
+    result = result.reindex(columns=cols)
     return result
 
 
@@ -117,10 +120,10 @@ if __name__ == "__main__":
 
     result = drop_infrequent_features(result)
 
-    cols_to_leave = [line.strip() for line in open("data/attr_after_6_wr_nb_bf", 'r')]
-    cols_to_leave += ["Sentiment", "Change"]
-    cols_to_drop = [c for c in list(result) if c not in cols_to_leave]
-    result.drop(columns=cols_to_drop, axis=1, inplace=True)
+    # cols_to_leave = [line.strip() for line in open("data/attr_after_6_wr_nb_bf", 'r')]
+    # cols_to_leave += ["Sentiment", "Change"]
+    # cols_to_drop = [c for c in list(result) if c not in cols_to_leave]
+    # result.drop(columns=cols_to_drop, axis=1, inplace=True)
 
     # save to file
     result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)

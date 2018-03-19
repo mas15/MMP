@@ -7,6 +7,9 @@ import os
 import pandas as pd
 import pickle
 
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+
 ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
 FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
 pd.set_option('display.width', 1500)
@@ -20,6 +23,11 @@ def build_model():
     df = df.drop(columns=['Change'])
     x = df.values
 
+
+
+    x = SelectKBest(chi2, k=117).fit_transform(x, y)
+
+
     sum_train, sum_test = 0, 0
 
     # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=69)
@@ -29,8 +37,8 @@ def build_model():
         x_train, x_test = x[train_index], x[test_index]
         y_train, y_test = y[train_index], y[test_index]
 
-        #model = MultinomialNB()
-        model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+        model = MultinomialNB()
+        #model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
         model.fit(x_train, y_train.ravel())
 
         accuracy_on_train = accuracy_score(y_train, model.predict(x_train))
@@ -45,7 +53,8 @@ def build_model():
     print()
     return model
 
-
+# TODO remove empty rows
+# TODO add st dev as a treshold
 def save_model(model):
     with open(ASSOCIATION_MODEL_FILE, "wb") as f:
         pickle.dump(model, f)
