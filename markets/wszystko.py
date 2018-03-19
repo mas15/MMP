@@ -92,70 +92,49 @@ if __name__ == "__main__":
     # cols_to_drop = [c for c in list(result) if c not in cols_to_leave]
     # result.drop(columns=cols_to_drop, axis=1, inplace=True)
 
-    t = 1
-    best = 0
-    best_t = 0
-    result_2 = result.copy()
-    while t < 3:
-        result = result_2.copy()
-
-        features = result.drop(columns=["Sentiment", "Change", "Text"])
-        cols_with_nr_of_trues = [(col, (features.loc[features[col] == True, col].count())) for col in features]
-        cols_with_nr_of_trues.sort(key=lambda t: t[1])
-        cols_to_drop = [c[0] for c in cols_with_nr_of_trues if c[1] <= t]
-        print("Dropping " + str(len(cols_to_drop)))
-        print(cols_to_drop)
-        result.drop(columns=cols_to_drop, axis=1, inplace=True)
-
-        # Change the change into True/False (dollar up, down)
-        result["Dollar_up"] = result["Change"].apply(get_change, args=(0.05,))
-        result.drop(columns=['Text', 'Change'], inplace=True)
-        #print(result.head())
-
-        print("Nr of NC: " + str(result.loc[result["Dollar_up"] == "NC", "Dollar_up"].count()))
-        u = result.loc[result["Dollar_up"] == "Up", "Dollar_up"].count()
-        d = result.loc[result["Dollar_up"] == "Down", "Dollar_up"].count()
-        # u = u if u>d else d
-        # zeroR = u/result["Dollar_up"].count()
-        # print("zeroR: " + str(zeroR))
 
 
-        y = result['Dollar_up'].values
-        result = result.drop(columns=['Dollar_up'])
-        x = result.values
+    features = result.drop(columns=["Sentiment", "Change", "Text"])
+    cols_with_nr_of_trues = [(col, (features.loc[features[col] == True, col].count())) for col in features]
+    cols_with_nr_of_trues.sort(key=lambda t: t[1])
+    cols_to_drop = [c[0] for c in cols_with_nr_of_trues if c[1] <= 6]
+    print("Dropping " + str(len(cols_to_drop)))
+    print(cols_to_drop)
+    result.drop(columns=cols_to_drop, axis=1, inplace=True)
+
+    # Change the change into True/False (dollar up, down)
+    result["Dollar_up"] = result["Change"].apply(get_change, args=(0.05,))
+    result.drop(columns=['Text', 'Change'], inplace=True)
+    #print(result.head())
+
+    print("Nr of NC: " + str(result.loc[result["Dollar_up"] == "NC", "Dollar_up"].count()))
+    u = result.loc[result["Dollar_up"] == "Up", "Dollar_up"].count()
+    d = result.loc[result["Dollar_up"] == "Down", "Dollar_up"].count()
+    # u = u if u>d else d
+    # zeroR = u/result["Dollar_up"].count()
+    # print("zeroR: " + str(zeroR))
 
 
-        sum_train, sum_test = 0, 0
+    y = result['Dollar_up'].values
+    result = result.drop(columns=['Dollar_up'])
+    x = result.values
 
-        kf = KFold(n_splits=10, random_state=123)
-        for train_index, test_index in kf.split(x):
-            x_train, x_test = x[train_index], x[test_index]
-            y_train, y_test = y[train_index], y[test_index]
+    sum_train, sum_test = 0, 0
 
-            # nb_model = GaussianNB()
-            nb_model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
-            nb_model.fit(x_train, y_train.ravel())
+    kf = KFold(n_splits=10, random_state=123)
+    for train_index, test_index in kf.split(x):
+        x_train, x_test = x[train_index], x[test_index]
+        y_train, y_test = y[train_index], y[test_index]
 
-            accuracy_on_train = accuracy_score(y_train, nb_model.predict(x_train))
-            accuracy_on_test = accuracy_score(y_test, nb_model.predict(x_test))
+        # nb_model = GaussianNB()
+        nb_model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+        nb_model.fit(x_train, y_train.ravel())
 
-            sum_train += accuracy_on_train
-            sum_test += accuracy_on_test
+        accuracy_on_train = accuracy_score(y_train, nb_model.predict(x_train))
+        accuracy_on_test = accuracy_score(y_test, nb_model.predict(x_test))
 
-        print()
-        print(t)
-        print(sum_train /10)
-        accu = sum_test / 10
-        print(accu)
-        print()
-        if accu > best:
-            best = accu
-            best_t = t
+        sum_train += accuracy_on_train
+        sum_test += accuracy_on_test
 
-        t+=1
-
-    print()
-    print()
-    print("BEST")
-    print(best_t)
-    print(best)
+    print(sum_train /10)
+    print(sum_test / 10)

@@ -81,16 +81,14 @@ def set_currency_change(result):
         else:
             return "NC"
 
-    # Change the change into True/False (dollar up, down)
-    result["Dollar_up"] = result["Change"].apply(get_change)
-    result.drop(columns=['Change'], inplace=True)
+    result["Change"] = result["Change"].apply(get_change)
     return result
 
 
 def drop_infrequent_features(result):
-    features = result.drop(columns=["Dollar_up", "Sentiment"])
+    features = result.drop(columns=["Change", "Sentiment"])
     cols_with_nr_of_trues = [(col, (features.loc[features[col] == True, col].count())) for col in features]
-    cols_with_nr_of_trues.sort(key=lambda t: t[1])  # todo to mozna usunac
+    #cols_with_nr_of_trues.sort(key=lambda t: t[1])  # todo to mozna usunac
     cols_to_drop = [c[0] for c in cols_with_nr_of_trues if c[1] <= MIN_FEATURE_OCCURENCIES]  # i c!=change
     print("Dropping " + str(len(cols_to_drop)))
     print(cols_to_drop)
@@ -119,10 +117,10 @@ if __name__ == "__main__":
 
     result = drop_infrequent_features(result)
 
-    # cols_to_leave = [line.strip() for line in open("data/attr_after_6_wr_nb_bf", 'r')]
-    # cols_to_leave += ["Sentiment", "Dollar_up"]
-    # cols_to_drop = [c for c in list(result) if c not in cols_to_leave]
-    # result.drop(columns=cols_to_drop, axis=1, inplace=True)
+    cols_to_leave = [line.strip() for line in open("data/attr_after_6_wr_nb_bf", 'r')]
+    cols_to_leave += ["Sentiment", "Change"]
+    cols_to_drop = [c for c in list(result) if c not in cols_to_leave]
+    result.drop(columns=cols_to_drop, axis=1, inplace=True)
 
     # save to file
     result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)
