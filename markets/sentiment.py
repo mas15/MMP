@@ -66,8 +66,8 @@ if __name__ == "__main__":
     for i in range(40):
         sum += sent.run_k_fold(pos, neg)
     print("VOCABULARY:")
-    print(sent.extr.vocabulary)
-    print(sent.extr.phrases)
+    print(sent.extr._vocabulary)
+    print(sent.extr._phrases)
     print("AV OF 40: " + str(sum / 40))
 
     print("TRAINING ON ALL AND SAVING CL")

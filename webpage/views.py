@@ -11,29 +11,21 @@ class TweetTextForm(FlaskForm):
     tweet_content = StringField('tweet_content', validators=[DataRequired(), Length(3, 300)], widget=TextArea())
 
 
-@app.route('/', methods=['POST', 'GET'])
-@app.route('/index', methods=['POST', 'GET'])
-@app.route('/dollar', methods=['POST', 'GET'])
-def dollar_page():
-    form = TweetTextForm()
+#
+# @app.route('/', methods=['POST', 'GET'])
+# @app.route('/index', methods=['POST', 'GET'])
+# @app.route('/dollar', methods=['POST', 'GET'])
+
+@app.route('/', methods=['POST', 'GET'], defaults={'currency': 'dollar'})
+@app.route('/currency/<currency>', methods=['POST', 'GET'])
+def index(currency):
+    form = TweetTextForm() # todo validate currency
     sentiment = ""
     if form.validate_on_submit():
         print(request.form["tweet_content"])
-        sentiment = app.sent.analyse(request.form["tweet_content"])
+        sentiment = app.model.analyse(request.form["tweet_content"])
     labels, values, tweets = get_graph_data()
-    return render_template('currency.html', sentiment=sentiment, currency="dollar",
-                           form=form, labels=labels, values=values, tweets=tweets)
-
-
-@app.route('/euro', methods=['POST', 'GET'])
-def euro_page():
-    form = TweetTextForm()
-    sentiment = ""
-    if form.validate_on_submit():
-        print(request.form["tweet_content"])
-        sentiment = app.sent.analyse(request.form["tweet_content"])
-    labels, values, tweets = get_graph_data()
-    return render_template('currency.html', sentiment=sentiment, currency="euro",
+    return render_template('currency.html', sentiment=sentiment, currency=currency,
                            form=form, labels=labels, values=values, tweets=tweets)
 
 

@@ -7,11 +7,11 @@ class TestFeatureExtractor(unittest.TestCase):
         self.extr = FeatureExtractor()
 
     def test_extract_features(self):
-        self.extr.vocabulary = ["hello", "another", "feature", "great"]  # todo again?
-        self.extr.phrases = ["whole phrases here", "make america great", "tax cuts", "hilary clinton"]
+        self.extr._vocabulary = ["hello", "another", "feature", "great"]  # todo again?
+        self.extr._phrases = ["whole phrases here", "make america great", "tax cuts", "hilary clinton"]
 
         res = self.extr.extract_features("Make America great again")
-        exp_res = {k: False for k in self.extr.vocabulary + self.extr.phrases}
+        exp_res = {k: False for k in self.extr._vocabulary + self.extr._phrases}
         exp_res["make america great"] = True
         # exp_res["great"] = True  # CZY TO DOBRZE?
         self.assertEqual(res, exp_res)
@@ -37,11 +37,11 @@ class TestFeatureExtractor(unittest.TestCase):
         self.assertEqual(["fake news media", "hillary clinton"], res_phrases)
 
     def test_extract_features_2(self):
-        self.extr.vocabulary = ["hello", "medium", "feature"]
-        self.extr.phrases = ["whole phrases here", "make america great", "tax cuts", "hilary clinton"]
+        self.extr._vocabulary = ["hello", "medium", "feature"]
+        self.extr._phrases = ["whole phrases here", "make america great", "tax cuts", "hilary clinton"]
 
         res = self.extr.extract_features("Media talking about tax cuts")
-        exp_res = {k: False for k in self.extr.vocabulary + self.extr.phrases}
+        exp_res = {k: False for k in self.extr._vocabulary + self.extr._phrases}
         exp_res["tax cuts"] = True
         exp_res["medium"] = True
         self.assertEqual(res, exp_res)
@@ -64,18 +64,13 @@ class TestFeatureExtractor(unittest.TestCase):
 
     def test_build_vocabulary(self):
         self.extr.build_vocabulary(self.dataset)
-        print(self.extr.phrases)
-        print(self.extr.vocabulary)
-
         exp_phrases = ['fake news media', 'hillary clinton']
         exp_vocabulary = set([word for words in self.exp_features for word in words]) - set(exp_phrases)
-        self.assertEqual(sorted(exp_vocabulary), sorted(self.extr.vocabulary))
-        self.assertEqual(exp_phrases, sorted(self.extr.phrases))
+        self.assertEqual(sorted(exp_vocabulary), sorted(self.extr._vocabulary))
+        self.assertEqual(exp_phrases, sorted(self.extr._phrases))
 
     def test_build_vocabulary_and_extract(self):
         self.extr.build_vocabulary(self.dataset)
-        print(self.extr.phrases)
-        print(self.extr.vocabulary)
         for t, exp_res in zip(self.dataset, self.exp_features):
             extracted = self.extr.extract_features(t)
             found = [f for f, is_found in extracted.items() if is_found]

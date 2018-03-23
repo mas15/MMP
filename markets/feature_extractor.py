@@ -24,8 +24,8 @@ class FeatureExtractor:
     def __init__(self, min_keyword_frequency=2):
         self.lemamatizer = WordNetLemmatizer()
         """ Features set containing unique words"""
-        self.vocabulary = set()
-        self.phrases = SortedSet(key=phrases_sorting_key)
+        self._vocabulary = set()
+        self._phrases = SortedSet(key=phrases_sorting_key)
 
         self.stop_word_regex = self._create_stopwords_regex()
 
@@ -34,9 +34,18 @@ class FeatureExtractor:
         self.min_keyword_frequency = min_keyword_frequency
         self.min_word_length = 3
 
+    def set_words_and_phrases(self, words, phrases):
+        self._vocabulary = set(words)
+        self._phrases = SortedSet(phrases, key=phrases_sorting_key)
+
+    def set_features(self, features):
+        phrases = [f for f in features if ' ' in f]
+        words = [f for f in features if f not in phrases]
+        self.set_words_and_phrases(words, phrases)
+
     @property
     def features(self):
-        return list(self.phrases) + list(self.vocabulary)
+        return list(self._phrases) + list(self._vocabulary)
 
     def _create_stopwords_regex(self):  # todo usunac self
         self.stop_words = load_stop_words(STOP_LIST_FILE)
@@ -45,14 +54,14 @@ class FeatureExtractor:
         return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)
 
     def extract_features(self, tweet):
-        features = dict.fromkeys(self.phrases, False)
+        features = dict.fromkeys(self._phrases, False)
         sentences = preprocess(tweet)
 
         # TODO tutaj np sprawdzanie phrsaes czy spelniaja wymogi
 
         extracted_words = set()
         for s in sentences:
-            s, found_phrases = extract_phrases_from_text(s, self.phrases)
+            s, found_phrases = extract_phrases_from_text(s, self._phrases)
             for p in found_phrases:
                 features[p] = True
             # sentence has no feature phrases now
@@ -61,7 +70,7 @@ class FeatureExtractor:
                 lemmatized = self.lemamatize_many(c.split())
                 extracted_words.update(lemmatized)
 
-        for w in self.vocabulary:
+        for w in self._vocabulary:
             features[w] = (w in extracted_words)
         return features
 
@@ -122,10 +131,9 @@ class FeatureExtractor:
 
     def build_vocabulary(self, dataset):
         found_phrases, all_words = self.build(dataset)
-        self.phrases.update(found_phrases)
-        self.vocabulary = set(all_words)
-        print('VOCABULARY LEN ' + str(len(self.vocabulary)))
-        print('PHRASES LENGTH ' + str(len(self.phrases)))
+        self.set_words_and_phrases(all_words, found_phrases)
+        print('VOCABULARY LEN ' + str(len(self._vocabulary)))
+        print('PHRASES LENGTH ' + str(len(self._phrases)))
 
     # def extract_adjoined_candidates(self, tweets):  # only one that is found is "build the wall"
     #     candidates = []

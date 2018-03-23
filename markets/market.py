@@ -38,9 +38,9 @@ tweets = [t for t, s in read_tweets()]
 ex = FeatureExtractor()
 ex.build_vocabulary(tweets)  # todo uzywac tylko tweets bez sent/dates
 print("VOCABULARY:")
-print(len(ex.vocabulary))
+print(len(ex._vocabulary))
 # print(ex.vocabulary)
-print(len(ex.phrases))
+print(len(ex._phrases))
 # print(ex.phrases)
 
 

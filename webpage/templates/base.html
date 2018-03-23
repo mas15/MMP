@@ -13,7 +13,7 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ url_for('dollar_page') }}">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
         <img src="{{ url_for('static', filename='dollar_logo.png') }}" width="30" height="30"
              class="d-inline-block align-top" alt="">
         Trump Tweets vs The Markets
@@ -25,14 +25,14 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('dollar_page') }}">Dollar <span
+                <a class="nav-link" href="{{ url_for('index', currency='dollar') }}">Dollar <span
                         class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('euro_page') }}">Euro</a>
+                <a class="nav-link" href="{{ url_for('index', currency='euro') }}">Euro</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('euro_page') }}">Pound</a>
+                <a class="nav-link" href="{{ url_for('index', currency='pound') }}">Pound</a>
             </li>
         </ul>
     </div>
