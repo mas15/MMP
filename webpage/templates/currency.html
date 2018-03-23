@@ -13,15 +13,17 @@
                 {% endwith %}
 
                 {{ form.csrf_token }}
-                {{ form.tweet_content(class_="form-control", rows="3") }}
+                {{ form.tweet_content(class_="form-control ", rows="3") }}
                 <input class="btn btn-outline-success my-2 my-sm-0 float-md-right" type="submit" aria-label="Submit"
                        style="margin-top: 5px">
             </form>
         </div>
         <div class="col-md-4">
-            {% if sentiment %}
-                <p>Sentiment : {{ sentiment }}</p>
+            <div class="alert alert-warning">
+            {% if prediction %}
+                <p>Prediction : {{ prediction }}</p>
             {% endif %}
+            </div>
         </div>
     </div>
 

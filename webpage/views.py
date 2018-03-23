@@ -20,12 +20,12 @@ class TweetTextForm(FlaskForm):
 @app.route('/currency/<currency>', methods=['POST', 'GET'])
 def index(currency):
     form = TweetTextForm() # todo validate currency
-    sentiment = ""
+    prediction = ""
     if form.validate_on_submit():
         print(request.form["tweet_content"])
-        sentiment = app.model.analyse(request.form["tweet_content"])
+        prediction = app.model.analyse(request.form["tweet_content"])
     labels, values, tweets = get_graph_data()
-    return render_template('currency.html', sentiment=sentiment, currency=currency,
+    return render_template('currency.html', prediction=prediction, currency=currency,
                            form=form, labels=labels, values=values, tweets=tweets)
 
 

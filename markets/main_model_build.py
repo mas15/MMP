@@ -71,9 +71,15 @@ class PredictingModel:
         self.model = model
 
     def analyse(self, text): # todo co jak nie ma modelu
+        print(text)
+        print(type(text))
         features = self.extract_features(text)
         features.drop(columns=["Text"], inplace=True)
-        return self.model.predict(features)[0]
+        result = self.model.predict(features)
+        print(type(result))
+        result = result[0]
+        print(type(result))
+        return str(result) # todo
 
     def extract_features(self, text): # todo get_features_vector?
         df = pd.DataFrame({'Text': [text]})
@@ -85,17 +91,18 @@ class PredictingModel:
     # TODO add st dev as a treshold
     def save(self):
         with open(ASSOCIATION_MODEL_FILE, "wb") as f:
-            pickle.dump(self.model, f)
+            pickle.dump((self.model,self.extr),  f)
 
     def load(self):
         with open(ASSOCIATION_MODEL_FILE, "rb") as f:
-            self.model = pickle.load(f)
+            self.model, self.extr = pickle.load(f)
 
 
 if __name__ == '__main__':
     model = PredictingModel()
     model.build_model()
     model.save()
+    model.load()
     print(model.analyse("Bad bad Mexicans."))
     # model = load_model()
     # print(model.predict("Bad Mexicans and taxes"))
