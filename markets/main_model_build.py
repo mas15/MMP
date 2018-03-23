@@ -30,8 +30,8 @@ class PredictingModel:
 
     def build_model(self):
         df = pd.read_csv(FEATURES_WITH_EFFECT_FILE)
-        y = df['Change'].values
-        df = df.drop(columns=['Change'])
+        y = df['Market_change'].values
+        df = df.drop(columns=['Market_change'])
         x = df.values
 
         print(df.columns.tolist())
@@ -43,7 +43,7 @@ class PredictingModel:
 
         # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=69)
 
-        for i in range(1, 11):
+        for i in range(1, 31):
 
             run_sum_train, run_sum_test = 0, 0
             kf = StratifiedKFold(n_splits=10, random_state=i, shuffle=True)
@@ -65,8 +65,8 @@ class PredictingModel:
             sum_test += run_sum_test / 10
 
         print()
-        print("Accuracy on train: {0}".format(sum_train / 10))
-        print("Accuracy on test:  {0}".format(sum_test / 10))
+        print("Accuracy on train: {0}".format(sum_train / 30))
+        print("Accuracy on test:  {0}".format(sum_test / 30))
         print()
         self.model = model
 
@@ -91,11 +91,13 @@ class PredictingModel:
     # TODO add st dev as a treshold
     def save(self):
         with open(ASSOCIATION_MODEL_FILE, "wb") as f:
-            pickle.dump((self.model,self.extr),  f)
+            pickle.dump(self.model, f)
+            pickle.dump(self.extr,  f)
 
     def load(self):
         with open(ASSOCIATION_MODEL_FILE, "rb") as f:
-            self.model, self.extr = pickle.load(f)
+            self.model = pickle.load(f)
+            self.extr = pickle.load(f)
 
 
 if __name__ == '__main__':

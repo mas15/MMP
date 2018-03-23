@@ -24,9 +24,9 @@ class TestAssosiationLearning(unittest.TestCase):
 
     def test_drop_instances_without_features(self):
         df = pd.DataFrame(
-            {'Sentiment': [1, 1, 1], 'f1': [0, 0, 0], 'f2': [1, 1, 0], 'f3': [0, 1, 0], 'Change': [0.1, 0.2, 0.3]})
+            {'Tweet_sentiment': [1, 1, 1], 'f1': [0, 0, 0], 'f2': [1, 1, 0], 'f3': [0, 1, 0], 'Market_change': [0.1, 0.2, 0.3]})
         exp_df = pd.DataFrame(
-            {'Sentiment': [1, 1], 'f1': [0, 0], 'f2': [1, 1], 'f3': [0, 1], 'Change': [0.1, 0.2]})
+            {'Tweet_sentiment': [1, 1], 'f1': [0, 0], 'f2': [1, 1], 'f3': [0, 1], 'Market_change': [0.1, 0.2]})
         result = drop_instances_without_features(df)
         self.assertTrue(exp_df.equals(result.reset_index(drop=True)))
 
