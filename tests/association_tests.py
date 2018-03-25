@@ -3,7 +3,7 @@ from markets.association import get_date_to_check_affect, mark_features, drop_in
 import pandas as pd
 import unittest
 from markets.feature_extractor import FeatureExtractor
-
+from markets.main_model_build import put_results_in_dict
 
 class TestAssosiationLearning(unittest.TestCase):
     def test_get_date_to_check_affect(self):
@@ -71,6 +71,15 @@ class TestAssosiationLearning(unittest.TestCase):
         res = res[sorted(res.columns)]
         exp_res = [['aaa ccc eee', 1, 0, 1, 0, 1, 0], ['ccc eee fff', 0, 0, 1, 0, 1, 1]]
         self.assertEqual(exp_res, res.values.tolist())
+
+    def test_put_results_in_dict(self):
+        features = pd.DataFrame({'f1': [0], 'f2': [1], 'f3': [0], 'f4': [1]})
+        propabs = [("Down", 0.1), ("NC", 0.5), ("UP", 0.2)]
+        prediction = "NC"
+        res = put_results_in_dict(prediction, propabs, features)
+        exp_res = {'Down': 0.1, 'NC': 0.5, 'UP': 0.2, 'prediction': 'NC', 'features': ['f2', 'f4']}
+        print(res)
+        self.assertEqual(exp_res, res)
 
 
 if __name__ == '__main__':

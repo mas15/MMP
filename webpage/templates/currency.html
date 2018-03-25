@@ -20,8 +20,10 @@
         </div>
         <div class="col-md-4">
             <div class="alert alert-warning">
-            {% if prediction %}
-                <p>Prediction : {{ prediction }}</p>
+            {% if prediction|length %}
+                {% for key, value in prediction.items() %}
+                    <p>{{ key }} : {{ value }}</p>
+                {% endfor %}
             {% endif %}
             </div>
         </div>

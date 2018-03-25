@@ -12,7 +12,7 @@ ALL_TWEETS_FILE = os.path.join(os.path.dirname(__file__), "data/all_tweets.csv")
 USD_INDEX_FILE = os.path.join(os.path.dirname(__file__), "data/USDIndex.csv")
 FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
 FEATURES_WITH_TEXT_AND_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/text_with_feats_and_effect.csv")
-MIN_FEATURE_OCCURENCIES = 6
+MIN_FEATURE_OCCURENCIES = 7 # todo 6?
 
 
 def read_all_tweets():
@@ -99,12 +99,14 @@ def move_column_to_the_end(df, col_name):
     return df
 
 
+def count_nr_of_feature_occurencies(features): # todo test
+    return [(col, (features.loc[features[col] == True, col].count())) for col in features]
+
+
 def drop_infrequent_features(df, min_freq=MIN_FEATURE_OCCURENCIES):
-    features = df.drop(columns=["Market_change", "Tweet_sentiment", "Text"])
-    cols_with_nr_of_trues = [(col, (features.loc[features[col] == True, col].count())) for col in features]
-    cols_to_drop = [c[0] for c in cols_with_nr_of_trues if c[1] <= min_freq]  # i c!=change
-    print("Dropping " + str(len(cols_to_drop)))
-    print(cols_to_drop)
+    features = df.drop(columns=["Market_change", "Tweet_sentiment", "Text"], errors="ignore")
+    cols_with_nr_of_trues = count_nr_of_feature_occurencies(features)
+    cols_to_drop = [c[0] for c in cols_with_nr_of_trues if c[1] < min_freq]  # i c!=change
     df.drop(columns=cols_to_drop, axis=1, inplace=True)
     return df
 
@@ -159,9 +161,9 @@ if __name__ == "__main__":
     # TODO text jako index
     result = drop_instances_without_features(result)
 
+    result = move_column_to_the_end(result, "Market_change")
+
     result.to_csv(FEATURES_WITH_TEXT_AND_EFFECT_FILE, index=False)
 
-    result = move_column_to_the_end(result, "Market_change")
     result.drop(columns=['Text'], inplace=True) # todo set as index?
-
     result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)

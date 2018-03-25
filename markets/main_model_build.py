@@ -15,6 +15,7 @@ from sklearn.feature_selection import chi2
 
 ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
 FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
+FEATURES_WITH_TEXT_AND_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/text_with_feats_and_effect.csv")
 pd.set_option('display.width', 1500)
 
 MIN_FEATURE_OCCURENCIES = 6
@@ -29,7 +30,8 @@ class PredictingModel:
         self.sent.load()
 
     def build_model(self):
-        df = pd.read_csv(FEATURES_WITH_EFFECT_FILE)
+        df = pd.read_csv(FEATURES_WITH_TEXT_AND_EFFECT_FILE)
+        df.drop(columns=['Text'], inplace=True) # TODO zachowac jakos
         y = df['Market_change'].values
         df = df.drop(columns=['Market_change'])
         x = df.values
@@ -73,9 +75,18 @@ class PredictingModel:
     def analyse(self, text): # todo co jak nie ma modelu
         features = self.extract_features(text)
         features.drop(columns=["Text"], inplace=True)
+        prediction, propabs = self.predict(features)
+
+        result = put_results_in_dict(prediction, propabs, features)
+        return result
+
+    def predict(self, features):
         result = self.model.predict(features)
         result = str(result[0])
-        return result
+        propabs_vals = self.model.predict_proba(features)
+        propabs_vals = propabs_vals[0].tolist()
+        propabs = dict(zip(self.model.classes_, propabs_vals))
+        return result, propabs
 
     def extract_features(self, text): # todo get_features_vector?
         df = pd.DataFrame({'Text': [text]})
@@ -96,10 +107,21 @@ class PredictingModel:
             self.extr = pickle.load(f)
 
 
+def put_results_in_dict(prediction, propabs, features): # todo przeniesc]
+    from markets.association import drop_infrequent_features
+    result = dict(propabs)
+    result["prediction"] = prediction
+    sentiment_value = features["Tweet_sentiment"].iloc[0]
+    features.drop(columns="Tweet_sentiment", inplace=True)
+    found_features = drop_infrequent_features(features, 1)
+    result["features"] = found_features.columns.tolist()
+    result["sentiment"] = "Possitive" if sentiment_value else "Negative"
+    return result
+
+
 if __name__ == '__main__':
     model = PredictingModel()
-    model.build_model()
-    model.save()
+    # model.build_model()
+    # model.save()
     model.load()
-    # model = load_model()
-    # print(model.predict("Bad Mexicans and taxes"))
+    print(model.analyse("Bad Mexicans and taxes"))
