@@ -52,7 +52,7 @@ class PredictingModel:
                 y_train, y_test = y[train_index], y[test_index]
 
                 model = MultinomialNB()
-                # model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+                #model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
                 model.fit(x_train, y_train.ravel())
 
                 accuracy_on_train = accuracy_score(y_train, model.predict(x_train))
@@ -71,15 +71,11 @@ class PredictingModel:
         self.model = model
 
     def analyse(self, text): # todo co jak nie ma modelu
-        print(text)
-        print(type(text))
         features = self.extract_features(text)
         features.drop(columns=["Text"], inplace=True)
         result = self.model.predict(features)
-        print(type(result))
-        result = result[0]
-        print(type(result))
-        return str(result) # todo
+        result = str(result[0])
+        return result
 
     def extract_features(self, text): # todo get_features_vector?
         df = pd.DataFrame({'Text': [text]})
@@ -105,6 +101,5 @@ if __name__ == '__main__':
     model.build_model()
     model.save()
     model.load()
-    print(model.analyse("Bad bad Mexicans."))
     # model = load_model()
     # print(model.predict("Bad Mexicans and taxes"))

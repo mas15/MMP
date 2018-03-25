@@ -35,7 +35,7 @@ def get_graph_data():
     all_tweets = read_all_tweets()
     dollar_prices = read_dollar_prices()
     all_tweets.drop(columns=["Id"], inplace=True)
-    dollar_prices.drop(columns=["Price", "High", "Low", "Change"], inplace=True)
+    dollar_prices.drop(columns=["Price", "High", "Low", "Market_change"], inplace=True)
     all_tweets["Date"] = all_tweets["Date"].apply(get_date_to_check_affect)
     all_tweets["Date"] = all_tweets["Date"].dt.strftime('%Y-%m-%d')
     dollar_prices["Date"] = dollar_prices["Date"].dt.strftime('%Y-%m-%d')
