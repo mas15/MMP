@@ -5,10 +5,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import os
 import pandas as pd
+import numpy as np
 import pickle
 from markets.feature_extractor import FeatureExtractor
 from markets.sentiment import SentimentAnalyser
-
 from markets.association import mark_features, calculate_sentiment
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
@@ -25,7 +25,7 @@ class PredictingModel:
     def __init__(self):
         self.model = None
         self.extr = FeatureExtractor()
-
+        self.features = []
         self.sent = SentimentAnalyser() # todo ogarnac to
         self.sent.load()
 
@@ -36,7 +36,7 @@ class PredictingModel:
         df = df.drop(columns=['Market_change'])
         x = df.values
 
-        print(df.columns.tolist())
+        self.features = df.columns.tolist()
         self.extr.set_features(df.columns)
 
         # x = SelectKBest(chi2, k=117).fit_transform(x, y)
@@ -45,23 +45,29 @@ class PredictingModel:
 
         # x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=69)
 
-        for i in range(1, 31):
+        # misclassified_objects = {i: 0 for i in range(1, len(x) + 1)}
 
+        best_model_accu = 0
+        for i in range(1, 31):
+            print(i)
             run_sum_train, run_sum_test = 0, 0
             kf = StratifiedKFold(n_splits=10, random_state=i, shuffle=True)
             for train_index, test_index in kf.split(x, y):
                 x_train, x_test = x[train_index], x[test_index]
                 y_train, y_test = y[train_index], y[test_index]
 
-                model = MultinomialNB()
-                #model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+                #model = MultinomialNB()
+                model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
                 model.fit(x_train, y_train.ravel())
 
-                accuracy_on_train = accuracy_score(y_train, model.predict(x_train))
-                accuracy_on_test = accuracy_score(y_test, model.predict(x_test))
+                accu_on_train, misclass_on_train = self.test_model_on_dataset(model, x_train, y_train)
+                accu_on_test, misclass_on_test = self.test_model_on_dataset(model, x_test, y_test)
 
-                run_sum_train += accuracy_on_train
-                run_sum_test += accuracy_on_test
+                run_sum_train += accu_on_train
+                run_sum_test += accu_on_test
+
+                if accu_on_test > best_model_accu:
+                    self.model = model
 
             sum_train += run_sum_train / 10
             sum_test += run_sum_test / 10
@@ -70,7 +76,12 @@ class PredictingModel:
         print("Accuracy on train: {0}".format(sum_train / 30))
         print("Accuracy on test:  {0}".format(sum_test / 30))
         print()
-        self.model = model
+
+    def test_model_on_dataset(self, model, x, y):
+        predicted = model.predict(x)
+        accuracy = accuracy_score(y, predicted)
+        misclassified_objects = np.where(y != predicted)
+        return accuracy, misclassified_objects
 
     def analyse(self, text): # todo co jak nie ma modelu
         features = self.extract_features(text)
@@ -95,16 +106,24 @@ class PredictingModel:
         # extract features and sentiment
         return df
 
-    # TODO add st dev as a treshold
     def save(self):
         with open(ASSOCIATION_MODEL_FILE, "wb") as f:
             pickle.dump(self.model, f)
             pickle.dump(self.extr,  f)
+            pickle.dump(self.features,  f)
 
     def load(self):
         with open(ASSOCIATION_MODEL_FILE, "rb") as f:
             self.model = pickle.load(f)
             self.extr = pickle.load(f)
+            self.features = pickle.load(f)
+
+    def get_most_coefficient_features(self):
+        result = dict()
+        for i, target in enumerate(self.model.classes_): # todo check if nr feats = coef
+            feats = sorted(zip(self.features, self.model.coef_[i]), key=lambda t: t[1])
+            result[target] = feats
+        return result
 
 
 def put_results_in_dict(prediction, propabs, features): # todo przeniesc]
@@ -121,7 +140,8 @@ def put_results_in_dict(prediction, propabs, features): # todo przeniesc]
 
 if __name__ == '__main__':
     model = PredictingModel()
-    # model.build_model()
-    # model.save()
+    model.build_model()
+    model.save()
     model.load()
-    print(model.analyse("Bad Mexicans and taxes"))
+    print(model.get_most_coefficient_features())
+    print(model.analyse("Bad bad Mexicans")) # todo nie przewiduje po zmienionym tsh

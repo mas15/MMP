@@ -11,11 +11,6 @@ class TweetTextForm(FlaskForm):
     tweet_content = StringField('tweet_content', validators=[DataRequired(), Length(3, 300)], widget=TextArea())
 
 
-#
-# @app.route('/', methods=['POST', 'GET'])
-# @app.route('/index', methods=['POST', 'GET'])
-# @app.route('/dollar', methods=['POST', 'GET'])
-
 @app.route('/', methods=['POST', 'GET'], defaults={'currency': 'dollar'})
 @app.route('/currency/<currency>', methods=['POST', 'GET'])
 def index(currency):
@@ -23,10 +18,15 @@ def index(currency):
     prediction_results = dict()
     if form.validate_on_submit():
         print(request.form["tweet_content"])
-        prediction_results = app.model.analyse(request.form["tweet_content"])
-    labels, values, tweets = get_graph_data()
+        prediction_results = app.model.predict(request.form["tweet_content"])
+    graph_data = get_graph_data()
+    features_data = get_features_data()
     return render_template('currency.html', prediction=prediction_results, currency=currency,
-                           form=form, labels=labels, values=values, tweets=tweets)
+                           form=form, graph_data=graph_data, features_data=features_data)
+
+
+def get_features_data():
+    return app.model.get_most_coefficient_features()
 
 
 def get_graph_data():

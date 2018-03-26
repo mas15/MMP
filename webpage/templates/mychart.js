@@ -4,6 +4,7 @@ Chart.defaults.global.responsive = false;
 // define the chart data
 window.onload = function() {
 
+{% set labels, values, tweets = graph_data %}
 
 var tweets_per_date = {
     {% for date, tweet in tweets.items() %}
@@ -41,7 +42,7 @@ var chartData = {
 }
 
 // get chart canvas
-var canvas = document.getElementById("myChart");
+var canvas = document.getElementById("currencyChart");
 
 canvas.style.width='100%';
 canvas.width  = canvas.offsetWidth;
@@ -49,7 +50,7 @@ canvas.width  = canvas.offsetWidth;
 var ctx = canvas.getContext("2d");
 
 // create the chart using the chart canvas
-var myChart = new Chart(ctx, {
+var currencyChart = new Chart(ctx, {
   type: 'line',
   data: chartData,
   options: {

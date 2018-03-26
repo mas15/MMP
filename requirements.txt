@@ -5,3 +5,4 @@ nltk
 sortedcontainers
 scipy
 scikit-learn
+mlxtend

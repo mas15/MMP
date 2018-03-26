@@ -33,9 +33,16 @@ class SentimentAnalyser:
         testing_features = nltk.classify.apply_features(self.extr.extract_features, test_data)
         return nltk.classify.accuracy(self.cl, testing_features)
 
-    def analyse(self, tweet):
+    def predict(self, tweet):
         problem_features = self.extr.extract_features(tweet)
         return self.cl.classify(problem_features)
+
+    def predict_score(self, tweet):
+        problem_features = self.extr.extract_features(tweet)
+        prob_res = self.cl.prob_classify(problem_features)
+        #result = map_prob_to_score(prob_res.prob("pos"))
+        result = prob_res.prob("pos")
+        return result
 
     def run_k_fold(self, pos, neg, nr_folds=5):
         sum = 0
@@ -56,25 +63,42 @@ class SentimentAnalyser:
         self.train(pos + neg)
 
 
+def map_prob_to_score(prob):
+    """
+    Map from 0.0 - 1.0 to -1 - 1
+    >>> map_prob_to_score(0.92)
+    0.84
+    >>> map_prob_to_score(0.5)
+    0.0
+    """
+    return round(prob*2 - 1, 2)
+
+
 if __name__ == "__main__":
+    import doctest
+
+    doctest.testmod()
+
     pos, neg = get_pos_and_neg_tweets_with_sentiment_from_file()
     sent = SentimentAnalyser()
 
-    # todo lemmatize phrases
-    # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
-    sum = 0
-    for i in range(40):
-        sum += sent.run_k_fold(pos, neg)
-    print("VOCABULARY:")
-    print(sent.extr._vocabulary)
-    print(sent.extr._phrases)
-    print("AV OF 40: " + str(sum / 40))
+    # # todo lemmatize phrases
+    # # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
+    # sum = 0
+    # for i in range(40):
+    #     sum += sent.run_k_fold(pos, neg)
+    # print("VOCABULARY:")
+    # print(sent.extr._vocabulary)
+    # print(sent.extr._phrases)
+    # print("AV OF 40: " + str(sum / 40))
+    #
+    # print("TRAINING ON ALL AND SAVING CL")
+    # sent.train_on_all(pos, neg)
+    #sent.save()
 
-    print("TRAINING ON ALL AND SAVING CL")
-    sent.train_on_all(pos, neg)
-    sent.save()
-
-    # print(sent.analyse("Make america great again"))
+    sent.load()
+    print(sent.predict_score("Make america great again"))
+    print(sent.predict_score("Bad Mexico"))
     # print("TUTEJ _-------------------------------------")
     # d = sent.extr.extract_features("Make america great again")
     # print([f for f, v in d.items() if v])
@@ -86,53 +110,3 @@ if __name__ == "__main__":
     # print([f for f, v in sent.extr.extract_features(
     #     "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.").items() if
     #        v])
-
-# wywalic to:
-# My warmest condolences and sympathies to the victims and families of the terrible Las Vegas shooting. God bless you!
-
-
-# def preproces(tweet):
-#     """
-#     >>> t = "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans."
-#     >>> preproces(t)
-#     'candidate promised would pass massive tax cut everyday working americans'
-#     >>> preproces("We love you!\\n\\nGOD BLESS TEXAS & GOD BLESS THE USA")
-#     'love ! god bless texas & god bless usa'
-#     """
-#     # r.extract_keywords_from_text(tweet)
-#     # words = r.get_ranked_phrases()
-#     words = word_tokenize(tweet)
-#     words = [w.lower() for w in words]
-#     to_remove = stopwords.words("english") + [",", ".", "\"", "'"] + ["n't"]  # shouldn't be split
-#     result = [w for w in words if w not in to_remove]
-#
-#     return " ".join(words)
-
-#
-# def phrases_extractor(document):
-#     #r.extract_keywords_from_text(document)
-#     #x = r.get_ranked_phrases_with_scores()
-#     words = r.run(document)
-#     words = [w for w in words if w[1] < 5]
-#     #words = [w.lower() for w in words]
-#
-#     print()
-#     print(document)
-#     print(words)
-#     print()
-#     words = [w[0] for w in words]
-#
-#     for w in words:
-#         if w != ps.lemmatize(w):
-#             RESULT.add((w, ps.lemmatize(w)))
-#     words = [ps.lemmatize(w) for w in words]
-#
-#     feats = {}
-#     for w in words:
-#         feats["contains({0})".format(w)] = True
-#     return feats
-#
-#
-# def preproces_tweet_tuples(tweets_with_sentiment):
-#     return [(preproces(t[0]), t[1]) for t in tweets_with_sentiment]
-#

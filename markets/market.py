@@ -56,7 +56,7 @@ with open('temp.csv', 'w', encoding='utf-8') as fw:
         features = ex.extract_features(t)
         features = OrderedDict(sorted(features.items()))
 
-        sentiment = sent.analyse(t)
+        sentiment = sent.predict(t)
         line = [sentiment] + [v for v in features.values()]
 
         if first:

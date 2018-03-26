@@ -4,7 +4,6 @@ import os
 from markets.sentiment import SentimentAnalyser
 from markets.feature_extractor import FeatureExtractor
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
-from sklearn.feature_selection import RFECV
 
 pd.set_option('display.width', 1500)
 
@@ -49,8 +48,8 @@ def set_date_with_effect(all_tweets, dollar_prices):
 
 
 def calculate_sentiment(tweets_df, sent):
-    tweets_df["Tweet_sentiment"] = tweets_df["Text"].apply(sent.analyse)
-    tweets_df["Tweet_sentiment"].replace({"pos": 1, "neg": 0}, inplace=True)
+    tweets_df["Tweet_sentiment"] = tweets_df["Text"].apply(sent.predict_score)
+    #tweets_df["Tweet_sentiment"].replace({"pos": 1, "neg": 0}, inplace=True)
     return tweets_df
 
 
