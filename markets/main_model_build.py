@@ -14,7 +14,7 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 from collections import OrderedDict
 
-ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
+ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/assoc_model.pickle")
 FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
 FEATURES_WITH_TEXT_AND_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/text_with_feats_and_effect.csv")
 pd.set_option('display.width', 1500)
@@ -57,7 +57,7 @@ class PredictingModel:
                 y_train, y_test = y[train_index], y[test_index]
 
                 model = MultinomialNB()
-                # model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+                #model = LogisticRegressionCV(random_state=123, cv=10, Cs=3)
                 model.fit(x_train, y_train.ravel())
 
                 accu_on_train, misclass_on_train = self.test_model_on_dataset(model, x_train, y_train)
@@ -165,7 +165,7 @@ def put_results_in_dict(prediction, propabs, features):  # todo przeniesc]
     features.drop(columns="Tweet_sentiment", inplace=True)
     found_features = drop_infrequent_features(features, 1)
     result["features"] = found_features.columns.tolist()
-    result["sentiment"] = "Possitive" if sentiment_value else "Negative"
+    result["sentiment"] = "Positive" if sentiment_value > 0.5 else "Negative"
     return result
 
 

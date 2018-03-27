@@ -5,7 +5,7 @@ import nltk
 from markets.feature_extractor import FeatureExtractor
 import os
 
-CLASSIFIER_FILE = os.path.join(os.path.dirname(__file__), "classifier.pickle")
+SENTIMENT_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/sentiment_model.pickle")
 
 
 class SentimentAnalyser:
@@ -14,12 +14,12 @@ class SentimentAnalyser:
         self.cl = None
 
     def save(self):
-        with open(CLASSIFIER_FILE, "wb") as f:
+        with open(SENTIMENT_MODEL_FILE, "wb") as f:
             pickle.dump(self.cl, f)
             pickle.dump(self.extr, f)
 
     def load(self):
-        with open(CLASSIFIER_FILE, "rb") as f:
+        with open(SENTIMENT_MODEL_FILE, "rb") as f:
             self.cl = pickle.load(f)
             self.extr = pickle.load(f)
 

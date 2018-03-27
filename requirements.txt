@@ -6,3 +6,4 @@ sortedcontainers
 scipy
 scikit-learn
 mlxtend
+numpy
