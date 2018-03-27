@@ -3,7 +3,6 @@ import pandas as pd
 import os
 from markets.sentiment import SentimentAnalyser
 from markets.feature_extractor import FeatureExtractor
-from sklearn.naive_bayes import GaussianNB, MultinomialNB
 
 pd.set_option('display.width', 1500)
 

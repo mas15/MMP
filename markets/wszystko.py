@@ -26,7 +26,8 @@ from mlxtend.frequent_patterns import apriori, association_rules
 #df = df[df["Market_change"] == "Up"]
 df = df.drop(columns=["Market_change", "Tweet_sentiment"])
 
-frequent_itemsets = apriori(df, min_support=0.0001, use_colnames=True)
+MIN_SUPPORT = 2/1272
+frequent_itemsets = apriori(df, min_support=0.001570, use_colnames=True)
 rules = association_rules(frequent_itemsets, metric="confidence")
 print(rules)
 

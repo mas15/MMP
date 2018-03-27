@@ -99,14 +99,4 @@ if __name__ == "__main__":
     sent.load()
     print(sent.predict_score("Make america great again"))
     print(sent.predict_score("Bad Mexico"))
-    # print("TUTEJ _-------------------------------------")
-    # d = sent.extr.extract_features("Make america great again")
-    # print([f for f, v in d.items() if v])
-    #
-    # print(sent.analyse("bad bad mexico"))
-    # print([f for f, v in sent.extr.extract_features("bad bad mexico").items() if v])
-    #
-    # print(sent.analyse("As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans."))
-    # print([f for f, v in sent.extr.extract_features(
-    #     "As a candidate, I promised we would pass a massive tax cut for the everyday, working Americans.").items() if
-    #        v])
+
