@@ -45,7 +45,7 @@ class PredictingModel:
 
         sum_train, sum_test = 0, 0
 
-        misclassified_objects = {i: 0 for i in range(1, len(x) + 1)}
+        misclassified_objects = {i: 0 for i in range(0, len(x))}
 
         best_model_accu = 0
         for i in range(1, 31):
@@ -81,7 +81,7 @@ class PredictingModel:
         print()
         print("Accuracy on train: {0}".format(sum_train / 30))
         print("Accuracy on test:  {0}".format(sum_test / 30))
-        self.print_misclassified(misclassified_objects)
+        #self.print_misclassified(misclassified_objects)
 
     def print_misclassified(self, misclassified_objects):
         print()
