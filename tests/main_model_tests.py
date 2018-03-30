@@ -1,5 +1,6 @@
 import unittest
-from markets.main_model_build import put_results_in_dict, get_misclassified_on_set, get_indexes_before_splitting, sort_misclassified
+from markets.main_model_build import put_results_in_dict, get_misclassified_on_set, get_indexes_before_splitting, \
+    sort_misclassified
 import numpy as np
 import pandas as pd
 
@@ -9,7 +10,7 @@ class TestMainModel(unittest.TestCase):
         y = np.array(["Up", "NC", "Down", "Up"])
         predicted = np.array(["NC", "NC", "Down", "Down"])
         result = get_misclassified_on_set(y, predicted)
-        self.assertEqual([0, 3], result)
+        self.assertEqual([0, 3], result[0].tolist()) # mozoe niech zwaraca z [0]?
 
     def test_get_indexes_before_splitting(self):  # todo indexowane od 1?
         train_indexes = np.array([0, 1, 3, 5, 6, 7, 8])
@@ -30,7 +31,6 @@ class TestMainModel(unittest.TestCase):
         res = put_results_in_dict(prediction, propabs, features)
         exp_res = {'Down': 0.1, 'NC': 0.5, 'UP': 0.2, 'prediction': 'NC', 'features': ['f2', 'f4'],
                    'sentiment': 'Negative'}
-        print(res)
         self.assertEqual(exp_res, res)
 
     def test_sort_misclassified(self):

@@ -3,10 +3,13 @@ from sklearn.model_selection import KFold
 from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
 from sklearn.feature_selection import RFECV
 from sklearn.model_selection import train_test_split
+from sklearn.feature_selection import RFECV
 from sklearn.metrics import accuracy_score
 import os
 import pandas as pd
 import pickle
+from mlxtend.feature_selection import ExhaustiveFeatureSelector as EFS
+from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 
 from sklearn.feature_selection import SelectKBest, SelectFromModel
 from sklearn.feature_selection import chi2, f_classif, mutual_info_classif
@@ -15,26 +18,46 @@ ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pi
 FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
 pd.set_option('display.width', 1500)
 
-MIN_FEATURE_OCCURENCIES = 6
+if __name__ == "__main__":
+    df = pd.read_csv(FEATURES_WITH_EFFECT_FILE)
+    y = df['Market_change'].values
+    df = df.drop(columns=['Market_change'])
+    x = df.values
+
+    model = MultinomialNB()
+
+    # sfs1 = SFS(model,
+    #            k_features=(50, 150),
+    #            forward=True,
+    #            n_jobs=-1,
+    #            floating=False,
+    #            verbose=2,
+    #            scoring='accuracy',
+    #            cv=0)
+    #
+    # sfs1 = sfs1.fit(x, y.ravel())
+    #
+    # print('Best accuracy score: %.2f' % sfs1.k_feature_idx_)
+    # print('Best subset:', sfs1.k_score_)
+
+    selector = RFECV(model, 1, cv=10, verbose=2, n_jobs=-1)
+    selector = selector.fit(x, y.ravel())
+    print(selector.support_)
+    print(selector.ranking_)
+
+    wybrane = []
+    for i, value in enumerate(selector.ranking_):
+        if value < 50:
+            wybrane.append(i)
 
 
-df = pd.read_csv(FEATURES_WITH_EFFECT_FILE)
 
-from mlxtend.frequent_patterns import apriori, association_rules
-
-
-#df = df[df["Market_change"] == "Up"]
-df = df.drop(columns=["Market_change", "Tweet_sentiment"])
-
-MIN_SUPPORT = 2/1272
-frequent_itemsets = apriori(df, min_support=0.001570, use_colnames=True)
-rules = association_rules(frequent_itemsets, metric="confidence")
-print(rules)
-
-
-
-
-
+    print("wybrane")
+    print(wybrane)
+    features_names = df.columns.tolist()
+    selected_features = [features_names[i] for i in wybrane]
+    for f in selected_features:
+        print(f)
 #
 #
 #

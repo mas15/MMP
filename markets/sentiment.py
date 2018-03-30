@@ -1,9 +1,10 @@
-from nltk import NaiveBayesClassifier
 import pickle
-from markets.dataset import *
 import nltk
-from markets.feature_extractor import FeatureExtractor
 import os
+from nltk import NaiveBayesClassifier
+from markets.helpers import split_pos_and_neg_into_folds, get_train_and_test_data_for_k_run, \
+    get_pos_and_neg_tweets_with_sentiment_from_file
+from markets.feature_extractor import FeatureExtractor
 
 SENTIMENT_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/sentiment_model.pickle")
 
@@ -40,11 +41,11 @@ class SentimentAnalyser:
     def predict_score(self, tweet):
         problem_features = self.extr.extract_features(tweet)
         prob_res = self.cl.prob_classify(problem_features)
-        #result = map_prob_to_score(prob_res.prob("pos"))
+        # result = map_prob_to_score(prob_res.prob("pos"))
         result = prob_res.prob("pos")
         return result
 
-    def run_k_fold(self, pos, neg, nr_folds=5):
+    def cross_validate(self, pos, neg, nr_folds=5):
         sum = 0
         pos_folds, neg_folds = split_pos_and_neg_into_folds(pos, neg, nr_folds)
 
@@ -54,9 +55,8 @@ class SentimentAnalyser:
             accuracy = self.check_accuracy(test_data)
 
             sum += accuracy
-        print("ACCU: " + str(sum / nr_folds))
+        print("Accuracy: " + str(sum / nr_folds))
         print(self.cl.show_most_informative_features(20))
-        print()
         return sum / nr_folds
 
     def train_on_all(self, pos, neg):
@@ -71,7 +71,7 @@ def map_prob_to_score(prob):
     >>> map_prob_to_score(0.5)
     0.0
     """
-    return round(prob*2 - 1, 2)
+    return round(prob * 2 - 1, 2)
 
 
 if __name__ == "__main__":
@@ -91,12 +91,11 @@ if __name__ == "__main__":
     # print(sent.extr._vocabulary)
     # print(sent.extr._phrases)
     # print("AV OF 40: " + str(sum / 40))
-    #
-    # print("TRAINING ON ALL AND SAVING CL")
-    # sent.train_on_all(pos, neg)
-    #sent.save()
+
+    print("TRAINING ON ALL AND SAVING CL")
+    sent.train_on_all(pos, neg)
+    sent.save()
 
     sent.load()
     print(sent.predict_score("Make america great again"))
     print(sent.predict_score("Bad Mexico"))
-
