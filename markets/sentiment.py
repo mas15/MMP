@@ -1,18 +1,19 @@
+import os
 import pickle
 import nltk
-import os
+import csv
 from nltk import NaiveBayesClassifier
-from markets.helpers import split_pos_and_neg_into_folds, get_train_and_test_data_for_k_run, \
-    get_pos_and_neg_tweets_with_sentiment_from_file
+from markets.helpers import get_x_y_from_list_of_tuples, k_split
 from markets.feature_extractor import FeatureExtractor
 
 SENTIMENT_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/sentiment_model.pickle")
+CORPUS_FILE = os.path.join(os.path.dirname(__file__), "data/sentimental_tweets.csv")
 
 
 class SentimentAnalyser:
-    def __init__(self):
-        self.extr = FeatureExtractor()
-        self.cl = None
+    def __init__(self, extr=None, cl=None):
+        self.extr = extr or FeatureExtractor()
+        self.cl = cl
 
     def save(self):
         with open(SENTIMENT_MODEL_FILE, "wb") as f:
@@ -27,7 +28,7 @@ class SentimentAnalyser:
     def train(self, train_data):
         only_tweets = [t for t, s in train_data]
         self.extr.build_vocabulary(only_tweets)
-        training_features = nltk.classify.apply_features(self.extr.extract_features, train_data)  # labeled = True
+        training_features = nltk.classify.apply_features(self.extr.extract_features, train_data)
         self.cl = NaiveBayesClassifier.train(training_features)
 
     def check_accuracy(self, test_data):
@@ -41,59 +42,60 @@ class SentimentAnalyser:
     def predict_score(self, tweet):
         problem_features = self.extr.extract_features(tweet)
         prob_res = self.cl.prob_classify(problem_features)
-        # result = map_prob_to_score(prob_res.prob("pos"))
         result = prob_res.prob("pos")
         return result
 
-    def cross_validate(self, pos, neg, nr_folds=5):
-        sum = 0
-        pos_folds, neg_folds = split_pos_and_neg_into_folds(pos, neg, nr_folds)
+    def cross_validate(self, dataset, random_state, nr_folds=5):
+        sum_in_runs = 0
+        x, y = get_x_y_from_list_of_tuples(dataset)
 
-        for k_run in range(nr_folds):
-            train_data, test_data = get_train_and_test_data_for_k_run(pos_folds, neg_folds, k_run)
+        for x_train, x_test, y_train, y_test in k_split(x, y, nr_folds, random_state):
+            train_data = list(zip(x_train, y_train))
+            test_data = list(zip(x_test, y_test))
+
             self.train(train_data)
             accuracy = self.check_accuracy(test_data)
+            sum_in_runs += accuracy
 
-            sum += accuracy
-        print("Accuracy: " + str(sum / nr_folds))
-        print(self.cl.show_most_informative_features(20))
-        return sum / nr_folds
-
-    def train_on_all(self, pos, neg):
-        self.train(pos + neg)
+        print("Accuracy: " + str(sum_in_runs / nr_folds))
+        # print(self.cl.show_most_informative_features(20))
+        return sum_in_runs / nr_folds
 
 
-def map_prob_to_score(prob):
-    """
-    Map from 0.0 - 1.0 to -1 - 1
-    >>> map_prob_to_score(0.92)
-    0.84
-    >>> map_prob_to_score(0.5)
-    0.0
-    """
-    return round(prob * 2 - 1, 2)
+def calculate_sentiment(tweets_df, sent):
+    tweets_df["Tweet_sentiment"] = tweets_df["Text"].apply(sent.predict_score)
+    return tweets_df
+
+
+def get_tweets_with_sentiment_from_file(filename):
+    result = []
+    with open(filename, encoding='utf8') as f:
+        reader = csv.reader(f, delimiter=",")
+        try:
+            for line in reader:
+                _, content, _, sentiment = line
+                if sentiment != "neg" and sentiment != "pos":
+                    raise Exception("Error while reading sentiment in line: {0}".format(line))  # TODO test it
+                result.append((content, sentiment))
+        except IndexError:
+            pass
+        return result
 
 
 if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()
-
-    pos, neg = get_pos_and_neg_tweets_with_sentiment_from_file()
+    tweets_with_sent = get_tweets_with_sentiment_from_file(CORPUS_FILE)
     sent = SentimentAnalyser()
 
-    # # todo lemmatize phrases
-    # # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
-    # sum = 0
-    # for i in range(40):
-    #     sum += sent.run_k_fold(pos, neg)
-    # print("VOCABULARY:")
-    # print(sent.extr._vocabulary)
-    # print(sent.extr._phrases)
-    # print("AV OF 40: " + str(sum / 40))
+    # todo lemmatize phrases
+    # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
+    average_of_n = sum([sent.cross_validate(tweets_with_sent, i) for i in range(40)])/40
+    print("VOCABULARY:")
+    print(sent.extr._vocabulary)
+    print(sent.extr._phrases)
+    print("AV OF 40: " + average_of_n)
 
     print("TRAINING ON ALL AND SAVING CL")
-    sent.train_on_all(pos, neg)
+    sent.train(tweets_with_sent)
     sent.save()
 
     sent.load()

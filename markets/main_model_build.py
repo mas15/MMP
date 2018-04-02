@@ -1,17 +1,17 @@
-from sklearn.linear_model import LogisticRegressionCV
-from sklearn.model_selection import StratifiedKFold
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score
 import numpy as np
 import pickle
 import os
 import pandas as pd
+from collections import Counter
+from sklearn.linear_model import LogisticRegressionCV
+from sklearn.naive_bayes import MultinomialNB
+from sklearn import metrics
 from markets.association import TWEETS_WITH_MARKET_CHANGE
-from markets.sentiment import SentimentAnalyser
+from markets.sentiment import SentimentAnalyser, calculate_sentiment
 from markets.feature_extractor import FeatureExtractor
 from markets.feature_selection import get_frequent_features, get_best_features_from_file
 from markets.helpers import get_x_y_from_df, remove_features, move_column_to_the_end, mark_features, \
-    drop_instances_without_features, drop_infrequent_features
+    drop_instances_without_features, k_split
 
 MARKET_PREDICTING_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/assoc_model.pickle")
 pd.set_option('display.width', 1500)
@@ -52,11 +52,10 @@ pd.options.display.max_colwidth = 1000
 
 
 class MarketPredictingModel:
-    def __init__(self):
-        self.model = MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
-        self.extr = FeatureExtractor(min_keyword_frequency=4)
-        self.features = []
-        self.sent = SentimentAnalyser()  # todo ogarnac to
+    def __init__(self, model=None, extr=None, sent=None):
+        self.model = model or MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+        self.extr = extr or FeatureExtractor(min_keyword_frequency=4)
+        self.sent = sent or SentimentAnalyser()  # todo ogarnac to
         self.sent.load()
 
     def trainnn(self, df):
@@ -73,7 +72,7 @@ class MarketPredictingModel:
         for features, k_features in get_best_features_from_file("data/attr_po_6_wr_nb_bf_nc2"):
             print(k_features)
             sifted_df = self.filter_features(df.copy(), features)  # remove not needed, mark other etc
-            accuracy = self._train_classifier(sifted_df)
+            accuracy = self._train_with_different_seeds(sifted_df)
             print("Trained on {0} features and {1} objects, got {2} accuracy".format(k_features, sifted_df.shape[0],
                                                                                      accuracy))
             if accuracy > best_accuracy:
@@ -84,11 +83,12 @@ class MarketPredictingModel:
 
         print("Best accuracy for {0} features: {1}".format(best_k, best_features))
         sifted_df = self.filter_features(df, best_features)
-        self._train_classifier(sifted_df)
+        self._train_with_different_seeds(sifted_df)
         print(results)
 
-    def _train_classifier(self, df):
+    def _train_with_different_seeds(self, df):
         sum_train, sum_test = 0, 0
+
         for n_run in range(1, 31):
             accu_on_test, accu_on_train = self.train(df, n_run)
 
@@ -100,7 +100,8 @@ class MarketPredictingModel:
     def extract_features(self, df):  # get features vector?
         df = mark_features(self.extr, df)
         df = calculate_sentiment(df, self.sent)
-        df = move_column_to_the_end(df, "Market_change")
+        if "Market_change" in list(df):
+            df = move_column_to_the_end(df, "Market_change")
         return df
 
     def filter_features(self, df, features):  # todo one tu nie pasuja?
@@ -112,12 +113,9 @@ class MarketPredictingModel:
 
     def train(self, df, random_state):
         x, y = get_x_y_from_df(df)
-        sum_test_accuracy, sum_train_accuracy, model = 0, 0, None
+        sum_test_accuracy, sum_train_accuracy, = 0, 0
 
-        kf = StratifiedKFold(n_splits=10, random_state=random_state, shuffle=True)
-        for train_index, test_index in kf.split(x, y):
-            x_train, x_test = x[train_index], x[test_index]
-            y_train, y_test = y[train_index], y[test_index]
+        for x_train, x_test, y_train, y_test in k_split(x, y, 10, random_state):
 
             self.model.fit(x_train, y_train)
 
@@ -126,9 +124,8 @@ class MarketPredictingModel:
 
             # indexes_of_mis_train = get_indexes_before_splitting(train_index, misclass_on_train)
             # indexes_of_mis_test = get_indexes_before_splitting(test_index, misclass_on_test)
-
-            # for i in indexes_of_mis_train.tolist() + indexes_of_mis_test.tolist():
-            #     misclassified_objects[i] += 1
+            # misclass_in_all_cvs.update(indexes_of_mis_train.tolist())
+            # misclass_in_all_cvs.update(indexes_of_mis_test.tolist())
 
             sum_test_accuracy += accu_on_test
             sum_train_accuracy += accu_on_train
@@ -137,7 +134,7 @@ class MarketPredictingModel:
 
     def test_model_on_dataset(self, x, y):
         predicted = self.model.predict(x)
-        accuracy = accuracy_score(y, predicted)
+        accuracy = metrics.accuracy_score(y, predicted)
         misclassified_objects = get_misclassified_on_set(y, predicted)
         return accuracy, misclassified_objects
 
@@ -161,25 +158,21 @@ class MarketPredictingModel:
         with open(MARKET_PREDICTING_MODEL_FILE, "wb") as f:
             pickle.dump(self.model, f)
             pickle.dump(self.extr, f)
-            pickle.dump(self.features, f)
 
     def load(self):
         with open(MARKET_PREDICTING_MODEL_FILE, "rb") as f:
             self.model = pickle.load(f)
             self.extr = pickle.load(f)
-            self.features = pickle.load(f)
 
     def get_most_coefficient_features(self):
+        if len(self.model.coef_) != len(self.model.classes_):
+            raise Exception("Different number of model features than coefs.")
+
         result = dict()
-        for i, target in enumerate(self.model.classes_):  # todo check if nr feats = coef
-            feats = sorted(zip(self.features, self.model.coef_[i]), key=lambda t: t[1])
+        for i, target in enumerate(self.model.classes_):
+            feats = sorted(zip(self.extr.features, self.model.coef_[i]), key=lambda t: t[1])
             result[target] = feats
         return result
-
-
-def calculate_sentiment(tweets_df, sent):
-    tweets_df["Tweet_sentiment"] = tweets_df["Text"].apply(sent.predict_score)
-    return tweets_df
 
 
 def zero_r(df):
@@ -220,9 +213,8 @@ def put_results_in_dict(prediction, propabs, features):
     result = dict(propabs)
     result["prediction"] = prediction
     sentiment_value = features["Tweet_sentiment"].iloc[0]
-    features.drop(columns=["Tweet_sentiment"], inplace=True) # todo tutaj text?
-    found_features = drop_infrequent_features(features, 1) # todo pozbyc sie tej funkcji
-    result["features"] = found_features.columns.tolist()
+    features.drop(columns=["Tweet_sentiment"], inplace=True)  # todo tutaj text?
+    result["features"] = features.columns[features.any()].tolist()  # todo test czy dziala po zmianie
     result["sentiment"] = "Positive" if sentiment_value > 0.5 else "Negative"
     return result
 
@@ -231,7 +223,7 @@ if __name__ == '__main__':
     df = pd.read_csv(TWEETS_WITH_MARKET_CHANGE)
     model = MarketPredictingModel()
     model.trainnn(df)
-    # model.save()
-    # model.load()
-    # print(model.get_most_coefficient_features())
-    # print(model.analyse("Bad bad Mexicans")) # todo nie przewiduje po zmienionym tsh
+    model.save()
+    model.load()
+    print(model.get_most_coefficient_features())
+    print(model.analyse("Bad bad Mexicans"))  # todo nie przewiduje po zmienionym tsh

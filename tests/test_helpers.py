@@ -1,7 +1,7 @@
 import unittest
+from unittest import mock
 from markets.helpers import get_x_y_from_df, move_column_to_the_end, drop_instances_without_features, \
-    drop_infrequent_features, remove_features, mark_features, mark_row
-from markets.feature_extractor import FeatureExtractor
+    remove_features, mark_features, mark_row, get_x_y_from_list_of_tuples, count_nr_of_feature_occurrences
 import pandas as pd
 
 
@@ -15,15 +15,10 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual([[1.0, 0.0, 0.2], [0.0, 1.0, 0.5]], x.tolist())
         self.assertEqual(["Up", "Down"], y.tolist())
 
-    def test_drop_infrequent_features(self):
-        df = pd.DataFrame({'Market_change': 1, 'Tweet_sentiment': 1, 'Text': 1,
-                           '2_times': [0, 0, 0, 1, 1],
-                           '4_times': [1, 1, 0, 1, 1],
-                           '0_times': [0, 0, 0, 0, 0],
-                           '5_times': [1, 1, 1, 1, 1]})
-        expected_columns = sorted(["Market_change", 'Tweet_sentiment', 'Text', "4_times", "5_times"])
-        res = drop_infrequent_features(df, min_freq=3)
-        self.assertEqual(expected_columns, sorted(res.columns.tolist()))
+    def test_get_x_y_from_list_of_tuples(self):
+        x, y = [1, 2, 3], [1, 4, 9]
+        res_x, res_y = get_x_y_from_list_of_tuples(zip(x, y))
+        self.assertEqual((x, y), (res_x.tolist(), res_y.tolist()))
 
     def test_move_column_to_the_end(self):
         df = pd.DataFrame(columns=["A", "B", "C", "D"])
@@ -36,7 +31,7 @@ class TestHelpers(unittest.TestCase):
              'Market_change': [0.1, 0.2, 0.3]})
         exp_df = pd.DataFrame(
             {'Text': ['a', 'b'], 'Tweet_sentiment': [1, 1], 'f1': [0, 0], 'f2': [1, 1], 'f3': [0, 1],
-             'Market_change': [0.1, 0.2]}) # todo drop last row
+             'Market_change': [0.1, 0.2]})  # todo drop last row
         result = drop_instances_without_features(df)
         self.assertTrue(exp_df.equals(result.reset_index(drop=True)))
 
@@ -60,15 +55,29 @@ class TestHelpers(unittest.TestCase):
         self.assertTrue(exp_df.equals(result))
 
     def test_mark_features(self):
-        extr = FeatureExtractor()  # todo mock?
-        features = "aaa bbb ccc ddd eee fff".split()
-        extr.set_features(features)
-        df = pd.DataFrame({'Text': ["aaa ccc eee", "ccc eee fff"]})
-
-        res = mark_features(extr, df)
-        res = res[sorted(res.columns)]
-        exp_res = [['aaa ccc eee', 1, 0, 1, 0, 1, 0], ['ccc eee fff', 0, 0, 1, 0, 1, 1]]
+        df = pd.DataFrame({'Text': ["first", "second"]})
+        res = mark_features(MockFeatureExtractor(), df)
+        exp_res = [["first", 1, 0, 1, 0], ["second", 0, 1, 1, 0]]
         self.assertEqual(exp_res, res.values.tolist())
+
+    # todo inne do mark features
+
+    def test_count_nr_of_feature_occurrences(self):
+        df = pd.DataFrame({'2_times': [0, 0, 0, 1, 1],
+                           '4_times': [1, 1, 0, 1, 1],
+                           '0_times': [0, 0, 0, 0, 0],
+                           '5_times': [1, 1, 1, 1, 1]})
+        res = count_nr_of_feature_occurrences(df)
+        self.assertEqual([('0_times', 0), ('2_times', 2), ('4_times', 4), ('5_times', 5)], res)
+
+
+class MockFeatureExtractor:
+    features = ["A", "B", "C", "D"]
+
+    def extract_features(self, text):
+        if text == "first":
+            return dict(zip(self.features, [1, 0, 1, 0]))
+        return dict(zip(self.features, [0, 1, 1, 0]))
 
 
 if __name__ == '__main__':

@@ -1,33 +1,33 @@
-from nltk.tokenize import sent_tokenize
-from nltk.stem import WordNetLemmatizer
-from sortedcontainers import SortedSet
 import re
 import string
 import os
+from nltk.stem import WordNetLemmatizer
+from sortedcontainers import SortedSet
 
 STOP_LIST_FILE = os.path.join(os.path.dirname(__file__), "data/SmartStoplist.txt")
-punct_remove_translator = str.maketrans('', '', string.punctuation)
+PUNCT_REMOVE_TRANSLATOR = str.maketrans('', '', string.punctuation)
 
 
-def load_stop_words(file_name):
-    with open(file_name, "r") as f:
+def read_stop_words():
+    with open(STOP_LIST_FILE, "r") as f:
         return [line.strip() for line in f]
 
 
-def len_words(text):
-    return len(text.split())
+def get_stopwords_regex():
+    stop_words = read_stop_words()
+    words_to_remove_with_reg = [r"\b" + w + r"\b" for w in stop_words]
+    words_to_remove_with_reg.append(r"\$?\d+[^\s]*")  # match number, $, %
+    return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)
 
 
 # rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
 
 class FeatureExtractor:
     def __init__(self, min_keyword_frequency=2):
-        self.lemamatizer = WordNetLemmatizer()
         """ Features set containing unique words"""
         self._vocabulary = set()
         self._phrases = SortedSet(key=phrases_sorting_key)
-
-        self.stop_word_regex = self._create_stopwords_regex()
+        self.stop_word_regex = get_stopwords_regex()
 
         self.max_words_in_feature = 3
         self.min_words_in_feature = 2
@@ -47,12 +47,6 @@ class FeatureExtractor:
     def features(self):
         return list(self._phrases) + list(self._vocabulary)
 
-    def _create_stopwords_regex(self):  # todo usunac self
-        self.stop_words = load_stop_words(STOP_LIST_FILE)
-        words_to_remove_with_reg = [r"\b" + w + r"\b" for w in self.stop_words]
-        words_to_remove_with_reg.append("\$?\d+[^\s]*")  # match number, $, %
-        return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)
-
     def extract_features(self, tweet):
         features = dict.fromkeys(self._phrases, False)
         sentences = preprocess(tweet)
@@ -67,7 +61,7 @@ class FeatureExtractor:
             # sentence has no feature phrases now
             chunks = self.split_by_stop_words(s)
             for c in chunks:
-                lemmatized = self.lemamatize_many(c.split())
+                lemmatized = lemamatize_many(c.split())
                 extracted_words.update(lemmatized)
 
         for w in self._vocabulary:
@@ -77,7 +71,7 @@ class FeatureExtractor:
     def build(self, tweets):
         sentences = preprocess_many(tweets)
         phrases, words = self.generate_phrases(sentences)
-        words = self.lemamatize_many(words)
+        words = lemamatize_many(words)
         words = [w for w in words if len(w) >= self.min_word_length]
         return phrases, words
 
@@ -93,12 +87,9 @@ class FeatureExtractor:
         phrases = [p.strip() for p in phrases]
         return [p for p in phrases if p]
 
-    def lemamatize_many(self, words):
-        return [self.lemamatizer.lemmatize(w) for w in words]
-
     def is_phrase_acceptable(self, candidate, candidates):
         has_occured_enough = candidates.count(candidate) >= self.min_keyword_frequency
-        is_phrase_length_ok = self.min_words_in_feature <= len_words(candidate) <= self.max_words_in_feature
+        is_phrase_length_ok = self.min_words_in_feature <= len(candidate.split()) <= self.max_words_in_feature
         return has_occured_enough and is_phrase_length_ok
 
     def extract_not_matching_candidates(self, candidates):
@@ -126,7 +117,6 @@ class FeatureExtractor:
                     phrases.append(p)
 
         candidates, rest = self.extract_not_matching_candidates(phrases)
-        # candidates.update(self.extract_adjoined_candidates(tweets))
         return candidates, rest
 
     def build_vocabulary(self, dataset):
@@ -135,26 +125,10 @@ class FeatureExtractor:
         print('VOCABULARY LEN ' + str(len(self._vocabulary)))
         print('PHRASES LENGTH ' + str(len(self._phrases)))
 
-    # def extract_adjoined_candidates(self, tweets):  # only one that is found is "build the wall"
-    #     candidates = []
-    #     for t in tweets:
-    #         words = t.split()
-    #         words_len = len(words)
-    #         if words_len > 3:
-    #             for i in range(words_len - 2):
-    #                 if not self.is_stopword(words[i]) \
-    #                         and self.is_stopword(words[i+1]) \
-    #                         and not self.is_stopword(words[i+2]):
-    #                     candidates.append(" ".join(words[i:i+3]))
-    #
-    #     result = set()
-    #     for c in candidates:
-    #         if candidates.count(c) >= self.min_keyword_frequency:
-    #             result.add(c)
-    #     return result
 
-    def is_stopword(self, w):
-        return w in self.stop_words
+def lemamatize_many(words):
+    lemmatizer = WordNetLemmatizer()
+    return [lemmatizer.lemmatize(w) for w in words]
 
 
 def phrases_sorting_key(text):
@@ -181,7 +155,7 @@ def clear_from_punct(phrase):
     >>> clear_from_punct(".")
     ''
     """
-    return phrase.translate(punct_remove_translator)
+    return phrase.translate(PUNCT_REMOVE_TRANSLATOR)
 
 
 def preprocess_many(tweets):
@@ -212,7 +186,7 @@ def preprocess(tweet):
     # sentences = sent_tokenize(text)
     # sentences = [s.rstrip('?:!.,;') for s in sentences]
     sentences = [s.strip() for s in sentences]
-    sentences = [re.sub(chars_to_remove, "", s) for s in sentences] # todo czy da sie szybciej?
+    sentences = [re.sub(chars_to_remove, "", s) for s in sentences]
     sentences = [re.sub(chars_to_replace, " ", s) for s in sentences]
     return sentences
 

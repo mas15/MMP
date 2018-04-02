@@ -1,3 +1,6 @@
+To run test: cd tests; nosetests
+nosetests --with-coverage --cover-erase --cover-package=markets --cover-html
+
 MMP
 Twitter only allows access to a users most recent 3240 tweets with this method
 

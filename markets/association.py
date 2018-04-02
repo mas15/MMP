@@ -1,6 +1,6 @@
+import os
 from datetime import timedelta
 import pandas as pd
-import os
 from markets.sentiment import SentimentAnalyser
 from markets.helpers import move_column_to_the_end
 
@@ -48,10 +48,9 @@ def set_currency_change(result):
     def _get_change(x):
         if x > up_min:
             return "Up"
-        elif x < down_max:
+        if x < down_max:
             return "Down"
-        else:
-            return "NC"
+        return "NC"
 
     down_max, up_min = calculate_thresholds(result)
     print(down_max)
@@ -63,12 +62,12 @@ def set_currency_change(result):
 def calculate_thresholds(df):
     mean = df["Market_change"].mean()
     sigma = df["Market_change"].std(ddof=0)
-    lower_threshold = (mean - (sigma/3)).round(2)
-    higher_threshold = (mean + (sigma/3)).round(2)
+    lower_threshold = (mean - (sigma / 3)).round(2)
+    higher_threshold = (mean + (sigma / 3)).round(2)
     return lower_threshold, higher_threshold
 
 
-if __name__ == "__main__":
+def build_df_with_tweets_and_effect():
     all_tweets = read_all_tweets()
     dollar_prices = read_dollar_prices()
     sent = SentimentAnalyser()
@@ -86,3 +85,7 @@ if __name__ == "__main__":
 
     # result.drop(columns=['Text'], inplace=True) # todo set as index?
     # result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)
+
+
+if __name__ == "__main__":
+    build_df_with_tweets_and_effect()

@@ -7,3 +7,5 @@ scipy
 scikit-learn
 mlxtend
 numpy
+parameterized
+nose

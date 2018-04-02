@@ -1,5 +1,6 @@
 from markets.feature_extractor import FeatureExtractor, extract_phrases_from_text, preprocess
 import unittest
+from parameterized import parameterized
 
 
 class TestFeatureExtractor(unittest.TestCase):
@@ -22,19 +23,20 @@ class TestFeatureExtractor(unittest.TestCase):
         self.assertEqual(["fake news media"], list(phrases))
         self.assertEqual({"bad"}, words)
 
-    def test_extract_phrases_from_text(self):  # todo przeniesc
-        phrases = ["fake news media", "hillary clinton"]
-        text = "bad fake news media"
+    @parameterized.expand([
+        (["fake news media", "hillary clinton"],
+         "bad fake news media",
+         "bad ",
+         ["fake news media"]),  # todo czemu tu spacja po bad?
+        (["tax cuts", "fake news media", "hillary clinton"],
+         "bad fake news media about hillary clinton and more text",
+         "bad  about  and more text",
+         ["fake news media", "hillary clinton"])
+    ])
+    def test_extract_phrases_from_text(self, phrases, text, exp_words, exp_phrases):
         res_words, res_phrases = extract_phrases_from_text(text, phrases)
-        self.assertEqual("bad ", res_words)
-        self.assertEqual(["fake news media"], res_phrases)
-
-    def test_extract_phrases_from_text_2(self):  # todo przeniesc
-        phrases = ["tax cuts", "fake news media", "hillary clinton"]
-        text = "bad fake news media about hillary clinton and more text"
-        res_words, res_phrases = extract_phrases_from_text(text, phrases)
-        self.assertEqual("bad  about  and more text", res_words)
-        self.assertEqual(["fake news media", "hillary clinton"], res_phrases)
+        self.assertEqual(exp_words, res_words)
+        self.assertEqual(exp_phrases, res_phrases)
 
     def test_extract_features_2(self):
         self.extr._vocabulary = ["hello", "medium", "feature"]
@@ -76,25 +78,37 @@ class TestFeatureExtractor(unittest.TestCase):
             found = [f for f, is_found in extracted.items() if is_found]
             self.assertEqual(exp_res, sorted(found))  # todo usunac sorted ale dac ordered set
 
-    def test_split_by_stop_words(self):
-        tweet = "Just cannot  believe a judge would put our country in such peril " \
-                "If something happens blame him and court system or People pouring in Bad "
+    @parameterized.expand([
+        ("Just cannot  believe a judge would put our country in such peril "
+         "If something happens blame him and court system or People pouring in Bad ",
+         ['judge', 'put', 'country', 'peril', 'blame', 'court system', 'People pouring', 'Bad']),
+        ("Taxes and people are bad decisions then stupid people $1.2 blame 45% and nothing 1st. time",
+         ["Taxes", "people", "bad decisions", "stupid people", "blame", "time"])
+    ])
+    def test_split_by_stop_words(self, tweet, exp_res):
         res = self.extr.split_by_stop_words(tweet)
-        exp_res = ['judge', 'put', 'country', 'peril', 'blame', 'court system', 'People pouring', 'Bad']
         self.assertEqual(res, exp_res)
 
-    def test_is_phrase_acceptable(self):
-        self.extr.min_keyword_frequency = 0  # todo test czy acc jak wystarczajaco razy
-        self.assertFalse(self.extr.is_phrase_acceptable("Four is too much", []))
-        self.assertTrue(self.extr.is_phrase_acceptable("Three words ok", []))
-        self.assertTrue(self.extr.is_phrase_acceptable("Also ok", []))
-        self.assertFalse(self.extr.is_phrase_acceptable("Bad", []))
+    @parameterized.expand([
+        ("Four is too much", False),
+        ("Bad", False),
+        ("Three words ok", True),
+        ("Also ok", True)
+    ])
+    def test_is_phrase_acceptable_just_length(self, phrase, exp_res):
+        self.extr.min_keyword_frequency = 0
+        result = self.extr.is_phrase_acceptable(phrase, [])
+        self.assertEqual(exp_res, result)
 
-    def test_split_by_stop_words_2(self):
-        text = "Taxes and people are bad decisions then stupid people $1.2 blame 45% and nothing 1st. time"
-        exp_res = ["Taxes", "people", "bad decisions", "stupid people", "blame", "time"]
-        res = self.extr.split_by_stop_words(text)
-        self.assertEqual(res, exp_res)
+    @parameterized.expand([
+        ("word", ["word", "another", "word", "word"], False),
+        ("whole phrase", ["whole phrase", "another", "whole phrase", "whole phrase"], True),
+        ("whole phrase", ["whole phrase", "another", "whole phrase"], True),
+        ("whole phrase", ["whole phrase", "another"], False),
+    ])
+    def test_is_phrase_acceptable_frequency(self, phrase, candidates, exp_res):
+        result = self.extr.is_phrase_acceptable(phrase, candidates)
+        self.assertEqual(exp_res, result)
 
     def test_generate_candidate_keywords(self):
         tweets = ["Make america great again.",
@@ -116,7 +130,7 @@ class TestFeatureExtractor(unittest.TestCase):
 
     def test_splitting_sentences(self):
         sent = "@DRUDGE_REPORT: Business is looking #better than ever with @business enthusiasm at record levels. " \
-            "Stock Market at an all-time high. That doesn't just happen! Mexico, wall"
+               "Stock Market at an all-time high. That doesn't just happen! Mexico, wall"
         result = preprocess(sent)
         exp_result = ['drudge report', 'business is looking better than ever with business enthusiasm at record levels',
                       'stock market at an alltime high', "that doesn't just happen", 'mexico', 'wall']

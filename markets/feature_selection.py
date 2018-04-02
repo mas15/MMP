@@ -1,8 +1,8 @@
 from sklearn.naive_bayes import MultinomialNB
 import os
 import pandas as pd
-from sklearn.feature_selection import RFECV
-from markets.helpers import get_x_y_from_df, count_nr_of_feature_occurencies
+from sklearn import feature_selection as fs
+from markets.helpers import get_x_y_from_df, count_nr_of_feature_occurrences
 
 ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
 FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
@@ -27,8 +27,8 @@ class FeatureSelector:
 
     def _sort_features_by_rank(self):
         model = MultinomialNB()
-        rfe = RFECV(model, 1, cv=10, verbose=1, n_jobs=-1)
-        rfe = rfe.fit(self.x, self.y)
+        rfe = fs.RFECV(model, 1, cv=10, verbose=1, n_jobs=-1)
+        rfe = rfe.fit(self.x, self.y) # nie trzeba zapisywac?
         ranking = [int(score) for score in rfe.ranking_.tolist()]
 
         sorted_indexes = get_indexes_sorted_by_score(ranking)
@@ -43,7 +43,7 @@ def get_indexes_sorted_by_score(scores):
 
 def get_frequent_features(df, min_freq=MIN_FEATURE_OCCURENCIES):
     features = df.drop(columns=["Market_change", "Tweet_sentiment", "Text"], errors="ignore")
-    cols_with_nr_of_trues = count_nr_of_feature_occurencies(features)
+    cols_with_nr_of_trues = count_nr_of_feature_occurrences(features)
     frequent_features = [c[0] for c in cols_with_nr_of_trues if c[1] > min_freq]  # i c!=change
     return frequent_features
 
