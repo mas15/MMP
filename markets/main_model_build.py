@@ -110,7 +110,7 @@ class ModelTrainer:
         df = self.df_processor.filter_features(df, features)
 
         # for features, k_features in get_k_best_features(df, 30, 300):
-        for features, k_features in get_best_features_from_file("data/attr_po_6_wr_nb_bf_nc2"):
+        for features, k_features in get_best_features_from_file("data/attr_selected_in_weka"):
             print(k_features)
             sifted_df = self.df_processor.filter_features(df.copy(), features)  # remove not needed, mark other etc
             accuracy = self._train_with_different_seeds(sifted_df)
