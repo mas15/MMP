@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.model_selection import StratifiedKFold
 
 
-def k_split(x, y, nr_folds, random_state): # todo test
+def k_split(x, y, nr_folds, random_state):  # todo test
     kf = StratifiedKFold(n_splits=nr_folds, random_state=random_state, shuffle=True)
     for train_index, test_index in kf.split(x, y):
         x_train, x_test = x[train_index], x[test_index]
@@ -57,11 +57,12 @@ def count_nr_of_feature_occurrences(features):
 
 
 def remove_features(df, features_to_leave):
-    cols_to_leave = features_to_leave + ["Tweet_sentiment", "Market_change", "Text"]
-    cols_to_drop = [c for c in list(df) if c not in cols_to_leave]
-    feats_not_in_df = [c for c in cols_to_leave if c not in list(df)]
+    cols_to_drop = [c for c in list(df) if c not in features_to_leave]
+    feats_not_in_df = [c for c in features_to_leave if c not in list(df)]
+
     if feats_not_in_df:
-        raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df), feats_not_in_df))
+        raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df),
+                                                                                                  feats_not_in_df))
+
     df.drop(columns=cols_to_drop, axis=1, inplace=True)
     return df
-

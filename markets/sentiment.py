@@ -86,13 +86,13 @@ if __name__ == "__main__":
     tweets_with_sent = get_tweets_with_sentiment_from_file(CORPUS_FILE)
     sent = SentimentAnalyser()
 
-    # todo lemmatize phrases
-    # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
-    average_of_n = sum([sent.cross_validate(tweets_with_sent, i) for i in range(40)])/40
-    print("VOCABULARY:")
-    print(sent.extr._vocabulary)
-    print(sent.extr._phrases)
-    print("AV OF 40: " + average_of_n)
+    # # todo lemmatize phrases
+    # # TODO min 3 litery ale vez kropki, We love you!\n\nGOD  nie dobre /n
+    # average_of_n = sum([sent.cross_validate(tweets_with_sent, i) for i in range(40)])/40
+    # print("VOCABULARY:")
+    # print(sent.extr._vocabulary)
+    # print(sent.extr._phrases)
+    # print("AV OF 40: " + str(average_of_n))
 
     print("TRAINING ON ALL AND SAVING CL")
     sent.train(tweets_with_sent)
