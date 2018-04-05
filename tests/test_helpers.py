@@ -1,12 +1,24 @@
 import unittest
 from unittest import mock
+from unittest.mock import create_autospec
+from markets.feature_extractor import FeatureExtractor
 from markets.helpers import get_x_y_from_df, move_column_to_the_end, drop_instances_without_features, \
-    remove_features, mark_features, mark_row, get_x_y_from_list_of_tuples, count_nr_of_feature_occurrences, \
-    save_sifted_tweets_with_date
+    remove_features, mark_features, mark_row, get_x_y_from_list_of_tuples, count_nr_of_feature_occurrences
 import pandas as pd
 
 
 class TestHelpers(unittest.TestCase):
+    def setUp(self):
+        features = ["A", "B", "C", "D"]
+        extracted = {"a": {"A": 1}, "b": {"B": 1, "A": 1}, "c": {},
+                     "first": dict(zip(features, [1, 0, 1, 0])), "second": dict(zip(features, [0, 1, 1, 0]))}
+
+        def extract_features(text):
+            return extracted[text]
+
+        self.mock_extr = create_autospec(FeatureExtractor)
+        self.mock_extr.features = features
+        self.mock_extr.extract_features = extract_features
 
     def test_get_x_y_from_df(self):
         df = pd.DataFrame({"Text": ["one", "two"], "f1": [1, 0], "f2": [0, 1],
@@ -39,25 +51,18 @@ class TestHelpers(unittest.TestCase):
     def test_remove_features(self):  # to teraz jebnie
         df = pd.DataFrame(columns=["Tweet_sentiment", "Text", 'a', 'b', 'c', 'd', 'e', "Market_change"])
         res = remove_features(df, ['b', 'd'])
-        expected_columns = ["Tweet_sentiment", "Text", 'b', 'd', "Market_change"]
-        self.assertEqual(expected_columns, res.columns.tolist())
+        self.assertEqual(['b', 'd'], res.columns.tolist())
         pass
 
-    class MockFeatExtr:
-        def extract_features(self, text):
-            res = {"a": {"One": 1}, "b": {"Two": 1, "One": 1}, "c": {}}  # co jak np "Another": 1
-            return res[text]
-
     def test_mark_row(self):
-        extr = self.MockFeatExtr()
-        df = pd.DataFrame({"Text": ['a', 'b', 'c'], "One": [0, 0, 0], "Two": [0, 0, 0], "Three": [0, 0, 0]})
-        result = df.apply(lambda x: mark_row(x, extr), axis=1)
-        exp_df = pd.DataFrame({"Text": ['a', 'b', 'c'], "One": [1, 1, 0], "Two": [0, 1, 0], "Three": [0, 0, 0]})
+        df = pd.DataFrame({"Text": ['a', 'b', 'c'], "A": [0, 0, 0], "B": [0, 0, 0], "C": [0, 0, 0]})
+        result = df.apply(lambda x: mark_row(x, self.mock_extr), axis=1)
+        exp_df = pd.DataFrame({"Text": ['a', 'b', 'c'], "A": [1, 1, 0], "B": [0, 1, 0], "C": [0, 0, 0]})
         self.assertTrue(exp_df.equals(result))
 
     def test_mark_features(self):
         df = pd.DataFrame({'Text': ["first", "second"]})
-        res = mark_features(MockFeatureExtractor(), df)
+        res = mark_features(self.mock_extr, df)
         exp_res = [["first", 1, 0, 1, 0], ["second", 0, 1, 1, 0]]
         self.assertEqual(exp_res, res.values.tolist())
 
@@ -70,33 +75,6 @@ class TestHelpers(unittest.TestCase):
                            '5_times': [1, 1, 1, 1, 1]})
         res = count_nr_of_feature_occurrences(df)
         self.assertEqual([('0_times', 0), ('2_times', 2), ('4_times', 4), ('5_times', 5)], res)
-
-    def test_save_text_with_market_change_df(self):
-        input_df = pd.DataFrame({"Text": ["First", "Second"],
-                                 "F1": [0, 0], "F2": [1, 1], "F3": [1, 0],
-                                 'Tweet_sentiment': [0.3, 0.6],
-                                 "Market_change": [0.2, 0.5]})
-
-        mock_tweets = pd.DataFrame({"Text": ["First", "Second", "Third"],
-                                    "Date": ["2018-03-06 11:22:33", "2018-03-07 22:33:44", "2018-03-05 12:57:12"],
-                                    "Id": [1, 2, 3]})
-
-        expected_result = pd.DataFrame({"Text": ["First", "Second"],
-                                        "Date": ['2018-03-06 11:22:33', '2018-03-07 22:33:44']})
-
-        with mock.patch("markets.helpers.read_all_tweets", return_value=mock_tweets):
-            with mock.patch("pandas.core.frame.DataFrame.to_csv"):
-                res = save_sifted_tweets_with_date(input_df, "filename")
-                self.assertEqual(expected_result.to_dict(), res.to_dict())
-
-
-class MockFeatureExtractor:
-    features = ["A", "B", "C", "D"]
-
-    def extract_features(self, text):
-        if text == "first":
-            return dict(zip(self.features, [1, 0, 1, 0]))
-        return dict(zip(self.features, [0, 1, 1, 0]))
 
 
 if __name__ == '__main__':
