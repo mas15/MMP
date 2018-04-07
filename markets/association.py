@@ -1,11 +1,10 @@
 import os
 from datetime import timedelta
 import pandas as pd
-from markets.helpers import move_column_to_the_end
+from markets.helpers import move_column_to_the_end, DATA_PATH
 
 pd.set_option('display.width', 1500)
 
-DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
 GRAPH_DATA_FILE_PREFIX = "graph_data_"
 AFFECT_FILE_PREFIX = "tweets_affect_"
 CURRENCY_PRICES_FILE_SUFFIX = "Index.csv"
@@ -85,7 +84,7 @@ def save_sifted_tweets_with_date(df, currency):
 
     result = merge_tweets_with_dollar_prices(tweets_with_date, dollar_prices, False)
 
-    result_df = result[result["Text"].isin(df["Text"])]
+    result_df = result[result["Text"].isin(df["Text"])].copy()
     result_df["Date"] = result_df["Date"].dt.strftime('%Y-%m-%d')
     result_df.to_csv(get_graph_filename(currency), index=False)  # todo test czy z dobra nazwa wywoalane
     return result_df

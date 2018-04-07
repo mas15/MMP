@@ -1,5 +1,5 @@
 from flask import Flask
-from markets.main_model_build import MarketPredictingModel
+from markets.main_model import MarketPredictingModel
 
 app = Flask(__name__, static_url_path='/static')
 app.config['TEMPLATES_AUTO_RELOAD'] = True

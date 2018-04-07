@@ -2,13 +2,21 @@ import pandas as pd
 import numpy as np
 import unittest
 from unittest import mock
+from unittest.mock import patch
 from parameterized import parameterized
 from markets.association import get_date_to_check_affect, set_currency_change, calculate_thresholds, \
     get_tweets_with_affect_filename, get_currency_prices_filename, get_graph_filename, get_graph_data, \
     save_sifted_tweets_with_date, read_currency_prices, set_date_with_effect
+from markets import helpers
 
 
-class TestAssosiationLearning(unittest.TestCase):  # todo rename
+@patch("markets.association.DATA_PATH", "data_path_here")
+class TestTweetsAssociationWithMarkets(unittest.TestCase):  # todo rename
+    def setUp(self):
+        self.mock_letters = mock.patch.object(
+            helpers, 'DATA_PATH', return_value="data_path_here"
+        )
+
     def test_get_date_to_check_affect(self):
         d = pd.Timestamp('2017-01-02T23:47')
         exp_res = pd.Timestamp('2017-01-03')
@@ -27,19 +35,16 @@ class TestAssosiationLearning(unittest.TestCase):  # todo rename
         self.assertEqual((3.33, 4.67), (lower, higher))
 
     def test_get_tweets_with_affect_filename(self):
-        with mock.patch("markets.association.DATA_PATH", "data_path_here"):
-            res = get_tweets_with_affect_filename("ABC")
-            self.assertEqual(r"data_path_here\tweets_affect_ABC.csv", res)
+        res = get_tweets_with_affect_filename("ABC")
+        self.assertEqual(r"data_path_here\tweets_affect_ABC.csv", res)
 
     def test_get_graph_filename(self):
-        with mock.patch("markets.association.DATA_PATH", "data_path_here"):
-            res = get_graph_filename("ABC")
-            self.assertEqual(r"data_path_here\graph_data_ABC.csv", res)
+        res = get_graph_filename("ABC")
+        self.assertEqual(r"data_path_here\graph_data_ABC.csv", res)
 
     def test_get_currency_prices_filename(self):
-        with mock.patch("markets.association.DATA_PATH", "data_path_here"):
-            res = get_currency_prices_filename("ABC")
-            self.assertEqual(r"data_path_here\ABCIndex.csv", res)
+        res = get_currency_prices_filename("ABC")
+        self.assertEqual(r"data_path_here\ABCIndex.csv", res)
 
     def test_get_graph_data(self):
         mock_data = pd.DataFrame({"Text": ["First", "Second"],

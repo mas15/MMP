@@ -20,15 +20,15 @@ var chartData = {
   datasets : [{
       fill: true,
       lineTension: 0.1,
-      backgroundColor: "rgba(75,192,83,0.4)",
-      borderColor: "rgba(75,192,83,1)",
+      backgroundColor: "rgba(154, 174, 94,0.8)",
+      borderColor: "rgba(91,98,65,1)",
       borderCapStyle: 'butt',
       borderJoinStyle: 'miter',
-      pointBorderColor: "rgba(75,192,192,1)",
+      pointBorderColor: "rgba(91,98,65,1)",
       pointBackgroundColor: "#fff",
       pointBorderWidth: 1,
       pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(75,192,83,1)",
+      pointHoverBackgroundColor: "rgba(91,98,65,1)",
       pointHoverBorderColor: "rgba(220,220,220,1)",
       pointHoverBorderWidth: 2,
       pointRadius: 1,
@@ -87,15 +87,15 @@ var featuresChartData = {
             "{{f}}",
             {% endfor %}],
   datasets : [{
-      backgroundColor: "rgba(75,192,83,0.4)",
-      borderColor: "rgba(75,192,83,1)",
+      backgroundColor: "rgba(154, 174, 94,0.8)",
+      borderColor: "rgba(91,98,65,1)",
       borderCapStyle: 'butt',
       borderJoinStyle: 'miter',
-      pointBorderColor: "rgba(75,192,192,1)",
+      pointBorderColor: "rgba(91,98,65,1)",
       pointBackgroundColor: "#fff",
       pointBorderWidth: 1,
       pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(75,192,83,1)",
+      pointHoverBackgroundColor: "rgba(91,98,65,1)",
       pointHoverBorderColor: "rgba(220,220,220,1)",
       pointHoverBorderWidth: 2,
       data : [{% for v in values %}
@@ -112,7 +112,7 @@ canvas.style.width='100%';
 canvas.width  = canvas.offsetWidth;
 
 var featuresChart = new Chart(canvas.getContext("2d"), {
-  type: 'pie',
+  type: 'doughnut',
   data: featuresChartData,
   options: {
          legend: {

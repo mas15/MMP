@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
-from markets.main_model_build import put_results_in_dict, get_misclassified_on_set, get_indexes_before_splitting, \
+from markets.main_model import put_results_in_dict, get_misclassified_on_set, get_indexes_before_splitting, \
     sort_misclassified, MarketPredictingModel, AssociationDataProcessor, ProvisionalPredictingModel
 import numpy as np
 from markets.helpers import k_split

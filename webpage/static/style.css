@@ -1,0 +1,10 @@
+.form-control:focus {
+   border-color: rgba(47,48,69, 0.5);
+   box-shadow: 0px 1px 1px rgba(47,48,69, 0.075) inset, 0px 0px 8px rgba(47,48,69, 0.5);
+}
+
+
+.btn-primary {
+  background-color: rgb(47,48,69);
+  border-color: rgb(47,48,69);
+}

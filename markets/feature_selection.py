@@ -27,7 +27,7 @@ class FeatureSelector:
 
     def _sort_features_by_rank(self):
         model = MultinomialNB()
-        rfe = fs.RFECV(model, 1, cv=10, verbose=1, n_jobs=-1)
+        rfe = fs.RFECV(model, 1, cv=10, verbose=0, n_jobs=-1)
         rfe = rfe.fit(self.x, self.y) # nie trzeba zapisywac?
         ranking = [int(score) for score in rfe.ranking_.tolist()]
 

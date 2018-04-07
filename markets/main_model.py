@@ -166,6 +166,6 @@ def put_results_in_dict(prediction, propabs, features):
     result["prediction"] = prediction
     sentiment_value = features["Tweet_sentiment"].iloc[0]
     features.drop(columns=["Tweet_sentiment"], inplace=True)  # todo tutaj text?
-    result["features"] = features.columns[features.any()].tolist()  # todo test czy dziala po zmianie
+    result["features"] = features.columns[features.any()].tolist()  # todo test czy dziala po zmianie - nie dziala, brawo
     result["sentiment"] = "Positive" if sentiment_value > 0.5 else "Negative"
     return result
