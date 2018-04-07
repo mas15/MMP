@@ -9,7 +9,7 @@ import pandas as pd
 class TestRuleLearning(unittest.TestCase):
 
     def test_get_rules_filename(self):
-        with mock.patch("markets.helpers.DATA_PATH", "data_path_here"):
+        with mock.patch("markets.rules.DATA_PATH", "data_path_here"):
             res = get_rules_filename("ABC")
             self.assertEqual(r"data_path_here\ABC_rules.csv", res)
 
