@@ -1,8 +1,5 @@
-import os
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
-
-DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
 
 
 def k_split(x, y, nr_folds, random_state):  # todo test
@@ -66,15 +63,5 @@ def remove_features(df, features_to_leave):
     if feats_not_in_df:
         raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df),
                                                                                                   feats_not_in_df))
-
     df.drop(columns=cols_to_drop, axis=1, inplace=True)
     return df
-
-
-def get_features_df_filename(currency):  # todo test
-    return os.path.join(DATA_PATH, currency + "_features.csv")
-
-
-def save_features_df(df, currency): # todo test
-    only_feats_and_target = df.drop(columns=["Text", "Tweet_sentiment", "Market_change"])
-    only_feats_and_target.to_csv(get_features_df_filename(currency), index=False)

@@ -5,18 +5,10 @@ from unittest import mock
 from unittest.mock import patch
 from parameterized import parameterized
 from markets.association import get_date_to_check_affect, set_currency_change, calculate_thresholds, \
-    get_tweets_with_affect_filename, get_currency_prices_filename, get_graph_filename, get_graph_data, \
     save_sifted_tweets_with_date, read_currency_prices, set_date_with_effect
-from markets import helpers
 
 
-@patch("markets.association.DATA_PATH", "data_path_here")
-class TestTweetsAssociationWithMarkets(unittest.TestCase):  # todo rename
-    def setUp(self):
-        self.mock_letters = mock.patch.object(
-            helpers, 'DATA_PATH', return_value="data_path_here"
-        )
-
+class TestTweetsAssociationWithMarkets(unittest.TestCase):
     def test_get_date_to_check_affect(self):
         d = pd.Timestamp('2017-01-02T23:47')
         exp_res = pd.Timestamp('2017-01-03')
@@ -33,28 +25,6 @@ class TestTweetsAssociationWithMarkets(unittest.TestCase):  # todo rename
         df = pd.DataFrame({'Market_change': [1, 2, 3, 4, 5, 6, 7]})
         lower, higher = calculate_thresholds(df)
         self.assertEqual((3.33, 4.67), (lower, higher))
-
-    def test_get_tweets_with_affect_filename(self):
-        res = get_tweets_with_affect_filename("ABC")
-        self.assertEqual(r"data_path_here\tweets_affect_ABC.csv", res)
-
-    def test_get_graph_filename(self):
-        res = get_graph_filename("ABC")
-        self.assertEqual(r"data_path_here\graph_data_ABC.csv", res)
-
-    def test_get_currency_prices_filename(self):
-        res = get_currency_prices_filename("ABC")
-        self.assertEqual(r"data_path_here\ABCIndex.csv", res)
-
-    def test_get_graph_data(self):
-        mock_data = pd.DataFrame({"Text": ["First", "Second"],
-                                  "Date": ['2018-03-06 11:22:33', '2018-03-07 22:33:44'],
-                                  "Open": [110, 120]})
-        with mock.patch("pandas.read_csv", return_value=mock_data):
-            dates, prices, tweets_per_date = get_graph_data("ABC")
-            self.assertEqual([110, 120], prices)
-            self.assertEqual(['2018-03-06 11:22:33', '2018-03-07 22:33:44'], dates)
-            self.assertEqual({'2018-03-06 11:22:33': 'First', '2018-03-07 22:33:44': 'Second'}, tweets_per_date)
 
     # def test_save_sifted_tweets_with_date(self):
     #     input_df = pd.DataFrame({"Text": ["First", "Second"], "F1": [0, 0], "F2": [1, 1]})

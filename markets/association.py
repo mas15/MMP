@@ -1,26 +1,19 @@
-import os
 from datetime import timedelta
 import pandas as pd
-from markets.helpers import move_column_to_the_end, DATA_PATH
+from markets.helpers import move_column_to_the_end
 
 pd.set_option('display.width', 1500)
 
-GRAPH_DATA_FILE_PREFIX = "graph_data_"
-AFFECT_FILE_PREFIX = "tweets_affect_"
-CURRENCY_PRICES_FILE_SUFFIX = "Index.csv"
-ALL_TWEETS_FILE = os.path.join(DATA_PATH, "all_tweets.csv")
 
-
-def read_all_tweets():
-    all_tweets = pd.read_csv(ALL_TWEETS_FILE)
+def read_all_tweets(tweets_filename):
+    all_tweets = pd.read_csv(tweets_filename)
     all_tweets['Date'] = pd.to_datetime(all_tweets['Date'], format='%Y-%m-%d %H:%M:%S')
-    all_tweets.drop(columns=['Id'], inplace=True) # todo czy to dobrze?
+    all_tweets.drop(columns=['Id'], inplace=True)  # todo czy to dobrze?
     return all_tweets
 
 
-def read_currency_prices(currency):
-    filename = get_currency_prices_filename(currency)
-    prices = pd.read_csv(filename)
+def read_currency_prices(prices_filename):
+    prices = pd.read_csv(prices_filename)
 
     prices['Date'] = pd.to_datetime(prices['Date'], format='%b %d, %Y')
     prices = prices[(prices['Date'].dt.year >= 2017)]
@@ -77,60 +70,24 @@ def calculate_thresholds(df):
     return lower_threshold, higher_threshold
 
 
-def save_sifted_tweets_with_date(df, currency):
-    all_tweets = read_all_tweets()
-    dollar_prices = read_currency_prices(currency)
-    tweets_with_date = set_date_with_effect(all_tweets)  # todo do jednej funckji - read_set
-
-    result = merge_tweets_with_dollar_prices(tweets_with_date, dollar_prices, False)
-
+def save_sifted_tweets_with_date(df, tweets_filename, prices_filename, output_filename):  # todo czy to tu?
+    result = get_tweets_with_currency_prices(tweets_filename, prices_filename, False)
     result_df = result[result["Text"].isin(df["Text"])].copy()
     result_df["Date"] = result_df["Date"].dt.strftime('%Y-%m-%d')
-    result_df.to_csv(get_graph_filename(currency), index=False)  # todo test czy z dobra nazwa wywoalane
+    result_df.to_csv(output_filename, index=False)  # todo test czy z dobra nazwa wywoalane
     return result_df
 
 
-def get_tweets_with_affect_filename(currency):
-    return os.path.join(DATA_PATH, AFFECT_FILE_PREFIX + currency + ".csv")
-
-
-def get_graph_filename(currency):
-    return os.path.join(DATA_PATH, GRAPH_DATA_FILE_PREFIX + currency + ".csv")
-
-
-def get_currency_prices_filename(currency):
-    return os.path.join(DATA_PATH, currency + CURRENCY_PRICES_FILE_SUFFIX)
-
-
-def get_graph_data(currency):
-    graph_data = pd.read_csv(get_graph_filename(currency))
-    tweets_per_date = dict(zip(graph_data.Date, graph_data.Text))
-    dates = graph_data["Date"].values.tolist()
-    prices = graph_data["Open"].values.tolist()
-
-    return dates, prices, tweets_per_date
-
-
-def build_df_with_tweets_and_effect(currency): # todo test
-    all_tweets = read_all_tweets()
-    prices = read_currency_prices(currency)
-
-    all_tweets = set_date_with_effect(all_tweets)
-    result = merge_tweets_with_dollar_prices(all_tweets, prices)
-    # result.to_csv("data/tweets_with_prices.csv", index=False)
-
+def build_df_with_tweets_and_effect(tweets_filename, prices_filename):  # todo test
+    result = get_tweets_with_currency_prices(tweets_filename, prices_filename)
     result = set_currency_change(result)
-    print("Currency change set")
-
     result = move_column_to_the_end(result, "Market_change")  # todo czy to potrzebne?
-
-    result_filename = get_tweets_with_affect_filename(currency)
-    result.to_csv(result_filename, index=False)
-
-    # result.drop(columns=['Text'], inplace=True) # todo set as index?
-    # result.to_csv(FEATURES_WITH_EFFECT_FILE, index=False)
-    return result_filename
+    return result
 
 
-# if __name__ == "__main__":
-#    build_df_with_tweets_and_effect()
+def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_and_date=True):  # todo test?
+    all_tweets = read_all_tweets(tweets_filename)
+    currency_prices = read_currency_prices(prices_filename)
+    tweets_with_date = set_date_with_effect(all_tweets)
+    result = merge_tweets_with_dollar_prices(tweets_with_date, currency_prices, drop_open_and_date)
+    return result

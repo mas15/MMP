@@ -1,7 +1,6 @@
 import numpy as np
 import pickle
 import pandas as pd
-import os
 from collections import Counter
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.naive_bayes import MultinomialNB
@@ -11,13 +10,6 @@ from markets.feature_extractor import FeatureExtractor
 from markets.helpers import get_x_y_from_df, remove_features, move_column_to_the_end, mark_features, \
     drop_instances_without_features
 from markets import helpers
-
-PICKLED_MODEL_PATH = os.path.join(os.path.dirname(__file__), "pickled_models")
-PREDICTING_MODEL_PREFIX = "assoc_model"
-
-
-def get_predicting_model_filename(currency):
-    return os.path.join(PICKLED_MODEL_PATH, PREDICTING_MODEL_PREFIX + currency + ".pickle")
 
 
 class AssociationDataProcessor:
@@ -87,9 +79,8 @@ class ProvisionalPredictingModel:
 
 
 class MarketPredictingModel(ProvisionalPredictingModel):
-    def __init__(self, currency, features=None, model=None):
+    def __init__(self, features=None, model=None):
         super(MarketPredictingModel, self).__init__(model)
-        self._currency = currency
         self.features = features or []
 
     def analyse(self, text):  # todo co jak nie ma modelu
@@ -106,13 +97,13 @@ class MarketPredictingModel(ProvisionalPredictingModel):
         propabs = dict(zip(self.model.classes_, propabs_vals))
         return result, propabs
 
-    def save(self):
-        with open(get_predicting_model_filename(self._currency), "wb") as f:
+    def save(self, model_filename):
+        with open(model_filename, "wb") as f:
             pickle.dump(self.model, f)
             pickle.dump(self.features, f)
 
-    def load(self):
-        with open(get_predicting_model_filename(self._currency), "rb") as f:
+    def load(self, model_filename):
+        with open(model_filename, "rb") as f:
             self.model = pickle.load(f)
             self.features = pickle.load(f)
 

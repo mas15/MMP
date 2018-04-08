@@ -26,7 +26,7 @@ class TestMainModel(unittest.TestCase):
 
         mock_model.predict.return_value = np.array(["NC"])
         mock_model.predict_proba.return_value = np.array([[0.3, 0.2, 0.5]])
-        self.pred_model = MarketPredictingModel("ABC", features, mock_model)
+        self.pred_model = MarketPredictingModel(features, mock_model)
 
     # TODO te nie uzywane
 
