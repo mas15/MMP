@@ -30,10 +30,15 @@ def dropdb():
 
 @manager.command
 def demo():
-    for c in ["EUR"]: #"USD", , "MEX"]:
+    for c in ["EUR", "MEX"]: # , "USD"]:
         analyser = CurrencyAnalyser(c)
-        test_accuracy, train_accuracy = analyser.analyse()
-        currency = Currency(name=c, full_name=c, test_accuracy=test_accuracy, train_accuracy=train_accuracy)
+        analyse_result = analyser.analyse()
+        currency = Currency(name=c,
+                            test_accuracy=analyse_result.test_accuracy,
+                            train_accuracy=analyse_result.train_accuracy,
+                            nr_features=analyse_result.nr_features,
+                            nr_tweets=analyse_result.nr_tweets,
+                            zero_r=analyse_result.zero_r)
         db.session.add(currency)
         db.session.commit()
 

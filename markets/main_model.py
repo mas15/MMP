@@ -21,7 +21,7 @@ class AssociationDataProcessor:
         self.sent.load()
 
     def extract_features(self, df):  # get features vector?
-        if not self.extr.features:  # todo has_features
+        if not self.extr.features:
             self.extr.build_vocabulary(df["Text"].tolist())
 
         df = mark_features(self.extr, df)
@@ -47,8 +47,9 @@ class AssociationDataProcessor:
         return df
 
 
-class ProvisionalPredictingModel:
-    def __init__(self, model=None):
+class MarketPredictingModel:
+    def __init__(self, features=None, model=None):
+        self.features = features or []
         self.model = model or MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
 
     def train(self, df, random_state=1, k_folds=10):
@@ -76,12 +77,6 @@ class ProvisionalPredictingModel:
         accuracy = metrics.accuracy_score(y, predicted)
         misclassified_objects = get_misclassified_on_set(y, predicted)
         return accuracy, misclassified_objects
-
-
-class MarketPredictingModel(ProvisionalPredictingModel):
-    def __init__(self, features=None, model=None):
-        super(MarketPredictingModel, self).__init__(model)
-        self.features = features or []
 
     def analyse(self, text):  # todo co jak nie ma modelu
         df = AssociationDataProcessor(self.features).process_text(text)
@@ -118,15 +113,6 @@ class MarketPredictingModel(ProvisionalPredictingModel):
         return result
 
 
-def zero_r(df):
-    """
-    >>> df = pd.DataFrame({"Text": [1, 2, 3, 4, 5], "Market_change":["Up", "Up", "Down", "NC", "Up"]})
-    >>> zero_r(df)
-    0.6
-    """
-    return df["Market_change"].value_counts().max() / df["Market_change"].size
-
-
 def print_misclassified(df, misclassified_objects):
     print()
     print("misclassified_objects")
@@ -147,7 +133,7 @@ def get_indexes_before_splitting(before, after):
     return before[after]
 
 
-def get_misclassified_on_set(y, predicted):
+def get_misclassified_on_set(y, predicted): # tu cos moze teraz byc nie tak todo
     misclassified_objects = np.where(y != predicted)
     return misclassified_objects
 
@@ -157,6 +143,7 @@ def put_results_in_dict(prediction, propabs, features):
     result["prediction"] = prediction
     sentiment_value = features["Tweet_sentiment"].iloc[0]
     features.drop(columns=["Tweet_sentiment"], inplace=True)  # todo tutaj text?
-    result["features"] = features.columns[features.any()].tolist()  # todo test czy dziala po zmianie - nie dziala, brawo
+    result["features"] = features.columns[
+        features.any()].tolist()  # todo test czy dziala po zmianie - nie dziala, brawo
     result["sentiment"] = "Positive" if sentiment_value > 0.5 else "Negative"
     return result

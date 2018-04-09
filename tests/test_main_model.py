@@ -3,7 +3,7 @@ from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
 from markets.main_model import put_results_in_dict, get_misclassified_on_set, get_indexes_before_splitting, \
-    sort_misclassified, MarketPredictingModel, AssociationDataProcessor, ProvisionalPredictingModel
+    sort_misclassified, MarketPredictingModel, AssociationDataProcessor
 import numpy as np
 from markets.helpers import k_split
 from markets.feature_extractor import FeatureExtractor
@@ -49,6 +49,19 @@ class TestMainModel(unittest.TestCase):
     #     res = sort_misclassified(misclassified_objects)
     #     exp_res = [(3, 343), (5, 100), (1, 12), (4, 1)]
     #     self.assertEqual(exp_res, res)
+
+    def test_train(self):  # todo missclassified?
+        df = pd.DataFrame({"Text": ["Dummy", "Frame"], "Feature": [1, 0], "Target": [0, 1]})
+
+        mock_split_sets = iter([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]])
+        mock_accuracies = [10, 20, 12, 25, 19, 11, 15, 28]
+
+        with mock.patch("sklearn.metrics.accuracy_score", side_effect=mock_accuracies, autospec=True) as _:
+            with mock.patch("markets.helpers.k_split", return_value=mock_split_sets, autospec=True) as _:
+                res = self.pred_model.train(df, k_folds=4)
+
+                self.assertEqual((14.0, 21.0), res)
+                self.assertEqual(4, self.pred_model.model.fit.call_count)
 
     def test_analyse(self):
         res = self.pred_model.analyse("Tweet content")
@@ -114,27 +127,6 @@ class TestAssociationDataProcessor(unittest.TestCase):
         result_df = self.processor.process_text("First")  # czy dobrze ze nie ma textu w resulcie?
         expected_result = {"F1": {0: 1}, "F2": {0: 0}, 'Tweet_sentiment': {0: 0.3}}
         self.assertEqual(expected_result, result_df.to_dict())
-
-
-class TestProvisionalPredictingModel(unittest.TestCase):
-    def setUp(self):
-        mock_model = create_autospec(MultinomialNB)
-        mock_model.classes_ = ["Up", "Down", "NC"]
-        mock_model.coef_ = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1], [10, 11, 12, 13, 14]]
-        self.prov_model = ProvisionalPredictingModel(mock_model)
-
-    def test_train(self):  # todo missclassified?
-        df = pd.DataFrame({"Text": ["Dummy", "Frame"], "Feature": [1, 0], "Target": [0, 1]})
-
-        mock_split_sets = iter([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]])
-        mock_accuracies = [10, 20, 12, 25, 19, 11, 15, 28]
-
-        with mock.patch("sklearn.metrics.accuracy_score", side_effect=mock_accuracies, autospec=True) as _:
-            with mock.patch("markets.helpers.k_split", return_value=mock_split_sets, autospec=True) as _:
-                res = self.prov_model.train(df, k_folds=4)
-
-                self.assertEqual((14.0, 21.0), res)
-                self.assertEqual(4, self.prov_model.model.fit.call_count)
 
 
 class TestOtherFunctions(unittest.TestCase):

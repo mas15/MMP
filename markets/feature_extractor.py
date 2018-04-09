@@ -122,8 +122,8 @@ class FeatureExtractor:
     def build_vocabulary(self, dataset):
         found_phrases, all_words = self.build(dataset)
         self.set_words_and_phrases(all_words, found_phrases)
-        print('VOCABULARY LEN ' + str(len(self._vocabulary)))
-        print('PHRASES LENGTH ' + str(len(self._phrases)))
+        # print('VOCABULARY LEN ' + str(len(self._vocabulary)))
+        # print('PHRASES LENGTH ' + str(len(self._phrases)))
 
 
 def lemamatize_many(words):

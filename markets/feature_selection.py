@@ -51,9 +51,9 @@ def get_frequent_features(df, min_freq=MIN_FEATURE_OCCURENCIES):
 def get_k_best_features(df, k_min, k_max):
     selector = FeatureSelector(df)
     for k in range(k_min, k_max):
-        yield selector.select_k_best_features(k), k
+        yield selector.select_k_best_features(k)
 
 
-def get_best_features_from_file(filename):
+def get_best_features_from_file(filename): # todo przenisc wyzej
     features = [line.strip() for line in open(filename, 'r')]
-    yield features, len(features)
+    yield features

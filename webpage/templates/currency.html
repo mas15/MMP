@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
+<div class="row mt-5">
     <div class="col-md-8">
         <form class="form-group" method="POST">
             <h4>Predict tweet affect on market</h4>
@@ -18,8 +18,10 @@
         </form>
 
 
-        <p>{{ currency_details.name }} changes predicting model build on X tweets and Y features.</p>
-        <p>{{ currency_details.test_accuracy }} train accuracy, {{ currency_details.train_accuracy }} train accuracy, X ZeroR. </p>
+        <p>{{ currency_details.name }} change predicting model build on {{ currency_details.nr_tweets }}  tweets
+            and {{ currency_details.nr_features }}  features.</p>
+        <p>{{ currency_details.test_accuracy }} train accuracy, {{ currency_details.train_accuracy }} train accuracy,
+            {{ currency_details.zero_r }}  ZeroR. </p>
     </div>
     <div class="col-md-4">
         {% if prediction|length %}
@@ -32,29 +34,26 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row mt-5">
     <div class="col-md-12">
         <h4>Tweets affect on {{ currency_details.name }} </h4>
 
         <script type="text/javascript">
                 {% include "mychart.js" %}
-
-
-
         </script>
         <canvas id="currencyChart" height="500"></canvas>
 
     </div>
 </div>
 
-<div class="row">
+<div class="row mt-5">
     <div class="col-md-12">
         <h4>Features coefficiency</h4>
         <canvas id="featuresChart" height="500"></canvas>
     </div>
 </div>
 
-<div class="row">
+<div class="row mt-5">
     <div class="col-md-12">
 
         <table class="table">
