@@ -1,5 +1,5 @@
 antecedants,consequents,antecedent support,consequent support,support,confidence,lift
-pearl,harbor,0.01273885,0.0111465,0.0111465,0.875,78.5
-harbor,pearl,0.0111465,0.01273885,0.0111465,1.0,78.5
-"travel ban, politically",correct,0.00477707,0.01273885,0.00477707,1.0,78.5
-"travel ban, correct",politically,0.00477707,0.0111465,0.00477707,1.0,89.71428571
+harbor,pearl,0.01112878,0.0127186,0.01112878,1.0,78.625
+pearl,harbor,0.0127186,0.01112878,0.01112878,0.875,78.625
+"travel ban, politically",correct,0.00476948,0.0127186,0.00476948,1.0,78.625
+"travel ban, correct",politically,0.00476948,0.01112878,0.00476948,1.0,89.85714286

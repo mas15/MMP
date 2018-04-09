@@ -9,3 +9,5 @@ mlxtend
 numpy
 parameterized
 nose
+flask-sqlalchemy
+flask-script

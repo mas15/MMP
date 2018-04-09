@@ -1,3 +1,2 @@
 antecedants,consequents,antecedent support,consequent support,support,confidence,lift
-"puppet, gun",roy moore,0.00291121,0.01164483,0.00291121,1.0,85.875
-"roy moore, gun",puppet,0.00291121,0.01018923,0.00291121,1.0,98.14285714
+"roy moore, puppet",jones,0.00395778,0.01187335,0.00395778,1.0,84.22222222

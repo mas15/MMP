@@ -8,8 +8,8 @@ pd.options.display.max_colwidth = 1000
 
 
 class ModelTrainer:
-    def __init__(self):
-        self.df_processor = AssociationDataProcessor()
+    def __init__(self, df_processor=None):
+        self.df_processor = df_processor or AssociationDataProcessor()
 
     def train(self, df, features_filename=None): # todo test
         best_features = self._find_best_features(df, features_filename)
@@ -18,9 +18,9 @@ class ModelTrainer:
         sifted_df = self.df_processor.filter_features(df_with_features, best_features)
 
         model = MarketPredictingModel(best_features)
-        model.train(sifted_df)
+        accuracies = model.train(sifted_df)
 
-        return model, sifted_df
+        return model, sifted_df, accuracies
 
     def _find_best_features(self, df, features_filename):
         best_accuracy, best_k, best_features = (0, 0), 0, []
@@ -64,8 +64,3 @@ def get_features_iterator(df, selected_features_filename=None):  # todo test
         # lgo here no file
     return get_k_best_features(df, 100, 130)
 
-
-def build_main_model_to_predict_markets(df, model_save_filename, selected_features_filename=None):
-    model, sifted_df = ModelTrainer().train(df, selected_features_filename)
-    model.save(model_save_filename)
-    return model, sifted_df # todo save po zwroceniu?

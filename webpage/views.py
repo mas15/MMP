@@ -4,21 +4,19 @@ from wtforms import StringField
 from wtforms.validators import DataRequired, Length
 from wtforms.widgets import TextArea
 from webpage import app
+from webpage.models import Currency
 
 
 class TweetTextForm(FlaskForm):
     tweet_content = StringField('tweet_content', validators=[DataRequired(), Length(3, 300)], widget=TextArea())
 
 
-CURRENCIES = {"dollar": "USD", "euro": "EUR", "mexico": "MEX"}
-
-
-@app.route('/', methods=['POST', 'GET'], defaults={'currency': 'dollar'})
+@app.route('/', methods=['POST', 'GET'], defaults={'currency': 'USD'})
 @app.route('/currency/<currency>', methods=['POST', 'GET'])
 def index(currency):
     form = TweetTextForm()  # todo validate currency
-    currency_short = CURRENCIES[currency]
-    analyser = app.analysers[currency_short]
+    analyser = app.analysers[currency]
+    currency_details = Currency.get_currency(currency)
 
     prediction_results = dict()
 
@@ -27,7 +25,7 @@ def index(currency):
 
     return render_template('currency.html',
                            prediction=prediction_results,
-                           currency=currency,
+                           currency_details=currency_details,
                            form=form,
                            graph_data=analyser.get_graph_data(),
                            features_data=analyser.get_most_coefficient_features(),

@@ -1,4 +1,4 @@
-from markets.predicting_model_builder import build_main_model_to_predict_markets
+from markets.predicting_model_builder import ModelTrainer
 from markets.association import build_df_with_tweets_and_effect, save_sifted_tweets_with_date
 from markets.rules import extract_rules_to_file
 from markets.main_model import MarketPredictingModel
@@ -32,7 +32,7 @@ class CurrencyAnalyser:
         model_filename = get_predicting_model_filename(self._currency)
 
         tweets_with_affect_df = build_df_with_tweets_and_effect(ALL_TWEETS_FILE, prices_filename)  # tutaj raz
-        self._predicting_model, sifted_df = build_main_model_to_predict_markets(tweets_with_affect_df, model_filename, selected_features_filename)  # tu moze slac juz wczytany df
+        self._predicting_model, sifted_df, accuracies = build_main_model_to_predict_markets(tweets_with_affect_df, model_filename, selected_features_filename)  # tu moze slac juz wczytany df
 
         save_sifted_tweets_with_date(sifted_df, ALL_TWEETS_FILE, prices_filename, graph_filename)
 
@@ -40,6 +40,8 @@ class CurrencyAnalyser:
 
         features_df = sifted_df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], axis=1)
         extract_rules_to_file(features_df, rules_filename)  # tutej tez
+
+        return accuracies # todo zeroR jeszcze
 
     def get_rules_data(self):
         rules_data = pd.read_csv(get_rules_filename(self._currency))
@@ -62,7 +64,14 @@ class CurrencyAnalyser:
         return dates, prices, tweets_per_date
 
 
-def get_selected_features_for_currency_filename(currency):  # todo test
+def build_main_model_to_predict_markets(df, model_save_filename, selected_features_filename=None):
+    trainer = ModelTrainer()
+    model, sifted_df, accuracies = trainer.train(df, selected_features_filename)
+    model.save(model_save_filename)
+    return model, sifted_df, accuracies # todo save po zwroceniu?
+
+
+def get_selected_features_for_currency_filename(currency):
     return os.path.join(DATA_PATH, currency + "_ready_selected.txt")
 
 
