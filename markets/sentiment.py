@@ -4,7 +4,7 @@ import nltk
 import csv
 from nltk import NaiveBayesClassifier
 from markets.helpers import get_x_y_from_list_of_tuples, k_split
-from markets.feature_extractor import FeatureExtractor
+from markets.phrases_extractor import PhrasesExtractor
 
 SENTIMENT_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/sentiment_model.pickle")
 CORPUS_FILE = os.path.join(os.path.dirname(__file__), "data/sentimental_tweets.csv")
@@ -12,7 +12,7 @@ CORPUS_FILE = os.path.join(os.path.dirname(__file__), "data/sentimental_tweets.c
 
 class SentimentAnalyser:
     def __init__(self, extr=None, cl=None):
-        self.extr = extr or FeatureExtractor()
+        self.extr = extr or PhrasesExtractor()
         self.cl = cl
 
     def save(self):

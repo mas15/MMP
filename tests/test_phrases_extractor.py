@@ -1,11 +1,11 @@
-from markets.feature_extractor import FeatureExtractor, extract_phrases_from_text, preprocess
+from markets.phrases_extractor import PhrasesExtractor, extract_phrases_from_text, preprocess
 import unittest
 from parameterized import parameterized
 
 
-class TestFeatureExtractor(unittest.TestCase):
+class TestPhrasesExtractor(unittest.TestCase):
     def setUp(self):
-        self.extr = FeatureExtractor()
+        self.extr = PhrasesExtractor()
 
     def test_extract_features(self):
         self.extr._vocabulary = ["hello", "another", "feature", "great"]  # todo again?

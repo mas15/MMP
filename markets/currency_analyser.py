@@ -1,7 +1,7 @@
-from markets.predicting_model_builder import ModelTrainer
+from markets.predicting_model_trainer import ModelTrainer
 from markets.association import build_df_with_tweets_and_effect, save_sifted_tweets_with_date
 from markets.rules import extract_rules_to_file
-from markets.main_model import MarketPredictingModel
+from markets.market_predicting_model import MarketPredictingModel
 
 import pandas as pd
 import os

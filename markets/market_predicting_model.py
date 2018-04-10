@@ -1,56 +1,19 @@
 import numpy as np
 import pickle
-import pandas as pd
 from collections import Counter
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
-from markets.sentiment import SentimentAnalyser, calculate_sentiment
-from markets.feature_extractor import FeatureExtractor
-from markets.helpers import get_x_y_from_df, remove_features, move_column_to_the_end, mark_features, \
-    drop_instances_without_features
+from markets.helpers import get_x_y_from_df
+from markets.features_extractor import TweetFeaturesExtractor
 from markets import helpers
 
 
-class AssociationDataProcessor:
-    def __init__(self, features=None, extr=None, sent=None):
-        self.extr = extr or FeatureExtractor(min_keyword_frequency=4)
-        if features:
-            self.extr.set_features(features)
-        self.sent = sent or SentimentAnalyser()
-        self.sent.load()
-
-    def extract_features(self, df):  # get features vector?
-        if not self.extr.features:
-            self.extr.build_vocabulary(df["Text"].tolist())
-
-        df = mark_features(self.extr, df)
-        df = calculate_sentiment(df, self.sent)
-
-        if "Market_change" in list(df):
-            df = move_column_to_the_end(df, "Market_change")
-        return df
-
-    def filter_features(self, df, features):
-        features_to_leave = features + ["Tweet_sentiment", "Market_change", "Text"]
-        sifted_df = remove_features(df, features_to_leave)
-
-        self.extr.set_features(features)
-        sifted_df = mark_features(self.extr, sifted_df)
-        sifted_df = drop_instances_without_features(sifted_df)
-        return sifted_df
-
-    def process_text(self, text):
-        df = pd.DataFrame({'Text': [text]})
-        df = self.extract_features(df)
-        df.drop(columns=["Text"], inplace=True)
-        return df
-
-
 class MarketPredictingModel:
-    def __init__(self, features=None, model=None):
+    def __init__(self, features=None, model=None, extr=None):
         self.features = features or []
         self.model = model or MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+        self.features_extractor = extr or TweetFeaturesExtractor(self.features)
 
     def train(self, df, random_state=1, k_folds=10):
         sum_test_accuracy, sum_train_accuracy, = 0, 0
@@ -79,7 +42,7 @@ class MarketPredictingModel:
         return accuracy, misclassified_objects
 
     def analyse(self, text):  # todo co jak nie ma modelu
-        df = AssociationDataProcessor(self.features).process_text(text)
+        df = self.features_extractor.process_text(text)
         prediction, propabs = self._predict(df)
         result = put_results_in_dict(prediction, propabs, df)
         return result

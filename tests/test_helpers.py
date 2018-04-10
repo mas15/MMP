@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 from unittest.mock import create_autospec
-from markets.feature_extractor import FeatureExtractor
+from markets.phrases_extractor import PhrasesExtractor
 from markets.helpers import get_x_y_from_df, move_column_to_the_end, drop_instances_without_features, \
     remove_features, mark_features, mark_row, get_x_y_from_list_of_tuples, count_nr_of_feature_occurrences
 import pandas as pd
@@ -16,7 +16,7 @@ class TestHelpers(unittest.TestCase):
         def extract_features(text):
             return extracted[text]
 
-        self.mock_extr = create_autospec(FeatureExtractor)
+        self.mock_extr = create_autospec(PhrasesExtractor)
         self.mock_extr.features = features
         self.mock_extr.extract_features = extract_features
 
