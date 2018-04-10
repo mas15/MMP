@@ -1,3 +1,4 @@
+tweepy
 pandas
 flask
 flask_wtf

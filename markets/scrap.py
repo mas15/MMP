@@ -3,6 +3,7 @@ import tweepy
 from datetime import datetime
 import csv
 
+
 class TweeterScrapper:
     def __init__(self):
         consumer_key = "sHEmHwtt3koxdLoa6Ok2vEduH"
