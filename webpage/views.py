@@ -17,7 +17,7 @@ def index(currency):
     form = TweetTextForm()  # todo validate currency
     prediction_results = dict()
     try:
-        currency_details = Currency.get_currency(currency)
+        currency_details = Currency.get_currency(currency) # todo raise exception
         analyser = app.analysers[currency]
 
         if form.validate_on_submit():
@@ -30,5 +30,5 @@ def index(currency):
                                graph_data=analyser.get_graph_data(),
                                features_data=analyser.get_most_coefficient_features(),
                                rules_data=analyser.get_rules_data())
-    except Exception:
+    except KeyError:
         abort(404)

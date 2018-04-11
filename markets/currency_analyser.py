@@ -18,7 +18,7 @@ class CurrencyAnalyser:
         self._predicting_model = None  # todo czy to dobrze?
 
     def load(self):
-        self._predicting_model = MarketPredictingModel(self._currency)
+        self._predicting_model = MarketPredictingModel()
         filename = get_predicting_model_filename(self._currency)  # todo sprawdzic czy jest plik i logować
         self._predicting_model.load(filename)
 

@@ -23,8 +23,7 @@ class TestMarketPredictingModel(unittest.TestCase):
         mock_model.predict.return_value = np.array(["NC"])
         mock_model.predict_proba.return_value = np.array([[0.3, 0.2, 0.5]])
 
-        mock_extr = create_autospec(TweetFeaturesExtractor)
-        self.pred_model = MarketPredictingModel(features, mock_model, mock_extr)
+        self.pred_model = MarketPredictingModel(features, mock_model)
 
     # TODO te nie uzywane
 
@@ -61,6 +60,8 @@ class TestMarketPredictingModel(unittest.TestCase):
                 self.assertEqual((14.0, 21.0), res)
                 self.assertEqual(4, self.pred_model.model.fit.call_count)
 
+
+    # mock_extr = create_autospec(TweetFeaturesExtractor)
     # def test_analyse(self): # todo kiedys
     #     res = self.pred_model.analyse("Tweet content")
     #     expected_res = {'Down': 0.2, 'NC': 0.5, 'Up': 0.3,

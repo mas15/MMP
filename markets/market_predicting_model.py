@@ -10,10 +10,9 @@ from markets import helpers
 
 
 class MarketPredictingModel:
-    def __init__(self, features=None, model=None, extr=None):
+    def __init__(self, features=None, model=None):
         self.features = features or []
         self.model = model or MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
-        self.features_extractor = extr or TweetFeaturesExtractor(self.features)
 
     def train(self, df, random_state=1, k_folds=10):
         sum_test_accuracy, sum_train_accuracy, = 0, 0
@@ -42,7 +41,8 @@ class MarketPredictingModel:
         return accuracy, misclassified_objects
 
     def analyse(self, text):  # todo co jak nie ma modelu
-        df = self.features_extractor.process_text(text)
+        features_extractor = TweetFeaturesExtractor(self.features)
+        df = features_extractor.process_text(text)
         prediction, propabs = self._predict(df)
         result = put_results_in_dict(prediction, propabs, df)
         return result
