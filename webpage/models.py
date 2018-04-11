@@ -6,7 +6,7 @@ class Currency(db.Model):
     name = db.Column(db.String(4), unique=True, nullable=False)
     test_accuracy = db.Column(db.Integer, nullable=False)
     train_accuracy = db.Column(db.Integer, nullable=False)
-    zero_r = db.Column(db.Integer, nullable=False)
+    base_rate_accuracy = db.Column(db.Integer, nullable=False)
     nr_tweets = db.Column(db.Integer, nullable=False)
     nr_features = db.Column(db.Integer, nullable=False)
 
