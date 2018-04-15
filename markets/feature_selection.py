@@ -1,59 +1,86 @@
-from sklearn.naive_bayes import MultinomialNB
 import os
 import pandas as pd
-from sklearn import feature_selection as fs
-from markets.helpers import get_x_y_from_df, count_nr_of_feature_occurrences
+import subprocess
+from markets.phrases_extractor import PhrasesExtractor
+from markets.tweets_features_extraction import drop_instances_without_features, mark_features
+from markets.helpers import remove_features, drop_instances_without_features, filter_columns
 
 ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
-FEATURES_WITH_EFFECT_FILE = os.path.join(os.path.dirname(__file__), "data/features_with_effect.csv")
 pd.set_option('display.width', 1500)
-MIN_FEATURE_OCCURENCIES = 6
+WEKA_JAR_FILE = os.path.join(os.path.dirname(__file__), "weka-3-8-2", "weka.jar")
 
 
-class FeatureSelector:
-    def __init__(self, df):
-        self.df = df
-        self.x, self.y = get_x_y_from_df(df)
-        self.features_names = df.drop(columns=['Market_change', 'Text']).columns.tolist()
-        self.sorted_features = []
-        pass
-
-    def select_k_best_features(self, k_features):
-        if not self.sorted_features:
-            self.sorted_features = self._sort_features_by_rank()
-
-        selected = self.sorted_features[:k_features]
-        return selected
-
-    def _sort_features_by_rank(self):
-        model = MultinomialNB()
-        rfe = fs.RFECV(model, 1, cv=10, verbose=0, n_jobs=-1)
-        rfe = rfe.fit(self.x, self.y) # nie trzeba zapisywac?
-        ranking = [int(score) for score in rfe.ranking_.tolist()]
-
-        sorted_indexes = get_indexes_sorted_by_score(ranking)
-        sorted_features = [self.features_names[i] for i in sorted_indexes]
-        return sorted_features
+def get_features_from_file(filename):  # todo przenisc wyzej
+    return [line.strip() for line in open(filename, 'r')]
 
 
-def get_indexes_sorted_by_score(scores):
-    sorted_by_score = sorted(zip(range(len(scores)), scores), key=lambda t: t[1])
-    return [i for i, score in sorted_by_score]
+def select_features(df, filename=None):
+    has_got_faeture_already_selected = filename and os.path.isfile(filename)  # todo czy są tam featerki
+    if has_got_faeture_already_selected:
+        features = get_features_from_file(filename)
+    else:
+        features = get_features_from_weka(df)
+        save_selected_features(features, filename)
+
+    main_df = filter_features(df, features)
+    main_df = drop_instances_without_features(main_df)
+    print(main_df["Market_change"].size)
+    return main_df
 
 
-def get_frequent_features(df, min_freq=MIN_FEATURE_OCCURENCIES):
-    features = df.drop(columns=["Market_change", "Tweet_sentiment", "Text"], errors="ignore")
-    cols_with_nr_of_trues = count_nr_of_feature_occurrences(features)
-    frequent_features = [c[0] for c in cols_with_nr_of_trues if c[1] > min_freq]  # i c!=change
-    return frequent_features
+def save_selected_features(list_of_features, filename):
+    with open(filename, "w") as f:
+        f.write("\n".join(list_of_features))
 
 
-def get_k_best_features(df, k_min, k_max):
-    selector = FeatureSelector(df)
-    for k in range(k_min, k_max):
-        yield selector.select_k_best_features(k)
+def filter_features(df, features_to_leave):
+    feats_not_in_df = [c for c in features_to_leave if c not in list(df)]
+    if feats_not_in_df:
+        raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df),
+                                                                                                  feats_not_in_df))
+    features_to_leave += ["Tweet_sentiment", "Market_change", "Text"]
+
+    sifted_df = filter_columns(df, features_to_leave)  # remove 2000 except from 110
+    extr = PhrasesExtractor() # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
+    extr.set_features(features_to_leave)
+    sifted_df = mark_features(sifted_df, extr.extract_features)
+    return sifted_df
 
 
-def get_best_features_from_file(filename): # todo przenisc wyzej
-    features = [line.strip() for line in open(filename, 'r')]
-    yield features
+def save_features_with_target_to_file(df, filename):
+    df = df.drop(columns=["Text", "Tweet_sentiment"])
+    df.to_csv(filename, index=False)
+
+
+def run_weka_with_file(temp_filename):
+    command = ['java', '-classpath', WEKA_JAR_FILE,
+               'weka.attributeSelection.WrapperSubsetEval',
+               '-T', '0.5',  # mozna 00.1 domyslne
+               '-B', 'weka.classifiers.bayes.NaiveBayesMultinomial',
+               '-s', 'weka.attributeSelection.BestFirst',
+               '-i', temp_filename]
+    stdoutdata = subprocess.getoutput(command)
+    found_features = False
+    features = []
+    for l in stdoutdata.split("\n"):
+        if found_features:
+            features.append(l.strip())
+        if l.startswith("Selected attributes:"):
+            found_features = True
+    features = [f for f in features if f] # make sure no empty line added
+    if not features:
+        print(stdoutdata)
+        raise Exception("Problem while doing feature selection with Weka library.")
+
+    return features
+
+
+def get_features_from_weka(df):
+    temp_filename = "siema2.csv"
+    save_features_with_target_to_file(df, temp_filename)
+    features = run_weka_with_file(temp_filename)
+    return features
+
+
+if __name__ == '__main__':
+    run_weka_with_file("siema.csv")

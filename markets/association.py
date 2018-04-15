@@ -1,14 +1,19 @@
 from datetime import timedelta
 import pandas as pd
-from markets.helpers import move_column_to_the_end
 
 pd.set_option('display.width', 1500)
 
 
-def read_all_tweets(tweets_filename):
+def move_column_to_the_end(df, col_name):
+    cols = list(df)
+    cols.append(cols.pop(cols.index(col_name)))
+    df = df.reindex(columns=cols)
+    return df
+
+
+def read_tweets_with_features(tweets_filename): # todo https://stackoverflow.com/questions/17465045/can-pandas-automatically-recognize-dates
     all_tweets = pd.read_csv(tweets_filename)
     all_tweets['Date'] = pd.to_datetime(all_tweets['Date'], format='%Y-%m-%d %H:%M:%S')
-    all_tweets.drop(columns=['Id'], inplace=True)  # todo czy to dobrze?
     return all_tweets
 
 
@@ -70,24 +75,25 @@ def calculate_thresholds(df):
     return lower_threshold, higher_threshold
 
 
-def save_sifted_tweets_with_date(df, tweets_filename, prices_filename, output_filename):  # todo czy to tu?
+def save_sifted_tweets_with_date(df, tweets_filename, prices_filename, output_filename):  # todo czy to wyjebac?
     result = get_tweets_with_currency_prices(tweets_filename, prices_filename, False)
+    # todo wyjebac featery
     result_df = result[result["Text"].isin(df["Text"])].copy()
     result_df["Date"] = result_df["Date"].dt.strftime('%Y-%m-%d')
     result_df.to_csv(output_filename, index=False)  # todo test czy z dobra nazwa wywoalane
     return result_df
 
 
-def build_df_with_tweets_and_effect(tweets_filename, prices_filename):  # todo test
-    result = get_tweets_with_currency_prices(tweets_filename, prices_filename)
-    result = set_currency_change(result)
-    result = move_column_to_the_end(result, "Market_change")  # todo czy to potrzebne?
-    return result
-
-
 def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_and_date=True):  # todo test?
-    all_tweets = read_all_tweets(tweets_filename)
+    all_tweets = read_tweets_with_features(tweets_filename)
     currency_prices = read_currency_prices(prices_filename)
     tweets_with_date = set_date_with_effect(all_tweets)
     result = merge_tweets_with_dollar_prices(tweets_with_date, currency_prices, drop_open_and_date)
+    return result
+
+
+def build_df_with_tweets_and_affect(tweets_filename, prices_filename):  # todo test
+    result = get_tweets_with_currency_prices(tweets_filename, prices_filename)
+    result = set_currency_change(result)
+    result = move_column_to_the_end(result, "Market_change")  # todo usunac
     return result

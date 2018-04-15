@@ -22,7 +22,7 @@ def get_stopwords_regex():
 
 # rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
 
-class PhrasesExtractor:
+class PhrasesExtractor: # todo self greeedy?
     def __init__(self, min_keyword_frequency=2):
         """ Features set containing unique words"""
         self._vocabulary = set()
@@ -47,7 +47,7 @@ class PhrasesExtractor:
     def features(self):
         return list(self._phrases) + list(self._vocabulary)
 
-    def extract_features(self, tweet):
+    def extract_features(self, tweet, greedy=True): # lepiej jest bez false
         features = dict.fromkeys(self._phrases, False)
         sentences = preprocess(tweet)
 
@@ -55,10 +55,10 @@ class PhrasesExtractor:
 
         extracted_words = set()
         for s in sentences:
-            s, found_phrases = extract_phrases_from_text(s, self._phrases)
+            s, found_phrases = extract_phrases_from_text(s, self._phrases, greedy)
             for p in found_phrases:
                 features[p] = True
-            # sentence has no feature phrases now
+
             chunks = self.split_by_stop_words(s)
             for c in chunks:
                 lemmatized = lemamatize_many(c.split())
@@ -102,13 +102,14 @@ class PhrasesExtractor:
             else:
                 rest.add(c)
 
+        # TODO czy to konieczne?
         rest_with_removed_phrases = set()  # remove phrases from non matching candidates
         for r in rest:
             r, _ = extract_phrases_from_text(r, phrases)
             rest_with_removed_phrases.update(r.split())
         return phrases, rest_with_removed_phrases
 
-    def generate_phrases(self, tweets):
+    def generate_phrases(self, tweets): # todo tutaj lipa troche jak dluga fraza sie powtarza za malo razy to potem znowu jej nie bierze np. make am great aga, nie wezmie potem mag...
         phrases = []
         for t in tweets:
             for p in self.split_by_stop_words(t):
@@ -139,12 +140,17 @@ def phrases_sorting_key(text):
     return -len(text.split()), -len(text)
 
 
-def extract_phrases_from_text(text, phrases):
+def extract_phrases_from_text(text, phrases, greedy=True): # todo co jak na false?
     found = []
     for p in phrases:
-        text, is_found = re.subn(p, '', text)
-        if is_found:
-            found.append(p)
+        if greedy:
+            text, is_found = re.subn(p, '', text)
+            if is_found:
+                found.append(p)
+        else:
+            matched = re.search(p, text)
+            if matched:
+                found.append(p)
     return text, found
 
 

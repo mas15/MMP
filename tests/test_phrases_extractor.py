@@ -14,7 +14,7 @@ class TestPhrasesExtractor(unittest.TestCase):
         res = self.extr.extract_features("Make America great again")
         exp_res = {k: False for k in self.extr._vocabulary + self.extr._phrases}
         exp_res["make america great"] = True
-        # exp_res["great"] = True  # CZY TO DOBRZE?
+        exp_res["great"] = True # TU JEST ZMIENIONE TODO CZY DOBRZE CZY ZLE?
         self.assertEqual(res, exp_res)
 
     def test_generate_phrases(self):

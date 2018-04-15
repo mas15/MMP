@@ -1,7 +1,9 @@
-from markets.predicting_model_trainer import ModelTrainer
-from markets.association import build_df_with_tweets_and_effect, save_sifted_tweets_with_date
+from markets.feature_selection import select_features
+from markets.association import build_df_with_tweets_and_affect, save_sifted_tweets_with_date
 from markets.rules import extract_rules_to_file
 from markets.market_predicting_model import MarketPredictingModel
+from markets.market_predicting_model import DoubleMarketPredictingModel
+from markets.tweets_features_extraction import TWEETS_WITH_FEATURES_FILENAME
 
 import pandas as pd
 import os
@@ -31,11 +33,13 @@ class CurrencyAnalyser:
         selected_features_filename = get_selected_features_for_currency_filename(self._currency)
         model_filename = get_predicting_model_filename(self._currency)
 
-        tweets_with_affect_df = build_df_with_tweets_and_effect(ALL_TWEETS_FILE, prices_filename)
-        training_result = build_main_model_to_predict_markets(tweets_with_affect_df, model_filename, selected_features_filename)
-        self._predicting_model = training_result.model
+        tweets_with_affect_df = build_df_with_tweets_and_affect(TWEETS_WITH_FEATURES_FILENAME, prices_filename)
 
-        save_sifted_tweets_with_date(training_result.df, ALL_TWEETS_FILE, prices_filename, graph_filename)
+        sifted_tweets_df = select_features(tweets_with_affect_df, selected_features_filename)
+
+        training_result, self._predicting_model = build_main_model_to_predict_markets(sifted_tweets_df, tweets_with_affect_df, model_filename)
+
+        save_sifted_tweets_with_date(sifted_tweets_df, ALL_TWEETS_FILE, prices_filename, graph_filename)
 
         print("Model build for {0}".format(self._currency))
 
@@ -65,11 +69,11 @@ class CurrencyAnalyser:
         return dates, prices, tweets_per_date
 
 
-def build_main_model_to_predict_markets(df, model_save_filename, selected_features_filename=None): # todo nie potrzebna funkcja
-    trainer = ModelTrainer()
-    training_result = trainer.train(df, selected_features_filename)
-    training_result.model.save(model_save_filename)
-    return training_result
+def build_main_model_to_predict_markets(main_df, all_df, model_save_filename):
+    model = DoubleMarketPredictingModel()
+    main_result, rest_result = model.train(main_df, all_df) # todo use rest_result
+    # model.save(model_save_filename)
+    return main_result, model
 
 
 def get_selected_features_for_currency_filename(currency):
@@ -93,6 +97,6 @@ def get_predicting_model_filename(currency):
 
 
 if __name__ == '__main__':
-    for c in ["EUR", "MEX", "USD"]:
+    for c in ["USD", "EUR", "MEX"]:
         analyser = CurrencyAnalyser(c)
         analyser.analyse()
