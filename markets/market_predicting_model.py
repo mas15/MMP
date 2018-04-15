@@ -39,11 +39,15 @@ class DoubleMarketPredictingModel:
             return main_result.result
         return rest_result.combine_with(main_result)
 
-    def save(self):
-        pass
+    def save(self, model_filename):
+        with open(model_filename, "wb") as f:
+            pickle.dump(self.main_model, f)
+            pickle.dump(self.rest_model, f)
 
-    def load(self):
-        pass
+    def load(self, model_filename):
+        with open(model_filename, "rb") as f:
+            self.main_model = pickle.load(f)
+            self.rest_model = pickle.load(f)
 
     def get_most_coefficient_features(self):
         return self.main_model.get_most_coefficient_features()
@@ -110,16 +114,6 @@ class MarketPredictingModel:
         propabs_vals = propabs_vals[0].tolist()
         propabs = dict(zip(self.model.classes_, propabs_vals))
         return result, propabs
-
-    def save(self, model_filename):
-        with open(model_filename, "wb") as f:
-            pickle.dump(self.model, f)
-            pickle.dump(self.features, f)
-
-    def load(self, model_filename):
-        with open(model_filename, "rb") as f:
-            self.model = pickle.load(f)
-            self.features = pickle.load(f)
 
     def get_most_coefficient_features(self):
         if len(self.model.coef_) != len(self.model.classes_):
