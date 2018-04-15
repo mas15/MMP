@@ -7,14 +7,15 @@ class TestPhrasesExtractor(unittest.TestCase):
     def setUp(self):
         self.extr = PhrasesExtractor()
 
-    def test_extract_features(self):
+    @parameterized.expand([(True,), (False,)])
+    def test_extract_features(self, greedy):
         self.extr._vocabulary = ["hello", "another", "feature", "great"]  # todo again?
         self.extr._phrases = ["whole phrases here", "make america great", "tax cuts", "hilary clinton"]
 
-        res = self.extr.extract_features("Make America great again")
+        res = self.extr.extract_features("Make America great again", greedy)
         exp_res = {k: False for k in self.extr._vocabulary + self.extr._phrases}
         exp_res["make america great"] = True
-        exp_res["great"] = True # TU JEST ZMIENIONE TODO CZY DOBRZE CZY ZLE?
+        exp_res["great"] = False if greedy else True  # TU JEST ZMIENIONE TODO CZY DOBRZE CZY ZLE?
         self.assertEqual(res, exp_res)
 
     def test_generate_phrases(self):
