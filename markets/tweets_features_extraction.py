@@ -61,24 +61,28 @@ def set_sentiment(df, sentiment_calc_function):
     return df
 
 
-def extract_features(df): # todo pipeline
-    extr = PhrasesExtractor(min_keyword_frequency=4) # 5 tez jest spoko
-    extr.build_vocabulary(df["Text"].tolist())
+class FeatureExtractor:
+    def __init__(self, df):
+        self.df = df
+        self.extr = PhrasesExtractor(min_keyword_frequency=4)  # 5 tez jest spoko
+        self.extr.build_vocabulary(self.df["Text"].tolist())
 
-    sent = SentimentAnalyser()
-    sent.load()
+        self.sent = SentimentAnalyser()
+        self.sent.load()
 
-    df = add_features(df, extr.features)
-    df = mark_features(df, extr.extract_features)
-    df = drop_infrequent_features(df)
-    df = drop_instances_without_features(df)
-    df = set_sentiment(df, sent.predict_score)
-    return df
+    def extract_features(self):
+        self.df = add_features(self.df, self.extr.features)
+        self.df = mark_features(self.df, self.extr.extract_features)
+        self.df = drop_infrequent_features(self.df)
+        self.df = drop_instances_without_features(self.df)
+        self.df = set_sentiment(self.df, self.sent.predict_score)
+        return self.df
 
 
 def build_tweets_features_dataframe():
     tweets_df = read_all_tweets(ALL_TWEETS_FILENAME)
-    tweets_df_with_features = extract_features(tweets_df)
+    extractor = FeatureExtractor(tweets_df)
+    tweets_df_with_features = extractor.extract_features()
     tweets_df_with_features.to_csv(TWEETS_WITH_FEATURES_FILENAME, index=False)
 
 
