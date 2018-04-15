@@ -5,8 +5,20 @@ from sklearn.linear_model import LogisticRegressionCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
 from markets.helpers import get_x_y_from_df
-from markets.predicting_model_trainer import ModelTrainingResult
 from markets import helpers
+from collections import namedtuple
+
+
+ModelTrainingResult = namedtuple('ModelTrainingResult', 'test_accuracy train_accuracy base_rate_accuracy')
+
+
+def get_zero_r_from_y(y):
+    """
+    >>> get_zero_r_from_y(np.array(["Up", "Up", "Down", "NC", "Up"]))
+    0.6
+    """
+    counted = Counter(y)
+    return counted.most_common()[0][1] / y.size
 
 
 class AnalysisResult:
@@ -59,24 +71,22 @@ class MarketPredictingModel:
         self.model = model or MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
 
     def train(self, df, nr_of_runs=30, k_folds=10):
-        result = ModelTrainingResult(df=df)
         sum_train, sum_test = 0, 0
 
+        x, y = get_x_y_from_df(df)
         for n_run in range(nr_of_runs):
-            test_accuracy, train_accuracy = self._train(df, n_run + 1, k_folds)
+            test_accuracy, train_accuracy = self._train(x, y, n_run + 1, k_folds)
 
             sum_test += test_accuracy
             sum_train += train_accuracy
 
-        result.test_accuracy, result.train_accuracy = sum_test / nr_of_runs, sum_train / nr_of_runs
-
-        print("Accuracy {0} ({1}) and zeroR {2} for {3} features: {4}".format(result.test_accuracy, result.train_accuracy,result.base_rate_accuracy, result.nr_features, result.features))
+        result = ModelTrainingResult(sum_test / nr_of_runs, sum_train / nr_of_runs, get_zero_r_from_y(y))
+        print("Accuracy {0} ({1}) and zeroR {2}".format(result.test_accuracy, result.train_accuracy,result.base_rate_accuracy))
         return result
 
-    def _train(self, df, random_state, k_folds):
+    def _train(self, x, y, random_state, k_folds):
         sum_test_accuracy, sum_train_accuracy, = 0, 0
 
-        x, y = get_x_y_from_df(df)
         for x_train, x_test, y_train, y_test in helpers.k_split(x, y, k_folds, random_state):
             self.model.fit(x_train, y_train)
 

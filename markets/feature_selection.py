@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import subprocess
+import tempfile
 from markets.phrases_extractor import PhrasesExtractor
 from markets.tweets_features_extraction import drop_instances_without_features, mark_features
 from markets.helpers import remove_features, drop_instances_without_features, filter_columns
@@ -55,7 +56,7 @@ def save_features_with_target_to_file(df, filename):
 def run_weka_with_file(temp_filename):
     command = ['java', '-classpath', WEKA_JAR_FILE,
                'weka.attributeSelection.WrapperSubsetEval',
-               '-T', '0.5',  # mozna 00.1 domyslne
+               '-T', '0.5',
                '-B', 'weka.classifiers.bayes.NaiveBayesMultinomial',
                '-s', 'weka.attributeSelection.BestFirst',
                '-i', temp_filename]
@@ -76,11 +77,8 @@ def run_weka_with_file(temp_filename):
 
 
 def get_features_from_weka(df):
-    temp_filename = "siema2.csv"
-    save_features_with_target_to_file(df, temp_filename)
-    features = run_weka_with_file(temp_filename)
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as fp:
+        print(fp.name)
+        save_features_with_target_to_file(df, fp.name)
+        features = run_weka_with_file(fp.name)
     return features
-
-
-if __name__ == '__main__':
-    run_weka_with_file("siema.csv")

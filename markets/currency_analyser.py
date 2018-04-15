@@ -1,7 +1,6 @@
 from markets.feature_selection import select_features
 from markets.association import build_df_with_tweets_and_affect, save_sifted_tweets_with_date
 from markets.rules import extract_rules_to_file
-from markets.market_predicting_model import MarketPredictingModel
 from markets.market_predicting_model import DoubleMarketPredictingModel
 from markets.tweets_features_extraction import TWEETS_WITH_FEATURES_FILENAME
 
@@ -26,7 +25,7 @@ class CurrencyAnalyser:
         self.model_filename = os.path.join(PICKLED_MODEL_PATH, PREDICTING_MODEL_PREFIX + self._currency + ".pickle")
 
     def load(self):
-        self._predicting_model = MarketPredictingModel()
+        self._predicting_model = DoubleMarketPredictingModel()
         # todo sprawdzic czy jest plik i logować
         self._predicting_model.load(self.model_filename)
 
@@ -40,8 +39,8 @@ class CurrencyAnalyser:
 
         print("Model build for {0}".format(self._currency))
 
-        features_df = training_result.df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], axis=1)
-        extract_rules_to_file(features_df, self.rules_filename)
+        # features_df = training_result.df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], axis=1)
+        # extract_rules_to_file(features_df, self.rules_filename)
 
         return training_result
 
