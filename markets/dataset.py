@@ -1,21 +1,28 @@
 import pandas as pd
 from datetime import timedelta
-from markets.helpers import move_column_to_the_end
 
 
 class TweetsDataSet:
+    non_text_feature_columns = ["Text", "Market_change", "Tweet_sentiment", "Date"]
+
     def __init__(self, df):
         self.df = df
 
     @property
     def features(self):
-        return list(self.df.drop(columns=["Text", "Market_change", "Tweet_sentiment", "Date"], errors='ignore'))
+        return list(self.get_features_df())
+
+    def get_features_df(self):
+        return self.df.drop(columns=self.non_text_feature_columns, errors='ignore', axis=1)
+
+    def get_no_features_df(self):
+        return self.df[["Text", "Tweet_sentiment", "Market_change"]]
 
     def save_to_csv(self, filename):
         self.df.to_csv(filename, index=False)
 
     def set_phrase_features(self, selecting_function):
-        self.df = self.df.apply(lambda row: self.mark_row(row, selecting_function), axis=1)
+        self.df = self.df.apply(lambda row: self._mark_row(row, selecting_function), axis=1)
         self.df.fillna(0, inplace=True)
 
     def get_all_tweets(self):
@@ -28,7 +35,7 @@ class TweetsDataSet:
         self.df["Tweet_sentiment"] = self.df["Text"].apply(sentiment_calc_function)
 
     @staticmethod
-    def mark_row(row, selecting_function):
+    def _mark_row(row, selecting_function):
         features = selecting_function(row['Text']).items()
         for f, is_in_tweet in features:
             if is_in_tweet:
@@ -36,21 +43,13 @@ class TweetsDataSet:
         return row
 
     def get_x_y(self):
-        target_column = "Market_change"
-        y = self.df[target_column].values.ravel()
+        y = self.df["Market_change"].values.ravel()
         x = self.df.drop(columns=["Market_change", "Text"]).values  # todo text jakos ogarnac
         return x, y
 
-    def get_feature_occurencies(self):  # a co jak juz sentyment ustawiony?
-        df_with_features = self.df.drop(columns=["Text", "Date", "Tweet_sentiment", "Market_change"], errors='ignore')
-        features_with_occurencies = count_nr_of_feature_occurrences(df_with_features)
+    def get_feature_occurencies(self):
+        features_with_occurencies = count_nr_of_feature_occurrences(self.get_features_df())
         return features_with_occurencies
-
-    def get_features_df(self):
-        return self.df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], axis=1)
-
-    def get_no_features_df(self):
-        return self.df[["Text", "Tweet_sentiment", "Market_change"]]
 
     def _check_if_features_are_in_dataframe(self, features):
         feats_not_in_df = [f for f in features if f not in self.features]
@@ -62,7 +61,7 @@ class TweetsDataSet:
         self.df.drop(columns=features_to_remove, axis=1, inplace=True)
 
     def drop_instances_without_features(self):
-        self.df = self.df[(self.df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], errors='ignore').T != 0).any()]
+        self.df = self.df[(self.get_features_df().T != 0).any()]
 
     def set_date_with_effect(self):
         self.df["Date_with_affect"] = self.df["Date"].apply(get_date_to_check_affect)
@@ -88,7 +87,7 @@ class TweetsDataSet:
                 return "Down"
             return "NC"
 
-        down_max, up_min = calculate_thresholds(self.df)
+        down_max, up_min = calculate_thresholds(self.df) # todo to mozna do klasy wziac
         print(down_max)
         print(up_min)
         self.df["Market_change"] = self.df["Market_change"].apply(_get_change)

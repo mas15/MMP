@@ -76,11 +76,3 @@ class TestTweetsDataSet(unittest.TestCase):
                            '5_times': [1, 1, 1, 1, 1]})
         res = count_nr_of_feature_occurrences(df)
         self.assertEqual([('0_times', 0), ('2_times', 2), ('4_times', 4), ('5_times', 5)], res)
-
-
-    # def test_mark_row(self):
-    #     df = pd.DataFrame({"Text": ['a', 'b', 'c'], "A": [0, 0, 0], "B": [0, 0, 0], "C": [0, 0, 0]})
-    #     result = df.apply(lambda x: self.dataset.mark_row(x, self.mock_extr), axis=1)
-    #     exp_df = pd.DataFrame({"Text": ['a', 'b', 'c'], "A": [1, 1, 0], "B": [0, 1, 0], "C": [0, 0, 0]})
-    #     self.assertTrue(exp_df.equals(result))
-    #
