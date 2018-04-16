@@ -31,6 +31,28 @@ def read_currency_prices(prices_filename):
     return result
 
 
+def calculate_thresholds(stock_prices):
+    mean = stock_prices.mean()
+    sigma = stock_prices.std(ddof=0)
+    lower_threshold = (mean - (sigma / 3)).round(2)
+    higher_threshold = (mean + (sigma / 3)).round(2)
+    return lower_threshold, higher_threshold
+
+
+def set_currency_change(dataset):
+    def _get_change(x):
+        if x > up_min:
+            return "Up"
+        if x < down_max:
+            return "Down"
+        return "NC"
+
+    down_max, up_min = calculate_thresholds(dataset.get_stock_prices()) # todo to mozna do klasy wziac
+    print(down_max)
+    print(up_min)
+    dataset.set_market_change(_get_change)
+
+
 def save_sifted_tweets_with_date(sifted, tweets_filename, prices_filename, output_filename):  # todo czy to wyjebac?
     result = get_tweets_with_currency_prices(tweets_filename, prices_filename, False)
     # todo wyjebac featery
@@ -52,6 +74,6 @@ def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_
 
 def build_df_with_tweets_and_affect(tweets_filename, prices_filename):  # todo test
     result = get_tweets_with_currency_prices(tweets_filename, prices_filename)
-    result.set_currency_change()
+    set_currency_change(result)
     result.df = move_column_to_the_end(result.df, "Market_change")  # todo usunac
     return result

@@ -21,18 +21,21 @@ class TweetsDataSet:
     def save_to_csv(self, filename):
         self.df.to_csv(filename, index=False)
 
-    def set_phrase_features(self, selecting_function):
-        self.df = self.df.apply(lambda row: self._mark_row(row, selecting_function), axis=1)
-        self.df.fillna(0, inplace=True)
-
     def get_all_tweets(self):
         all_tweets = self.df["Text"].tolist()
         if not all_tweets:
             raise Exception("There is no tweets in the dataset")
         return all_tweets
 
+    def set_phrase_features(self, selecting_function):
+        self.df = self.df.apply(lambda row: self._mark_row(row, selecting_function), axis=1)
+        self.df.fillna(0, inplace=True)
+
     def set_sentiment(self, sentiment_calc_function):
         self.df["Tweet_sentiment"] = self.df["Text"].apply(sentiment_calc_function)
+
+    def set_market_change(self, change_setting_function):
+        self.df["Market_change"] = self.df["Market_change"].apply(change_setting_function)
 
     @staticmethod
     def _mark_row(row, selecting_function):
@@ -79,26 +82,8 @@ class TweetsDataSet:
         self.df.drop(columns=columns_to_drop, inplace=True)
         # todo powinno sprawdzac czy wszystko sie dopasowało
 
-    def set_currency_change(self):
-        def _get_change(x):
-            if x > up_min:
-                return "Up"
-            if x < down_max:
-                return "Down"
-            return "NC"
-
-        down_max, up_min = calculate_thresholds(self.df) # todo to mozna do klasy wziac
-        print(down_max)
-        print(up_min)
-        self.df["Market_change"] = self.df["Market_change"].apply(_get_change)
-
-
-def calculate_thresholds(df):
-    mean = df["Market_change"].mean()
-    sigma = df["Market_change"].std(ddof=0)
-    lower_threshold = (mean - (sigma / 3)).round(2)
-    higher_threshold = (mean + (sigma / 3)).round(2)
-    return lower_threshold, higher_threshold
+    def get_stock_prices(self):
+        return self.df["Market_change"]
 
 
 def count_nr_of_feature_occurrences(df):
