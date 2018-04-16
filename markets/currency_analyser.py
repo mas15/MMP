@@ -39,8 +39,8 @@ class CurrencyAnalyser:
 
         print("Model build for {0}".format(self._currency))
 
-        # features_df = training_result.df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], axis=1)
-        # extract_rules_to_file(features_df, self.rules_filename)
+        features_df = sifted_tweets_df.get_features_df()
+        extract_rules_to_file(features_df, self.rules_filename)
 
         return training_result
 

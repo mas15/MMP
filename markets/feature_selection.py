@@ -2,8 +2,8 @@ import os
 import pandas as pd
 import subprocess
 import tempfile
+import copy
 from markets.phrases_extractor import PhrasesExtractor
-from markets.tweets_features_extraction import drop_instances_without_features, mark_features
 from markets.helpers import remove_features, drop_instances_without_features, filter_columns
 
 ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
@@ -24,8 +24,8 @@ def select_features(df, filename=None):
         save_selected_features(features, filename)
 
     main_df = filter_features(df, features)
-    main_df = drop_instances_without_features(main_df)
-    print(main_df["Market_change"].size)
+    main_df.drop_instances_without_features()
+    print(main_df.df["Market_change"].size)
     return main_df
 
 
@@ -34,18 +34,20 @@ def save_selected_features(list_of_features, filename):
         f.write("\n".join(list_of_features))
 
 
-def filter_features(df, features_to_leave):
-    feats_not_in_df = [c for c in features_to_leave if c not in list(df)]
+def filter_features(dataset, features_to_leave): # returns copy
+    sifted_dataset = copy.deepcopy(dataset)
+
+    feats_not_in_df = [f for f in features_to_leave if f not in sifted_dataset.features]
     if feats_not_in_df:
         raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df),
                                                                                                   feats_not_in_df))
-    features_to_leave += ["Tweet_sentiment", "Market_change", "Text"]
+    #sifted_df = filter_columns(df, features_to_leave)  # remove 2000 except from 110
+    sifted_dataset.filter_features(features_to_leave)
 
-    sifted_df = filter_columns(df, features_to_leave)  # remove 2000 except from 110
     extr = PhrasesExtractor() # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
     extr.set_features(features_to_leave)
-    sifted_df = mark_features(sifted_df, extr.extract_features)
-    return sifted_df
+    sifted_dataset.set_phrase_features(extr.extract_features)
+    return sifted_dataset
 
 
 def save_features_with_target_to_file(df, filename):

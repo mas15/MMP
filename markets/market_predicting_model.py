@@ -73,7 +73,7 @@ class MarketPredictingModel:
     def train(self, df, nr_of_runs=30, k_folds=10):
         sum_train, sum_test = 0, 0
 
-        x, y = get_x_y_from_df(df)
+        x, y = df.get_x_y()
         for n_run in range(nr_of_runs):
             test_accuracy, train_accuracy = self._train(x, y, n_run + 1, k_folds)
 

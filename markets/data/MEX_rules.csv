@@ -1,4 +1,4 @@
 antecedants,consequents,antecedent support,consequent support,support,confidence,lift
 "james comey, hillary",clinton,0.00277264,0.03604436,0.00277264,1.0,27.74358974
 "comey, hillary",clinton,0.00277264,0.03604436,0.00277264,1.0,27.74358974
-"pas, repeal",republican,0.00277264,0.12476895,0.00277264,1.0,8.01481481
+"repeal, pas",republican,0.00277264,0.12476895,0.00277264,1.0,8.01481481
