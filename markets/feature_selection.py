@@ -4,7 +4,6 @@ import subprocess
 import tempfile
 import copy
 from markets.phrases_extractor import PhrasesExtractor
-from markets.helpers import remove_features, drop_instances_without_features, filter_columns
 
 ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
 pd.set_option('display.width', 1500)
@@ -36,14 +35,7 @@ def save_selected_features(list_of_features, filename):
 
 def filter_features(dataset, features_to_leave): # returns copy
     sifted_dataset = copy.deepcopy(dataset)
-
-    feats_not_in_df = [f for f in features_to_leave if f not in sifted_dataset.features]
-    if feats_not_in_df:
-        raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df),
-                                                                                                  feats_not_in_df))
-    #sifted_df = filter_columns(df, features_to_leave)  # remove 2000 except from 110
-    sifted_dataset.filter_features(features_to_leave)
-
+    sifted_dataset.filter_features(features_to_leave) # TODO uzyc feature extractora
     extr = PhrasesExtractor() # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
     extr.set_features(features_to_leave)
     sifted_dataset.set_phrase_features(extr.extract_features)

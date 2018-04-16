@@ -9,7 +9,7 @@ class TweetsDataSet:
 
     @property
     def features(self):
-        return list(self.df.drop(columns=["Text", "Market_change", "Tweet_sentiment"]))
+        return list(self.df.drop(columns=["Text", "Market_change", "Tweet_sentiment", "Date"], errors='ignore'))
 
     def save_to_csv(self, filename):
         self.df.to_csv(filename, index=False)
@@ -42,18 +42,25 @@ class TweetsDataSet:
         return x, y
 
     def get_feature_occurencies(self):  # a co jak juz sentyment ustawiony?
-        df_with_features = self.df.drop(columns=["Text", "Date"])
+        df_with_features = self.df.drop(columns=["Text", "Date", "Tweet_sentiment", "Market_change"], errors='ignore')
         features_with_occurencies = count_nr_of_feature_occurrences(df_with_features)
         return features_with_occurencies
 
     def get_features_df(self):
         return self.df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], axis=1)
 
+    def _check_if_features_are_in_dataframe(self, features):
+        feats_not_in_df = [f for f in features if f not in self.features]
+        if feats_not_in_df:
+            raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df), feats_not_in_df))
+
     def filter_features(self, features_to_leave):
+        self._check_if_features_are_in_dataframe(features_to_leave)
         self.df = self.df[features_to_leave+["Tweet_sentiment", "Market_change", "Text"]]
         self.df = move_column_to_the_end(self.df, "Market_change")
 
     def remove_features(self, features_to_remove):
+        self._check_if_features_are_in_dataframe(features_to_remove)
         self.df.drop(columns=features_to_remove, axis=1, inplace=True)
 
     def drop_instances_without_features(self):

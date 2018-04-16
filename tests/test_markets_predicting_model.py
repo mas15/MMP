@@ -2,9 +2,8 @@ import unittest
 from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
-from markets.features_extractor import TweetFeaturesExtractor
-from markets.market_predicting_model import put_results_in_dict, get_misclassified_on_set, get_indexes_before_splitting, \
-    sort_misclassified, MarketPredictingModel
+from markets.market_predicting_model import get_misclassified_on_set, get_indexes_before_splitting, \
+    sort_misclassified, MarketPredictingModel, format_result
 import numpy as np
 from markets.helpers import k_split
 from sklearn.naive_bayes import MultinomialNB
@@ -60,7 +59,6 @@ class TestMarketPredictingModel(unittest.TestCase):
                 self.assertEqual((14.0, 21.0), res)
                 self.assertEqual(4, self.pred_model.model.fit.call_count)
 
-
     # mock_extr = create_autospec(TweetFeaturesExtractor)
     # def test_analyse(self): # todo kiedys
     #     res = self.pred_model.analyse("Tweet content")
@@ -84,14 +82,15 @@ class TestMarketPredictingModel(unittest.TestCase):
 
 
 class TestOtherFunctions(unittest.TestCase):
-    def test_put_results_in_dict(self):
+    def test_format_result(self):
         features = pd.DataFrame({'f1': [0], 'f2': [1], 'f3': [0], 'f4': [1], "Tweet_sentiment": [0.23]})
-        propabilities = [("Down", 0.1), ("NC", 0.5), ("UP", 0.2)]
+        propabilities = [("Down", 0.1), ("NC", 0.5), ("Up", 0.2)]
         prediction = "NC"
-        res = put_results_in_dict(prediction, propabilities, features)
-        exp_res = {'Down': 0.1, 'NC': 0.5, 'UP': 0.2, 'prediction': 'NC', 'features': ['f2', 'f4'],
-                   'sentiment': 'Negative'}
-        self.assertEqual(exp_res, res)
+        res = format_result(prediction, propabilities, features)
+        self.assertEqual("Negative", res.sentiment)
+        self.assertEqual(['f2', 'f4'], res.features)
+        self.assertEqual("NC", res.prediction)
+        self.assertEqual((0.2, 0.1, 0.5), (res.up, res.down, res.nc))
 
 
 if __name__ == '__main__':

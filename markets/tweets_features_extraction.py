@@ -18,30 +18,26 @@ def read_all_tweets(tweets_filename):
 
 
 class FeatureExtractor:
-    def __init__(self, df):
-        self.df = df
-        self.extr = PhrasesExtractor(min_keyword_frequency=4)  # 5 tez jest spoko
-        self.extr.build_vocabulary(self.df.get_all_tweets())
+    def __init__(self, dataset, extr=None, sent=None, min_freq=MIN_FEATURE_OCCURENCIES):
+        self.dataset = dataset
+        self.extr = extr or PhrasesExtractor(min_keyword_frequency=4)  # 5 tez jest spoko
+        self.extr.build_vocabulary(self.dataset.get_all_tweets())
 
-        self.sent = SentimentAnalyser()
+        self.sent = sent or SentimentAnalyser()
         self.sent.load()
+        self.min_feature_freq = min_freq
 
     def extract_features(self):
-        self.df.set_phrase_features(self.extr.extract_features)
+        self.dataset.set_phrase_features(self.extr.extract_features)
         self.drop_infrequent_features()
-        self.df.drop_instances_without_features()
-        self.df.set_sentiment(self.sent.predict_score)
-        return self.df
+        self.dataset.drop_instances_without_features()
+        self.dataset.set_sentiment(self.sent.predict_score)
+        return self.dataset
 
     def drop_infrequent_features(self):
-        features = get_infrequent_features(self.df)
-        self.df.remove_features(features)
-
-
-def get_infrequent_features(dataset, min_freq=MIN_FEATURE_OCCURENCIES):
-    cols_with_nr_of_trues = dataset.get_feature_occurencies()
-    infrequent_features = [c[0] for c in cols_with_nr_of_trues if c[1] < min_freq]
-    return infrequent_features
+        cols_with_nr_of_trues = self.dataset.get_feature_occurencies()
+        infrequent_features = [c[0] for c in cols_with_nr_of_trues if c[1] < self.min_feature_freq]
+        self.dataset.remove_features(infrequent_features)
 
 
 def build_tweets_features_dataframe():

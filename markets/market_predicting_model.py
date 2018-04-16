@@ -23,10 +23,12 @@ def get_zero_r_from_y(y):
 
 class AnalysisResult:
     def __init__(self, prediction, sentiment, features, propabs):
-        self.prediction = prediction
+        self.up = propabs["Up"]
+        self.down = propabs["Down"]
+        self.nc = propabs["NC"]
         self.sentiment = sentiment
         self.features = features
-        self.propabs = propabs
+        self.prediction = prediction
 
     def combine_with(self, other):
         # self.prediction = z propabsow
@@ -162,11 +164,9 @@ def get_misclassified_on_set(y, predicted): # tu cos moze teraz byc nie tak todo
 
 
 def format_result(prediction, propabs, features):
-    prediction = prediction
     sentiment_value = features["Tweet_sentiment"].iloc[0]
     features.drop(columns=["Tweet_sentiment"], inplace=True)  # todo tutaj text?
     features = features.columns[features.any()].tolist()
     sentiment = "Positive" if sentiment_value > 0.5 else "Negative"
-    propabs = propabs
-
+    propabs = dict(propabs)
     return AnalysisResult(prediction, sentiment, features, propabs)

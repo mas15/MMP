@@ -29,23 +29,3 @@ def move_column_to_the_end(df, col_name):
     cols.append(cols.pop(cols.index(col_name)))
     df = df.reindex(columns=cols)
     return df
-
-
-def drop_instances_without_features(df):
-    df = df[(df.drop(columns=["Market_change", "Tweet_sentiment", "Text"]).T != 0).any()]
-    return df
-
-
-def count_nr_of_feature_occurrences(features):
-    return [(col, (features.loc[features[col] == True, col].count())) for col in features]
-
-
-def remove_features(df, features_to_remove): # todo usunac?
-    df.drop(columns=features_to_remove, axis=1, inplace=True)
-    return df
-
-
-def filter_columns(df, features_to_leave):
-    sifted_df = df[features_to_leave]
-    sifted_df = move_column_to_the_end(sifted_df, "Market_change")
-    return sifted_df
