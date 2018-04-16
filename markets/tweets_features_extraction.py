@@ -18,14 +18,22 @@ def read_all_tweets(tweets_filename):
 
 
 class FeatureExtractor:
-    def __init__(self, dataset, extr=None, sent=None, min_freq=MIN_FEATURE_OCCURENCIES):
+    def __init__(self, dataset, vocabulary=None, extr=None, sent=None, min_freq=MIN_FEATURE_OCCURENCIES):
         self.dataset = dataset
         self.extr = extr or PhrasesExtractor(min_keyword_frequency=4)  # 5 tez jest spoko
-        self.extr.build_vocabulary(self.dataset.get_all_tweets())
+        if vocabulary:
+            self.extr.set_features(vocabulary)
+        else:
+            self.extr.build_vocabulary(self.dataset.get_all_tweets())
 
         self.sent = sent or SentimentAnalyser()
         self.sent.load()
         self.min_feature_freq = min_freq
+
+    def remark_features(self):
+        self.dataset.set_phrase_features(self.extr.extract_features)
+        self.dataset.drop_instances_without_features()
+        return self.dataset
 
     def extract_features(self):
         self.dataset.set_phrase_features(self.extr.extract_features)

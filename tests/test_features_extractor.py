@@ -14,12 +14,12 @@ class TestTweetFeaturesExtractor(unittest.TestCase):
         mock_sent.predict_score.side_effect = lambda text: 0.3 if text == "First" else 0.6
 
         mock_extr = create_autospec(PhrasesExtractor)
-        mock_extr.features = ["F1", "F2"]
+        mock_extr.features = ["F1", "F2"] # todo usunac ta lnijke
         features = {"First": {"F1": 1, "F2": 0}, "Second": {"F1": 0, "F2": 1}, "No features tweet": {"F1": 0, "F2": 0}}
         mock_extr.extract_features.side_effect = lambda t: features[t]
 
         dataset = TweetsDataSet(pd.DataFrame({"Text": ["First", "Second", "No features tweet"], "Market_change": [0.2, 0.5, 0.9]}))
-        self.extractor = FeatureExtractor(dataset, mock_extr, mock_sent, 1)
+        self.extractor = FeatureExtractor(dataset, None, mock_extr, mock_sent, 1)
 
     def test_extract_features(self):
         result = self.extractor.extract_features()

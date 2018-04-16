@@ -44,14 +44,6 @@ class TestTweetsDataSet(unittest.TestCase):
         with self.assertRaises(Exception):  # todo test message
             self.dataset.remove_features(["F999"])
 
-    def test_filter_features(self):
-        self.dataset.filter_features(["F2"])
-        self.assertEqual(["F2"], self.dataset.features)
-
-    def test_filter_features_raises_if_feature_not_in_dataset(self):
-        with self.assertRaises(Exception):  # todo test message
-            self.dataset.filter_features(["F999"])
-
     def test_get_feature_occurencies(self):
         res = self.dataset.get_feature_occurencies()
         self.assertEqual([('F1', 0), ('F2', 2), ('F3', 1)], res)

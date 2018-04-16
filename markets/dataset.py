@@ -49,15 +49,13 @@ class TweetsDataSet:
     def get_features_df(self):
         return self.df.drop(columns=["Text", "Tweet_sentiment", "Market_change"], axis=1)
 
+    def get_no_features_df(self):
+        return self.df[["Text", "Tweet_sentiment", "Market_change"]]
+
     def _check_if_features_are_in_dataframe(self, features):
         feats_not_in_df = [f for f in features if f not in self.features]
         if feats_not_in_df:
             raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df), feats_not_in_df))
-
-    def filter_features(self, features_to_leave):
-        self._check_if_features_are_in_dataframe(features_to_leave)
-        self.df = self.df[features_to_leave+["Tweet_sentiment", "Market_change", "Text"]]
-        self.df = move_column_to_the_end(self.df, "Market_change")
 
     def remove_features(self, features_to_remove):
         self._check_if_features_are_in_dataframe(features_to_remove)
