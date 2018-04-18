@@ -1,6 +1,6 @@
 from markets.feature_selection import select_features, filter_features
 from markets.association import build_df_with_tweets_and_affect, save_sifted_tweets_with_date
-from markets.rules import extract_rules_to_file
+from markets.rules import extract_rules_to_file, read_rules_sets
 from markets.dataset import TweetsDataSet
 from markets.market_predicting_model import DoubleMarketPredictingModel
 from markets.tweets_features_extraction import TWEETS_WITH_FEATURES_FILENAME, build_dataset_with_one_tweet
@@ -49,8 +49,7 @@ class CurrencyAnalyser:
         return training_result
 
     def get_rules_data(self):
-        rules_data = pd.read_csv(self.rules_filename)
-        return rules_data.to_dict("split")
+        return read_rules_sets(self.rules_filename)
 
     def get_most_coefficient_features(self):
         # todo sprawdzic czy jest model
@@ -90,6 +89,6 @@ if __name__ == '__main__':
     for c in ["USD", "EUR", "MEX"]:
         analyser = CurrencyAnalyser(c)
         analyser.analyse()
-        print(analyser.analyse_tweet("Fuckin insurance companies").to_dict())
-        print(analyser.analyse_tweet("lalal abc").to_dict())
-        print(analyser.analyse_tweet("siema co tam").to_dict())
+        print(analyser.analyse_tweet("Fuckin insurance companies"))
+        print(analyser.analyse_tweet("lalal abc"))
+        print(analyser.analyse_tweet("siema co tam"))

@@ -2,16 +2,19 @@ import unittest
 from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
-from markets.rules import  extract_rules_to_file
+from markets.rules import group_into_sets
 import pandas as pd
 
 
-# class TestRuleLearning(unittest.TestCase)
+class TestRuleLearning(unittest.TestCase):
 
-    #
-    # def test_get_most_coefficient_features(self):
-    #     res = self.pred_model.get_most_coefficient_features()
-    #     features_sorted_by_coef = dict({"Up": [('F1', 1), ('F2', 2), ('F3', 3), ('F4', 4), ('F5', 5)],
-    #                                     "Down": [('F5', 1), ('F4', 2), ('F3', 3), ('F2', 4), ('F1', 5)],
-    #                                     "NC": [('F1', 10), ('F2', 11), ('F3', 12), ('F4', 13), ('F5', 14)]})
-    #     self.assertEqual(features_sorted_by_coef, res)
+    def test_group_into_sets(self):
+        r1 = dict({"words_set": {"a", "b", "c"}, "support": 11, "confidence": 11, "antecedants": ["a", "b"], "consequents": ["c"]})
+        r2 = dict({"words_set": {"a", "b", "c"}, "support": 11, "confidence": 11, "antecedants": ["a", "c"], "consequents": ["b"]})
+        r3 = dict({"words_set": {"b", "c", "a"}, "support": 11, "confidence": 11, "antecedants": ["c", "b"], "consequents": ["a"]})
+        r4 = dict({"words_set": {"d", "e", "f"}, "support": 121, "confidence": 121, "antecedants": ["d", "e"], "consequents": ["f"]})
+        rules = [r1, r2, r3, r4]
+        result = group_into_sets(rules)
+        self.assertEquals(2, len(result))
+        self.assertEquals({"a", "b", "c"}, result[0].words_set)
+        self.assertEquals({"d", "e", "f"}, result[1].words_set)

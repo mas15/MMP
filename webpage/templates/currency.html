@@ -56,25 +56,36 @@
 <div class="row mt-5">
     <div class="col-md-12">
 
-        <table class="table">
+        <table class="table table-hover" id="accordion">
+
             <h4>Rules extracted from tweets used to build a model</h4>
             <thead>
             <tr>
-                {% for column in rules_data["columns"] %}
-                <th scope="col">{{ column }}</th>
-                {% endfor %}
+                <th scope="col">Words set</th>
+                <th scope="col">support</th>
+                <th scope="col">confidence</th>
             </tr>
             </thead>
+
             <tbody>
-            {% for rule_details in rules_data["data"] %}
+            {% for rule in rules_data %}
+            <tr data-toggle="collapse" data-target="#rule{{ loop.index0 }}" class="clickable">
+                <td>{{ rule.words_set|join(", ") }}</td>
+                <td>{{ rule.support }}</td>
+                <td>{{ rule.confidence }}</td>
+            </tr>
             <tr>
-                {% for detail in rule_details %}
-                <td>{{ detail }}</td>
-                {% endfor %}
+                <td colspan="3" class="hidden_table_row">
+                    <div class="collapse" id="rule{{ loop.index0 }}" data-parent="#accordion">{{ rule.rules }}</div>
+                </td>
             </tr>
             {% endfor %}
             </tbody>
+
         </table>
+
+
+
     </div>
 </div>
 
