@@ -1,4 +1,55 @@
 antecedants,consequents,antecedent support,consequent support,support,confidence,lift
-"james comey, hillary",clinton,0.00277264,0.03604436,0.00277264,1.0,27.74358974
-"comey, hillary",clinton,0.00277264,0.03604436,0.00277264,1.0,27.74358974
-"repeal, pas",republican,0.00277264,0.12476895,0.00277264,1.0,8.01481481
+"insurance companies, plan",dead,0.00185014,0.01942646,0.00185014,1.0,51.47619048
+"dnc, trump campaign",dossier,0.00185014,0.0120259,0.00185014,1.0,83.15384615
+"dnc, trump campaign",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"dnc, trump campaign",hillary,0.00185014,0.03977798,0.00185014,1.0,25.13953488
+"james comey, hillary",clinton,0.00277521,0.03607771,0.00277521,1.0,27.71794872
+"dossier, comey",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"comey, hillary",clinton,0.00277521,0.03607771,0.00277521,1.0,27.71794872
+"dnc, dossier",clinton,0.00462535,0.03607771,0.00370028,0.8,22.17435897
+"worked, republican",hard,0.00185014,0.06753006,0.00185014,1.0,14.80821918
+"increase, mccain",arizona,0.00185014,0.01295097,0.00185014,1.0,77.21428571
+"failed, hard",republican,0.00185014,0.12488437,0.00185014,1.0,8.00740741
+"pas, shutdown",republican,0.00185014,0.12488437,0.00185014,1.0,8.00740741
+"pas, repeal",republican,0.00277521,0.12488437,0.00277521,1.0,8.00740741
+"pas, rule",republican,0.00185014,0.12488437,0.00185014,1.0,8.00740741
+"pas, shutdown",government,0.00185014,0.02590194,0.00185014,1.0,38.60714286
+"clinton, pas",hillary,0.00185014,0.03977798,0.00185014,1.0,25.13953488
+"pas, hillary",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"infrastructure, reform",repeal,0.00185014,0.02867715,0.00185014,1.0,34.87096774
+"infrastructure, repeal",reform,0.00185014,0.04162812,0.00185014,1.0,24.02222222
+"dnc, clinton, trump campaign",dossier,0.00185014,0.0120259,0.00185014,1.0,83.15384615
+"dnc, trump campaign, dossier",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"clinton, trump campaign, dossier",dnc,0.00185014,0.0212766,0.00185014,1.0,47.0
+"dnc, trump campaign","clinton, dossier",0.00185014,0.00647549,0.00185014,1.0,154.42857143
+"dnc, trump campaign, dossier",hillary,0.00185014,0.03977798,0.00185014,1.0,25.13953488
+"dnc, trump campaign, hillary",dossier,0.00185014,0.0120259,0.00185014,1.0,83.15384615
+"dnc, dossier, hillary",trump campaign,0.00185014,0.00925069,0.00185014,1.0,108.1
+"trump campaign, dossier, hillary",dnc,0.00185014,0.0212766,0.00185014,1.0,47.0
+"dnc, trump campaign","dossier, hillary",0.00185014,0.00370028,0.00185014,1.0,270.25
+"dnc, clinton, trump campaign",hillary,0.00185014,0.03977798,0.00185014,1.0,25.13953488
+"dnc, trump campaign, hillary",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"clinton, trump campaign, hillary",dnc,0.00185014,0.0212766,0.00185014,1.0,47.0
+"dnc, trump campaign","clinton, hillary",0.00185014,0.01757632,0.00185014,1.0,56.89473684
+"clinton, trump campaign, dossier",hillary,0.00185014,0.03977798,0.00185014,1.0,25.13953488
+"clinton, trump campaign, hillary",dossier,0.00185014,0.0120259,0.00185014,1.0,83.15384615
+"trump campaign, dossier, hillary",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"dnc, dossier, hillary",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"pas, government, shutdown",republican,0.00185014,0.12488437,0.00185014,1.0,8.00740741
+"pas, government, republican",shutdown,0.00185014,0.01017576,0.00185014,1.0,98.27272727
+"pas, shutdown, republican",government,0.00185014,0.02590194,0.00185014,1.0,38.60714286
+"government, shutdown, republican",pas,0.00185014,0.0212766,0.00185014,1.0,47.0
+"pas, shutdown","government, republican",0.00185014,0.00277521,0.00185014,1.0,360.33333333
+"dnc, clinton, trump campaign, hillary",dossier,0.00185014,0.0120259,0.00185014,1.0,83.15384615
+"dnc, trump campaign, dossier, hillary",clinton,0.00185014,0.03607771,0.00185014,1.0,27.71794872
+"clinton, trump campaign, dossier, hillary",dnc,0.00185014,0.0212766,0.00185014,1.0,47.0
+"dnc, clinton, trump campaign, dossier",hillary,0.00185014,0.03977798,0.00185014,1.0,25.13953488
+"dnc, clinton, dossier, hillary",trump campaign,0.00185014,0.00925069,0.00185014,1.0,108.1
+"dnc, trump campaign, hillary","clinton, dossier",0.00185014,0.00647549,0.00185014,1.0,154.42857143
+"clinton, trump campaign, hillary","dnc, dossier",0.00185014,0.00462535,0.00185014,1.0,216.2
+"trump campaign, dossier, hillary","dnc, clinton",0.00185014,0.00740056,0.00185014,1.0,135.125
+"dnc, clinton, trump campaign","dossier, hillary",0.00185014,0.00370028,0.00185014,1.0,270.25
+"dnc, trump campaign, dossier","clinton, hillary",0.00185014,0.01757632,0.00185014,1.0,56.89473684
+"clinton, trump campaign, dossier","dnc, hillary",0.00185014,0.00370028,0.00185014,1.0,270.25
+"dnc, dossier, hillary","clinton, trump campaign",0.00185014,0.00277521,0.00185014,1.0,360.33333333
+"dnc, trump campaign","clinton, dossier, hillary",0.00185014,0.00277521,0.00185014,1.0,360.33333333

@@ -47,7 +47,7 @@ def set_currency_change(dataset):
             return "Down"
         return "NC"
 
-    down_max, up_min = calculate_thresholds(dataset.get_stock_prices()) # todo to mozna do klasy wziac
+    down_max, up_min = calculate_thresholds(dataset.get_market_change()) # todo to mozna do klasy wziac
     print(down_max)
     print(up_min)
     dataset.set_market_change(_get_change)

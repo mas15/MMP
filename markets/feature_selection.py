@@ -32,10 +32,10 @@ def save_selected_features(list_of_features, filename):
         f.write("\n".join(list_of_features))
 
 
-def filter_features(dataset, features_to_leave):
+def filter_features(dataset, features_to_leave, with_dropping=True):
     sifted_dataset = TweetsDataSet(dataset.get_no_features_df())
     extr = FeatureExtractor(sifted_dataset, features_to_leave)
-    extr.remark_features()  # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
+    extr.remark_features(with_dropping)  # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
     return sifted_dataset
 
 

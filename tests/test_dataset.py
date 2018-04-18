@@ -76,3 +76,10 @@ class TestTweetsDataSet(unittest.TestCase):
                            '5_times': [1, 1, 1, 1, 1]})
         res = count_nr_of_feature_occurrences(df)
         self.assertEqual([('0_times', 0), ('2_times', 2), ('4_times', 4), ('5_times', 5)], res)
+
+    def test_get_marked_features(self):
+        self.assertEqual(["F2", "F3"], self.dataset.get_marked_features())
+        self.dataset.df["F2"] = 0
+        self.assertEqual(["F3"], self.dataset.get_marked_features())
+        self.dataset.df["F3"] = 0
+        self.assertEqual([], self.dataset.get_marked_features())

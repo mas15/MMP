@@ -30,15 +30,17 @@ class FeatureExtractor:
         self.sent.load()
         self.min_feature_freq = min_freq
 
-    def remark_features(self):
-        self.dataset.set_phrase_features(self.extr.extract_features)
-        self.dataset.drop_instances_without_features()
+    def remark_features(self, with_dropping=True):
+        self.dataset.set_phrase_features(self.extr.extract_features, self.extr.features)
+        if with_dropping:
+            self.dataset.drop_instances_without_features()
         return self.dataset
 
-    def extract_features(self):
-        self.dataset.set_phrase_features(self.extr.extract_features)
-        self.drop_infrequent_features()
-        self.dataset.drop_instances_without_features()
+    def extract_features(self, with_dropping=True):
+        self.dataset.set_phrase_features(self.extr.extract_features, self.extr.features)
+        if with_dropping:
+            self.drop_infrequent_features()
+            self.dataset.drop_instances_without_features()
         self.dataset.set_sentiment(self.sent.predict_score)
         return self.dataset
 
@@ -54,6 +56,13 @@ def build_tweets_features_dataframe():
     extractor = FeatureExtractor(ds)
     tweets_df_with_features = extractor.extract_features()
     tweets_df_with_features.save_to_csv(TWEETS_WITH_FEATURES_FILENAME)
+
+
+def build_dataset_with_one_tweet(text, features):
+    tweet_dataset = TweetsDataSet(pd.DataFrame({'Text': [text]}))
+    extractor = FeatureExtractor(tweet_dataset, features)
+    tweet_dataset_with_features = extractor.extract_features(with_dropping=False) # todo nad tym pomyśleć
+    return tweet_dataset_with_features
 
 
 if __name__ == '__main__':

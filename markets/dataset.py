@@ -9,14 +9,14 @@ class TweetsDataSet:
         self.df = df
 
     @property
-    def features(self):
+    def features(self): # TODO musza miec ciagle te same featurey w tej samej kolejnosci
         return list(self.get_features_df())
 
     def get_features_df(self):
         return self.df.drop(columns=self.non_text_feature_columns, errors='ignore', axis=1)
 
     def get_no_features_df(self):
-        return self.df[["Text", "Tweet_sentiment", "Market_change"]]
+        return self.df.drop(columns=[c for c in self.df.columns if c not in self.non_text_feature_columns], errors='ignore')
 
     def save_to_csv(self, filename):
         self.df.to_csv(filename, index=False)
@@ -27,15 +27,23 @@ class TweetsDataSet:
             raise Exception("There is no tweets in the dataset")
         return all_tweets
 
-    def set_phrase_features(self, selecting_function):
+    def set_phrase_features(self, selecting_function, features):
+        for f in features: # TODO musza miec ciagle te same featurey w tej samej kolejnosci !!!!
+            self.df[f] = 0  # todo test ze teraz resetuje tez
         self.df = self.df.apply(lambda row: self._mark_row(row, selecting_function), axis=1)
-        self.df.fillna(0, inplace=True)
+        self.df.fillna(0, inplace=True) # todo remove
 
     def set_sentiment(self, sentiment_calc_function):
         self.df["Tweet_sentiment"] = self.df["Text"].apply(sentiment_calc_function)
 
+    def get_sentiment(self):
+        return self.df["Tweet_sentiment"]
+
     def set_market_change(self, change_setting_function):
         self.df["Market_change"] = self.df["Market_change"].apply(change_setting_function)
+
+    def get_market_change(self): # todo rename
+        return self.df["Market_change"]
 
     @staticmethod
     def _mark_row(row, selecting_function):
@@ -44,6 +52,9 @@ class TweetsDataSet:
             if is_in_tweet:
                 row[f] = 1
         return row
+
+    def get_x(self):
+        return self.df.drop(columns=["Text"]).values  # todo get features df with sentiment?
 
     def get_x_y(self):
         y = self.df["Market_change"].values.ravel()
@@ -57,7 +68,7 @@ class TweetsDataSet:
     def _check_if_features_are_in_dataframe(self, features):
         feats_not_in_df = [f for f in features if f not in self.features]
         if feats_not_in_df:
-            raise Exception("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df), feats_not_in_df))
+            raise ValueError("There are {0} selected features that are not in the dataset: {1}".format(len(feats_not_in_df), feats_not_in_df))
 
     def remove_features(self, features_to_remove):
         self._check_if_features_are_in_dataframe(features_to_remove)
@@ -65,6 +76,11 @@ class TweetsDataSet:
 
     def drop_instances_without_features(self):
         self.df = self.df[(self.get_features_df().T != 0).any()]
+
+    def get_marked_features(self):
+        counted = count_nr_of_feature_occurrences(self.get_features_df())
+        marked = [f for f, is_marked in counted if is_marked]
+        return marked
 
     def set_date_with_effect(self):
         self.df["Date_with_affect"] = self.df["Date"].apply(get_date_to_check_affect)
@@ -82,8 +98,6 @@ class TweetsDataSet:
         self.df.drop(columns=columns_to_drop, inplace=True)
         # todo powinno sprawdzac czy wszystko sie dopasowało
 
-    def get_stock_prices(self):
-        return self.df["Market_change"]
 
 
 def count_nr_of_feature_occurrences(df):

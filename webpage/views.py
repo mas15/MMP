@@ -21,7 +21,7 @@ def index(currency):
         analyser = app.analysers[currency]
 
         if form.validate_on_submit():
-            prediction_results = analyser.analyse_tweet(request.form["tweet_content"])
+            prediction_results = analyser.analyse_tweet(request.form["tweet_content"])  # todo co jak exception?
 
         return render_template('currency.html',
                                prediction=prediction_results,
