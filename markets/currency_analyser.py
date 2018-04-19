@@ -1,13 +1,12 @@
+import os
+import pandas as pd
+from collections import namedtuple
 from markets.feature_selection import select_features, filter_features
 from markets.association import build_df_with_tweets_and_affect, save_sifted_tweets_with_date
 from markets.rules import extract_rules_to_file, read_rules_sets
-from markets.dataset import TweetsDataSet
-from markets.market_predicting_model import DoubleMarketPredictingModel
+from markets.market_predicting_model import MarketPredictingModel
 from markets.tweets_features_extraction import TWEETS_WITH_FEATURES_FILENAME, build_dataset_with_one_tweet
 
-import pandas as pd
-import os
-from collections import namedtuple
 
 PICKLED_MODEL_PATH = os.path.join(os.path.dirname(__file__), "pickled_models")
 PREDICTING_MODEL_PREFIX = "assoc_model"
@@ -21,7 +20,7 @@ AnalyseResult = namedtuple('AnalyseResult',
 class CurrencyAnalyser:
     def __init__(self, currency):
         self._currency = currency
-        self._predicting_model = None
+        self._model = None
         self.selected_features_filename = os.path.join(DATA_PATH, self._currency + "_ready_selected.txt")
         self.rules_filename = os.path.join(DATA_PATH, self._currency + "_rules.csv")
         self.graph_filename = os.path.join(DATA_PATH, self._currency + "_graph_data.csv")
@@ -29,9 +28,9 @@ class CurrencyAnalyser:
         self.model_filename = os.path.join(PICKLED_MODEL_PATH, PREDICTING_MODEL_PREFIX + self._currency + ".pickle")
 
     def load(self):
-        self._predicting_model = DoubleMarketPredictingModel()
+        self._model = MarketPredictingModel()
         # todo sprawdzic czy jest plik i logować
-        self._predicting_model.load(self.model_filename)
+        self._model.load(self.model_filename)
 
     def analyse(self):
         # todo test co jak nie ma pliku?
@@ -53,18 +52,18 @@ class CurrencyAnalyser:
 
     def get_most_coefficient_features(self):
         self._check_if_model_is_build() # TODO test it
-        result = self._predicting_model.get_most_coefficient_features()
+        result = self._model.get_most_coefficient_features()
         return result
 
     def _check_if_model_is_build(self):
-        if self._predicting_model is None:
+        if self._model is None:
             raise Exception("Model has not been built yet")
 
     def analyse_tweet(self, text):
         self._check_if_model_is_build()
-        tweet_dataset = build_dataset_with_one_tweet(text, self._predicting_model.all_features)
-        sifted_tweet_dataset = filter_features(tweet_dataset, self._predicting_model.main_features, False)
-        result = self._predicting_model.analyse(tweet_dataset, sifted_tweet_dataset)
+        tweet_dataset = build_dataset_with_one_tweet(text, self._model.all_features)
+        sifted_tweet_dataset = filter_features(tweet_dataset, self._model.main_features, False)
+        result = self._model.analyse(tweet_dataset, sifted_tweet_dataset)
         return result.to_dict()
 
     def get_graph_data(self):  # czy to dobrze tutaj?
@@ -76,9 +75,9 @@ class CurrencyAnalyser:
         return dates, prices, tweets_per_date
 
     def build_main_model_to_predict_markets(self, main_df, all_df):
-        self._predicting_model = DoubleMarketPredictingModel()
-        main_result, rest_result = self._predicting_model.train(main_df, all_df)  # todo use rest_result
-        self._predicting_model.save(self.model_filename)
+        self._model = MarketPredictingModel()
+        main_result, rest_result = self._model.train(main_df, all_df)  # todo use rest_result
+        self._model.save(self.model_filename)
 
         return AnalyseResult(self._currency,
                              main_result.test_accuracy,
@@ -92,6 +91,3 @@ if __name__ == '__main__':
     for c in ["USD", "EUR", "MEX"]:
         analyser = CurrencyAnalyser(c)
         analyser.analyse()
-        print(analyser.analyse_tweet("Fuckin insurance companies"))
-        print(analyser.analyse_tweet("lalal abc"))
-        print(analyser.analyse_tweet("siema co tam"))

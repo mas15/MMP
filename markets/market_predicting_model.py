@@ -21,34 +21,34 @@ def get_zero_r_from_y(y):
 
 
 class AnalysisResult:
-    def __init__(self, propabs, sentiment_value, features):
-        self.propabs = propabs  # up, down, nc
+    def __init__(self, probabilities, sentiment_value, features):
+        self.probabilities = probabilities
         self.sentiment_value = sentiment_value
         self.features = features
-        self.prediction = max(self.propabs, key=self.propabs.get)
+        self.prediction = max(self.probabilities, key=self.probabilities.get)
 
     def combine_with(self, other):
-        self.propabs = {t: (v + other.propabs[t]) * 0.5 for t, v in self.propabs.items()}
+        self.probabilities = {t: (v + other.probabilities[t]) * 0.5 for t, v in self.probabilities.items()}
         self.sentiment_value = (self.sentiment_value + other.sentiment_value) * 0.5
-        self.prediction = max(self.propabs, key=self.propabs.get)
+        self.prediction = max(self.probabilities, key=self.probabilities.get)
 
     def to_dict(self):
-        result = dict(self.propabs)
+        result = dict(self.probabilities)
         result["Sentiment"] = "Positive" if self.sentiment_value > 0.5 else "Negative"
         result["Features"] = ", ".join(self.features) if self.features else "No features found in the tweet"
         return result
 
 
-def format_result(propabs, dataset):
+def format_result(probabilities, dataset):
     sentiment_value = dataset.get_sentiment()[0]
     features = dataset.get_marked_features()
-    return AnalysisResult(propabs, sentiment_value, features)
+    return AnalysisResult(probabilities, sentiment_value, features)
 
 
-class DoubleMarketPredictingModel:
+class MarketPredictingModel:
     def __init__(self):
-        self.main_model = MarketPredictingModel()
-        self.rest_model = MarketPredictingModel()
+        self.main_model = Classifier()
+        self.rest_model = Classifier()
         self.all_features = []
         self.main_features = []
 
@@ -60,7 +60,7 @@ class DoubleMarketPredictingModel:
         main_result = self.main_model.train(x, y, random_state, k_folds)
 
         x, y = all_df.get_x_y()
-        all_result = self.rest_model.train(x, y, random_state, k_folds)  # todo z inymi featurami
+        all_result = self.rest_model.train(x, y, random_state, k_folds)
         return main_result, all_result
 
     def analyse(self, tweet_dataset, sifted_tweet_dataset):
@@ -74,10 +74,11 @@ class DoubleMarketPredictingModel:
         main_result.combine_with(rest_result)
         return main_result
 
-    def _analyse_on_model(self, dataset, model):
+    @staticmethod
+    def _analyse_on_model(dataset, model):
         x = dataset.get_x()
-        propabs = model.analyse(x)
-        return AnalysisResult(propabs, dataset.get_sentiment()[0], dataset.get_marked_features())
+        probabilities = model.analyse(x)
+        return AnalysisResult(probabilities, dataset.get_sentiment()[0], dataset.get_marked_features())
 
     def save(self, model_filename):
         with open(model_filename, "wb") as f:
@@ -93,20 +94,19 @@ class DoubleMarketPredictingModel:
             self.all_features = pickle.load(f)
             self.main_features = pickle.load(f)
 
-    def get_most_coefficient_features(self):
-        if len(self.main_model.model.coef_) != len(self.main_model.model.classes_):
-            raise Exception("Different number of model features than coefs.")
-
+    def get_most_coefficient_features(self):  # TODO a co z sentimentem jak pierwszy albo ktorys?
         result = dict()
-        for i, target in enumerate(self.main_model.model.classes_):
-            feats = sorted(zip(self.main_features, self.main_model.model.coef_[i]), key=lambda t: t[1]) # TODO to lower
-            result[target] = feats
+        for (features_with_scores, target) in self.main_model.get_coefficient_features():
+            result[target] = sorted(zip(self.main_features+["Tweet_sentiment"], features_with_scores), key=lambda t: t[1])
         return result
 
 
-class MarketPredictingModel:
+class Classifier:
     def __init__(self, model=None):
         self.model = model or MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+
+    def get_coefficient_features(self):
+        return zip(self.model.coef_, self.model.classes_)
 
     def train(self, x, y, nr_of_runs=30, k_folds=10):
         sum_train, sum_test = 0, 0
@@ -127,7 +127,7 @@ class MarketPredictingModel:
             self.model.fit(x_train, y_train)
 
             accu_on_test, misclass_on_test = self.test_model_on_dataset(x_test, y_test)
-            accu_on_train, misclass_on_train = self.test_model_on_dataset(x_train, y_train)  # nie slac self
+            accu_on_train, misclass_on_train = self.test_model_on_dataset(x_train, y_train)
 
             # indexes_of_mis_train = get_indexes_before_splitting(train_index, misclass_on_train)
             # indexes_of_mis_test = get_indexes_before_splitting(test_index, misclass_on_test)
@@ -172,14 +172,6 @@ def get_indexes_before_splitting(before, after):
     return before[after]
 
 
-def get_misclassified_on_set(y, predicted): # tu cos moze teraz byc nie tak todo
+def get_misclassified_on_set(y, predicted):  # tu cos moze teraz byc nie tak todo
     misclassified_objects = np.where(y != predicted)
     return misclassified_objects
-
-#
-# def format_result(prediction, propabs, features):
-#     sentiment_value = features["Tweet_sentiment"].iloc[0]
-#     features.drop(columns=["Tweet_sentiment"], inplace=True)  # todo tutaj text?
-#     features = features.columns[features.any()].tolist()
-#     propabs = dict(propabs)
-#     return AnalysisResult(prediction, sentiment_value, features, propabs)

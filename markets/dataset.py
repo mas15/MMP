@@ -57,9 +57,16 @@ class TweetsDataSet:
         return self.df.drop(columns=["Text"]).values
 
     def get_x_y(self):
+        self._keep_sentiment_at_the_end() # TODO nie tutaj
         y = self.df["Market_change"].values.ravel()
         x = self.df.drop(columns=["Market_change", "Text"]).values
         return x, y
+
+    def _keep_sentiment_at_the_end(self):
+        cols = list(self.df)
+        cols.append(cols.pop(cols.index("Tweet_sentiment")))
+        self.df = self.df.reindex(columns=cols)
+        return self.df
 
     def get_feature_occurrences(self):
         features_with_occurrences = count_nr_of_feature_occurrences(self.get_features_df())

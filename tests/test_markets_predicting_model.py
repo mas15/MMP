@@ -3,7 +3,7 @@ from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
 from markets.market_predicting_model import get_misclassified_on_set, get_indexes_before_splitting, \
-    sort_misclassified, MarketPredictingModel, format_result
+    sort_misclassified, Classifier, format_result
 import numpy as np
 from markets.helpers import k_split
 from sklearn.naive_bayes import MultinomialNB
@@ -22,7 +22,7 @@ class TestMarketPredictingModel(unittest.TestCase):
         mock_model.predict.return_value = np.array(["NC"])
         mock_model.predict_proba.return_value = np.array([[0.3, 0.2, 0.5]])
 
-        self.pred_model = MarketPredictingModel(features, mock_model)
+        self.pred_model = Classifier(features, mock_model)
 
     # TODO te nie uzywane
 
