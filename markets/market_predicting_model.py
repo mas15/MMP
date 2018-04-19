@@ -10,6 +10,8 @@ from collections import namedtuple
 
 ModelTrainingResult = namedtuple('ModelTrainingResult', 'test_accuracy train_accuracy base_rate_accuracy')
 
+N_MOST_COEFFICIENT_FEATURES = 20
+
 
 def get_zero_r_from_y(y):
     """
@@ -97,7 +99,13 @@ class MarketPredictingModel:
     def get_most_coefficient_features(self):  # TODO a co z sentimentem jak pierwszy albo ktorys?
         result = dict()
         for (features_with_scores, target) in self.main_model.get_coefficient_features():
-            result[target] = sorted(zip(self.main_features+["Tweet_sentiment"], features_with_scores), key=lambda t: t[1])
+            features_names = self.main_features+["Tweet_sentiment"]
+            features_names_with_scores = zip(features_names, features_with_scores)
+            sorted_features = sorted(features_names_with_scores, key=lambda t: -t[1])
+            sorted_features = sorted_features[:N_MOST_COEFFICIENT_FEATURES]
+            sorted_features = [(name, -N_MOST_COEFFICIENT_FEATURES/value) for name, value in sorted_features]
+            sorted_features = [(name, round(value, 2)) for name, value in sorted_features]
+            result[target] = sorted_features
         return result
 
 
