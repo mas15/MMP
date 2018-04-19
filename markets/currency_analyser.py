@@ -21,7 +21,7 @@ AnalyseResult = namedtuple('AnalyseResult',
 class CurrencyAnalyser:
     def __init__(self, currency):
         self._currency = currency
-        self._predicting_model = None  # todo czy to dobrze?
+        self._predicting_model = None
         self.selected_features_filename = os.path.join(DATA_PATH, self._currency + "_ready_selected.txt")
         self.rules_filename = os.path.join(DATA_PATH, self._currency + "_rules.csv")
         self.graph_filename = os.path.join(DATA_PATH, self._currency + "_graph_data.csv")
@@ -52,13 +52,16 @@ class CurrencyAnalyser:
         return read_rules_sets(self.rules_filename)
 
     def get_most_coefficient_features(self):
-        # todo sprawdzic czy jest model
+        self._check_if_model_is_build() # TODO test it
         result = self._predicting_model.get_most_coefficient_features()
         return result
 
-    def analyse_tweet(self, text):
+    def _check_if_model_is_build(self):
         if self._predicting_model is None:
             raise Exception("Model has not been built yet")
+
+    def analyse_tweet(self, text):
+        self._check_if_model_is_build()
         tweet_dataset = build_dataset_with_one_tweet(text, self._predicting_model.all_features)
         sifted_tweet_dataset = filter_features(tweet_dataset, self._predicting_model.main_features, False)
         result = self._predicting_model.analyse(tweet_dataset, sifted_tweet_dataset)

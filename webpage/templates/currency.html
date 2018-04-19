@@ -75,9 +75,10 @@
                 <td>{{ rule.confidence }}</td>
             </tr>
             <tr>
-                <td colspan="3" class="hidden_table_row">
-                    <div class="collapse col-md-8" id="rule{{ loop.index0 }}" data-parent="#accordion">
-                        <table class="table" >
+                <td colspan="3" class="hidden_table_row font-weight-light">
+                    <div class="collapse" id="rule{{ loop.index0 }}" data-parent="#accordion">
+                        <table class="table" style="width:80%" align="center">
+                            <thead>
                             <tr>
                                 <th scope="col">antecedants</th>
                                 <th scope="col">consequents</th>
@@ -85,15 +86,18 @@
                                 <th scope="col">consequent support</th>
                                 <th scope="col">lift</th>
                             </tr>
-                            {% for r in rule.rules %}
-                            <tr>
-                                <td>{{ r["antecedants"] }}</td>
-                                <td>{{ r["consequents"] }}</td>
-                                <td>{{ r["antecedent support"] }}</td>
-                                <td>{{ r["consequent support"] }}</td>
-                                <td>{{ r["lift"] }}</td>
-                            </tr>
-                            {%  endfor %}
+                            </thead>
+                            <tbody>
+                                {% for r in rule.rules %}
+                                <tr>
+                                    <td>{{ r.antecedants }}</td>
+                                    <td>{{ r.consequents }}</td>
+                                    <td>{{ r.antecedent_support }}</td>
+                                    <td>{{ r.consequent_support }}</td>
+                                    <td>{{ r.lift }}</td>
+                                </tr>
+                                {%  endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </td>

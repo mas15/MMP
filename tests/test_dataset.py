@@ -44,8 +44,8 @@ class TestTweetsDataSet(unittest.TestCase):
         with self.assertRaises(Exception):  # todo test message
             self.dataset.remove_features(["F999"])
 
-    def test_get_feature_occurencies(self):
-        res = self.dataset.get_feature_occurencies()
+    def test_get_feature_occurrences(self):
+        res = self.dataset.get_feature_occurrences()
         self.assertEqual([('F1', 0), ('F2', 2), ('F3', 1)], res)
 
     def test_set_sentiment(self):
@@ -64,10 +64,10 @@ class TestTweetsDataSet(unittest.TestCase):
         def extract_features(text):
             return extracted[text]
 
-        self.dataset.df.drop(columns=["F1", "F2", "F3"], inplace=True)
-        self.dataset.set_phrase_features(extract_features)
+        self.dataset.df.drop(columns=["F1", "F2", "F3", "Tweet_sentiment"], inplace=True)
+        self.dataset.set_phrase_features(extract_features, ["F1", "F2", "F3"])
         x, _ = self.dataset.get_x_y()
-        self.assertEqual([[0, 1, 1, 0.3], [0, 0, 0, 0.6], [1, 1, 1, 0.9]], x.tolist())
+        self.assertEqual([[0, 1, 1], [0, 0, 0], [1, 1, 1]], x.tolist())
 
     def test_count_nr_of_feature_occurrences(self):
         df = pd.DataFrame({'2_times': [0, 0, 0, 1, 1],

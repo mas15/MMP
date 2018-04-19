@@ -7,7 +7,7 @@ from markets.dataset import TweetsDataSet
 DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
 ALL_TWEETS_FILENAME = os.path.join(DATA_PATH, "all_tweets.csv")
 TWEETS_WITH_FEATURES_FILENAME = os.path.join(DATA_PATH, "tweets_with_features.csv")
-MIN_FEATURE_OCCURENCIES = 7
+MIN_FEATURE_OCCURRENCES = 7
 
 
 def read_all_tweets(tweets_filename):
@@ -18,9 +18,9 @@ def read_all_tweets(tweets_filename):
 
 
 class FeatureExtractor:
-    def __init__(self, dataset, vocabulary=None, extr=None, sent=None, min_freq=MIN_FEATURE_OCCURENCIES):
+    def __init__(self, dataset, vocabulary=None, extr=None, sent=None, min_freq=MIN_FEATURE_OCCURRENCES):
         self.dataset = dataset
-        self.extr = extr or PhrasesExtractor(min_keyword_frequency=4)  # 5 tez jest spoko
+        self.extr = extr or PhrasesExtractor(min_keyword_frequency=4)
         if vocabulary:
             self.extr.set_features(vocabulary)
         else:
@@ -45,7 +45,7 @@ class FeatureExtractor:
         return self.dataset
 
     def drop_infrequent_features(self):
-        cols_with_nr_of_trues = self.dataset.get_feature_occurencies()
+        cols_with_nr_of_trues = self.dataset.get_feature_occurrences()
         infrequent_features = [c[0] for c in cols_with_nr_of_trues if c[1] < self.min_feature_freq]
         self.dataset.remove_features(infrequent_features)
 
