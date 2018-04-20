@@ -11,14 +11,9 @@ def step_impl(context):
     context.s = SentimentAnalyser()
 
 
-@given('we have texts: {texts}')
-def step_impl(context, texts):
-    context.texts = texts.split(", ")
-
-
 @given('we know their sentiment: {sentiments}')
 def step_impl(context, sentiments):
-    context.texts = zip(context.texts, sentiments.split(", "))
+    context.texts = list(zip(context.texts, sentiments.split(", ")))
 
 
 @when('we train a sentiment analyser')
@@ -29,5 +24,5 @@ def step_impl(context):
 @then('we can predict that {text} is {expected_result}')
 def step_impl(context, text, expected_result):
     result = context.s.predict(text)
-    print(result)
+    expected_result = "pos" if expected_result == "positive" else "neg"
     assert expected_result == result

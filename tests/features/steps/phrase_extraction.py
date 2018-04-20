@@ -16,11 +16,6 @@ def step_impl(context, vocabulary):
     context.e.set_features(vocabulary.split(", "))
 
 
-@given('we have texts: {texts}')
-def step_impl(context, texts):
-    context.texts = texts.split(", ")
-
-
 @when('we extract phrases from the sentence: {sentence}')
 def step_impl(context, sentence):
     context.e.result = context.e.extract_features(sentence)
