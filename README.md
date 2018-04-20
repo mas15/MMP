@@ -1,6 +1,10 @@
 To run test: cd tests; nosetests
 nosetests --with-coverage --cover-erase --cover-package=markets --cover-html
 
+to run BBD:
+cd tests
+behave
+
 mexykanski S&P/BMV IPC (MXX)
 
 

@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 from markets.feature_selection import select_features, filter_features
 from markets.association import build_df_with_tweets_and_affect, save_sifted_tweets_with_date
 from markets.rules import extract_rules_to_file, read_rules_sets
@@ -68,7 +68,10 @@ class CurrencyAnalyser:
 
     def get_graph_data(self):  # czy to dobrze tutaj?
         graph_data = pd.read_csv(self.graph_filename)
-        tweets_per_date = dict(zip(graph_data.Date, graph_data.Text))
+        tweets_per_date = defaultdict(list)
+        for date, tweet in zip(graph_data.Date, graph_data.Text):
+            tweets_per_date[date].append(tweet)
+
         dates = graph_data["Date"].values.tolist()
         prices = graph_data["Open"].values.tolist()
 

@@ -12,3 +12,4 @@ parameterized
 nose
 flask-sqlalchemy
 flask-script
+behave

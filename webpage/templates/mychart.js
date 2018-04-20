@@ -7,8 +7,8 @@ window.onload = function() {
 {% set labels, values, tweets = graph_data %}
 
 var tweets_per_date = {
-    {% for date, tweet in tweets.items() %}
-        "{{date}}": {{tweet|tojson|safe}},
+    {% for date, tweets in tweets.items() %}
+        "{{date}}": {{tweets|tojson|safe}},
     {% endfor %}
 }
 
