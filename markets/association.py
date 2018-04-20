@@ -1,19 +1,10 @@
-from datetime import timedelta
 import pandas as pd
-
 from markets.dataset import TweetsDataSet
 
 pd.set_option('display.width', 1500)
 
 
-def move_column_to_the_end(df, col_name):
-    cols = list(df)
-    cols.append(cols.pop(cols.index(col_name)))
-    df = df.reindex(columns=cols)
-    return df
-
-
-def read_tweets_with_features(tweets_filename): # todo https://stackoverflow.com/questions/17465045/can-pandas-automatically-recognize-dates
+def read_tweets_with_features(tweets_filename):  # todo https://stackoverflow.com/questions/17465045/can-pandas-automatically-recognize-dates
     all_tweets = pd.read_csv(tweets_filename)
     all_tweets['Date'] = pd.to_datetime(all_tweets['Date'], format='%Y-%m-%d %H:%M:%S')
     return all_tweets
@@ -24,7 +15,6 @@ def read_currency_prices(prices_filename):
 
     prices['Date'] = pd.to_datetime(prices['Date'], format='%b %d, %Y')
     prices = prices[(prices['Date'].dt.year >= 2017)]
-    # dollar_prices.set_index('Date', inplace=True)
 
     result = prices.filter(['Text', 'Date', 'Open', 'Change'], axis=1)
     result.rename(columns={'Change': 'Market_change'}, inplace=True)
@@ -47,9 +37,7 @@ def set_currency_change(dataset):
             return "Down"
         return "NC"
 
-    down_max, up_min = calculate_thresholds(dataset.get_market_change()) # todo to mozna do klasy wziac
-    print(down_max)
-    print(up_min)
+    down_max, up_min = calculate_thresholds(dataset.get_market_change())
     dataset.set_market_change(_get_change)
 
 
@@ -74,5 +62,4 @@ def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_
 def build_df_with_tweets_and_affect(tweets_filename, prices_filename):  # todo test
     result = get_tweets_with_currency_prices(tweets_filename, prices_filename)
     set_currency_change(result)
-    result.df = move_column_to_the_end(result.df, "Market_change")  # todo usunac
     return result

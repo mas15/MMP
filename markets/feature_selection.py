@@ -3,7 +3,7 @@ import pandas as pd
 import subprocess
 import tempfile
 from markets.dataset import TweetsDataSet
-from markets.tweets_features_extraction import FeatureExtractor
+from markets.tweets_features_extraction import remark_features
 
 ASSOCIATION_MODEL_FILE = os.path.join(os.path.dirname(__file__), "assoc_model.pickle")
 pd.set_option('display.width', 1500)
@@ -34,8 +34,7 @@ def save_selected_features(list_of_features, filename):
 
 def filter_features(dataset, features_to_leave, with_dropping=True):
     sifted_dataset = TweetsDataSet(dataset.get_no_features_df())
-    extr = FeatureExtractor(sifted_dataset, features_to_leave)
-    extr.remark_features(with_dropping)  # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
+    remark_features(sifted_dataset, features_to_leave, with_dropping)  # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
     return sifted_dataset
 
 

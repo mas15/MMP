@@ -27,9 +27,10 @@ class CurrencyAnalyser:
         self.currency_prices_filename = os.path.join(DATA_PATH, self._currency + "Index.csv")
         self.model_filename = os.path.join(PICKLED_MODEL_PATH, PREDICTING_MODEL_PREFIX + self._currency + ".pickle")
 
-    def load(self):
+    def load(self):  # TODO test?
         self._model = MarketPredictingModel()
-        # todo sprawdzic czy jest plik i logować
+        if not os.path.isfile(self.model_filename):
+            raise Exception("Cannot find a pickled model file")
         self._model.load(self.model_filename)
 
     def analyse(self):
@@ -51,7 +52,7 @@ class CurrencyAnalyser:
         return read_rules_sets(self.rules_filename)
 
     def get_most_coefficient_features(self):
-        self._check_if_model_is_build() # TODO test it
+        self._check_if_model_is_build()  # TODO test it
         result = self._model.get_most_coefficient_features()
         return result
 
