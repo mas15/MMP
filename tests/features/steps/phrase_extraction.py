@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.insert(0, os.path.pardir)
 
-from behave import given, when, then, step
+from behave import given, when, then
 from markets.phrases_extractor import PhrasesExtractor
 
 

@@ -16,7 +16,7 @@ class TweeterScrapper:
 
         self.api = tweepy.API(auth)
 
-    def get_tweets(self, user, count): # cant get more than 200 at once - count=200,max_id=201)
+    def get_tweets(self, user, count):  # cant get more than 200 at once - count=200,max_id=201)
         return self.api.user_timeline(user, count=count, tweet_mode="extended", )
 
     def get_status(self, id):

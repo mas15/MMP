@@ -96,7 +96,7 @@ class MarketPredictingModel:
             self.all_features = pickle.load(f)
             self.main_features = pickle.load(f)
 
-    def get_most_coefficient_features(self):  # TODO a co z sentimentem jak pierwszy albo ktorys?
+    def get_most_coefficient_features(self):
         result = dict()
         for (features_with_scores, target) in self.main_model.get_coefficient_features():
             features_names = self.main_features+["Tweet_sentiment"]
