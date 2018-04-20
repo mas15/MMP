@@ -55,7 +55,7 @@ def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_
 
     ds = TweetsDataSet(all_tweets)
     ds.set_date_with_effect()
-    ds.merge_tweets_with_dollar_prices(currency_prices, drop_open_and_date) # todo to jest średnie
+    ds.merge_tweets_with_dollar_prices(currency_prices, drop_open_and_date)  # todo to jest średnie
     return ds
 
 

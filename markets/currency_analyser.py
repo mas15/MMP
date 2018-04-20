@@ -35,7 +35,6 @@ class CurrencyAnalyser:
 
     def analyse(self):
         # todo test co jak nie ma pliku?
-
         tweets_with_affect_df = build_df_with_tweets_and_affect(TWEETS_WITH_FEATURES_FILENAME, self.currency_prices_filename)
         sifted_tweets_df = select_features(tweets_with_affect_df, self.selected_features_filename)
         training_result = self.build_main_model_to_predict_markets(sifted_tweets_df, tweets_with_affect_df)
@@ -67,7 +66,7 @@ class CurrencyAnalyser:
         result = self._model.analyse(tweet_dataset, sifted_tweet_dataset)
         return result.to_dict()
 
-    def get_graph_data(self):  # czy to dobrze tutaj?
+    def get_graph_data(self):
         graph_data = pd.read_csv(self.graph_filename)
         tweets_per_date = defaultdict(list)
         for date, tweet in zip(graph_data.Date, graph_data.Text):

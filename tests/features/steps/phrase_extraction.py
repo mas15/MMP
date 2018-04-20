@@ -23,7 +23,7 @@ def step_impl(context, sentence):
 
 @when('we build a vocabulary')
 def step_impl(context):
-    context.e.build_vocabulary(context.texts)
+    context.e.build(context.texts)
 
 
 @then('we get {phrases} extracted')

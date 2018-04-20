@@ -1,5 +1,5 @@
 import pandas as pd
-from markets.dataset import TweetsDataSet, count_nr_of_feature_occurrences
+from markets.dataset import TweetsDataSet, count_nr_of_feature_occurrences, get_date_to_check_affect
 from markets.sentiment import SentimentAnalyser
 import unittest
 from unittest import mock
@@ -64,10 +64,10 @@ class TestTweetsDataSet(unittest.TestCase):
         def extract_features(text):
             return extracted[text]
 
-        self.dataset.df.drop(columns=["F1", "F2", "F3", "Tweet_sentiment"], inplace=True)
+        self.dataset.df.drop(columns=["F1", "F2", "F3"], inplace=True)
         self.dataset.set_phrase_features(extract_features, ["F1", "F2", "F3"])
         x, _ = self.dataset.get_x_y()
-        self.assertEqual([[0, 1, 1], [0, 0, 0], [1, 1, 1]], x.tolist())
+        self.assertEqual([[0, 1, 1, 0.3], [0, 0, 0, 0.6], [1, 1, 1, 0.9]], x.tolist())
 
     def test_count_nr_of_feature_occurrences(self):
         df = pd.DataFrame({'2_times': [0, 0, 0, 1, 1],
@@ -83,3 +83,17 @@ class TestTweetsDataSet(unittest.TestCase):
         self.assertEqual(["F3"], self.dataset.get_marked_features())
         self.dataset.df["F3"] = 0
         self.assertEqual([], self.dataset.get_marked_features())
+
+    def test_set_date_with_effect(self):
+        self.dataset.df["Date"] = [pd.Timestamp('2017-01-02T23:47'), pd.Timestamp('2017-01-04T12:47'),
+                                   pd.Timestamp('2017-01-04T12:47')]
+        self.dataset.set_date_with_effect()
+        expected_dates = [pd.Timestamp('2017-01-03 00:00:00'), pd.Timestamp('2017-01-04 00:00:00'),
+                          pd.Timestamp('2017-01-04 00:00:00')]
+        self.assertEqual(expected_dates, self.dataset.df["Date_with_affect"].tolist())
+
+    def test_get_date_to_check_affect(self):
+        d = pd.Timestamp('2017-01-02T23:47')
+        exp_res = pd.Timestamp('2017-01-03')
+        res = get_date_to_check_affect(d)
+        self.assertEqual(exp_res, res)

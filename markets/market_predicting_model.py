@@ -145,7 +145,7 @@ class Classifier:
             sum_test_accuracy += accu_on_test
             sum_train_accuracy += accu_on_train
 
-        return sum_test_accuracy / k_folds, sum_train_accuracy / k_folds  # todo najlepszy z 10
+        return sum_test_accuracy / k_folds, sum_train_accuracy / k_folds  # todo best of 10?
 
     def test_model_on_dataset(self, x, y):
         predicted = self.model.predict(x)
@@ -180,6 +180,6 @@ def get_indexes_before_splitting(before, after):
     return before[after]
 
 
-def get_misclassified_on_set(y, predicted):  # tu cos moze teraz byc nie tak todo
+def get_misclassified_on_set(y, predicted):
     misclassified_objects = np.where(y != predicted)
     return misclassified_objects

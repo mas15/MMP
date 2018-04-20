@@ -51,8 +51,6 @@ class PhrasesExtractor: # todo self greeedy?
         features = dict.fromkeys(self._phrases, False)
         sentences = preprocess(tweet)
 
-        # TODO tutaj np sprawdzanie phrsaes czy spelniaja wymogi
-
         extracted_words = set()
         for s in sentences:
             s, found_phrases = extract_phrases_from_text(s, self._phrases, greedy)
@@ -68,7 +66,7 @@ class PhrasesExtractor: # todo self greeedy?
             features[w] = (w in extracted_words)
         return features
 
-    def build(self, tweets): # to build voca a tamto build TODO
+    def build_vocabulary(self, tweets):
         sentences = preprocess_many(tweets)
         phrases, words = self.generate_phrases(sentences)
         words = lemamatize_many(words)
@@ -109,7 +107,7 @@ class PhrasesExtractor: # todo self greeedy?
             rest_with_removed_phrases.update(r.split())
         return phrases, rest_with_removed_phrases
 
-    def generate_phrases(self, tweets): # todo tutaj lipa troche jak dluga fraza sie powtarza za malo razy to potem znowu jej nie bierze np. make am great aga, nie wezmie potem mag...
+    def generate_phrases(self, tweets):
         phrases = []
         for t in tweets:
             for p in self.split_by_stop_words(t):
@@ -120,8 +118,8 @@ class PhrasesExtractor: # todo self greeedy?
         candidates, rest = self.extract_not_matching_candidates(phrases)
         return candidates, rest
 
-    def build_vocabulary(self, dataset):
-        found_phrases, all_words = self.build(dataset)
+    def build(self, dataset):
+        found_phrases, all_words = self.build_vocabulary(dataset)
         self.set_words_and_phrases(all_words, found_phrases)
         # print('VOCABULARY LEN ' + str(len(self._vocabulary)))
         # print('PHRASES LENGTH ' + str(len(self._phrases)))

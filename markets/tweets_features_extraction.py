@@ -15,7 +15,7 @@ def _create_phrases_extractor(vocabulary, dataset):
     if vocabulary:
         extr.set_features(vocabulary)
     else:
-        extr.build_vocabulary(dataset.get_all_tweets())
+        extr.build(dataset.get_all_tweets())
     return extr
 
 

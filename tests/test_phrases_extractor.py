@@ -66,14 +66,14 @@ class TestPhrasesExtractor(unittest.TestCase):
     ]
 
     def test_build_vocabulary(self):
-        self.extr.build_vocabulary(self.dataset)
+        self.extr.build(self.dataset)
         exp_phrases = ['fake news media', 'hillary clinton']
         exp_vocabulary = set([word for words in self.exp_features for word in words]) - set(exp_phrases)
         self.assertEqual(sorted(exp_vocabulary), sorted(self.extr._vocabulary))
         self.assertEqual(exp_phrases, sorted(self.extr._phrases))
 
     def test_build_vocabulary_and_extract(self):
-        self.extr.build_vocabulary(self.dataset)
+        self.extr.build(self.dataset)
         for t, exp_res in zip(self.dataset, self.exp_features):
             extracted = self.extr.extract_features(t)
             found = [f for f, is_found in extracted.items() if is_found]

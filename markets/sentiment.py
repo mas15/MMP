@@ -27,7 +27,7 @@ class SentimentAnalyser:
 
     def train(self, train_data):
         only_tweets = [t for t, s in train_data]
-        self.extr.build_vocabulary(only_tweets)
+        self.extr.build(only_tweets)
         training_features = nltk.classify.apply_features(self.extr.extract_features, train_data)
         self.cl = NaiveBayesClassifier.train(training_features)
 

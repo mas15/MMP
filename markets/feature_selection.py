@@ -15,7 +15,7 @@ def read_features_from_file(filename):
 
 
 def select_features(df, filename=None):
-    has_got_faeture_already_selected = filename and os.path.isfile(filename)  # todo czy są tam featerki
+    has_got_faeture_already_selected = filename and os.path.isfile(filename)  # todo is file not empty
     if has_got_faeture_already_selected:
         features = read_features_from_file(filename)
     else:
@@ -58,7 +58,7 @@ def run_weka_with_file(temp_filename):
             features.append(l.strip())
         if l.startswith("Selected attributes:"):
             found_features = True
-    features = [f for f in features if f] # make sure no empty line added
+    features = [f for f in features if f]  # make sure no empty line added
     if not features:
         print(stdoutdata)
         raise Exception("Problem while doing feature selection with Weka library.")

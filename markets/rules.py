@@ -1,7 +1,7 @@
-from mlxtend.frequent_patterns import apriori, association_rules
-from itertools import groupby
 import pickle
+from itertools import groupby
 from collections import namedtuple
+from mlxtend.frequent_patterns import apriori, association_rules
 
 MINIMUM_OCCURRENCES = 2
 
