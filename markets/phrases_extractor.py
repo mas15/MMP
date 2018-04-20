@@ -68,7 +68,7 @@ class PhrasesExtractor: # todo self greeedy?
             features[w] = (w in extracted_words)
         return features
 
-    def build(self, tweets):
+    def build(self, tweets): # to build voca a tamto build TODO
         sentences = preprocess_many(tweets)
         phrases, words = self.generate_phrases(sentences)
         words = lemamatize_many(words)
@@ -189,8 +189,6 @@ def preprocess(tweet):
 
     tweet = tweet.lower()
     sentences = sentence_delimiters.split(tweet)
-    # sentences = sent_tokenize(text)
-    # sentences = [s.rstrip('?:!.,;') for s in sentences]
     sentences = [s.strip() for s in sentences]
     sentences = [re.sub(chars_to_remove, "", s) for s in sentences]
     sentences = [re.sub(chars_to_replace, " ", s) for s in sentences]
