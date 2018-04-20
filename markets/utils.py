@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.model_selection import StratifiedKFold
 
 
@@ -15,3 +16,10 @@ def get_x_y_from_list_of_tuples(dataset):
     x = np.array(x)
     y = np.array(y)
     return x, y
+
+
+def read_all_tweets(tweets_filename):
+    all_tweets = pd.read_csv(tweets_filename)
+    all_tweets['Date'] = pd.to_datetime(all_tweets['Date'], format='%Y-%m-%d %H:%M:%S')
+    all_tweets.drop(columns=['Id'], inplace=True)
+    return all_tweets

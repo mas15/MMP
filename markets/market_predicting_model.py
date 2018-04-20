@@ -4,7 +4,7 @@ from collections import Counter
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.naive_bayes import MultinomialNB
 from sklearn import metrics
-from markets import helpers
+from markets import utils
 from collections import namedtuple
 
 
@@ -131,7 +131,7 @@ class Classifier:
     def _train(self, x, y, random_state, k_folds):
         sum_test_accuracy, sum_train_accuracy, = 0, 0
 
-        for x_train, x_test, y_train, y_test in helpers.k_split(x, y, k_folds, random_state):
+        for x_train, x_test, y_train, y_test in utils.k_split(x, y, k_folds, random_state):
             self.model.fit(x_train, y_train)
 
             accu_on_test, misclass_on_test = self.test_model_on_dataset(x_test, y_test)

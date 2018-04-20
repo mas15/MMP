@@ -3,7 +3,7 @@ import pickle
 import nltk
 import csv
 from nltk import NaiveBayesClassifier
-from markets.helpers import get_x_y_from_list_of_tuples, k_split
+from markets.utils import get_x_y_from_list_of_tuples, k_split
 from markets.phrases_extractor import PhrasesExtractor
 
 SENTIMENT_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/sentiment_model.pickle")

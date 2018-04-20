@@ -105,6 +105,10 @@ class TweetsDataSet:
         self.df.drop(columns=columns_to_drop, inplace=True)
 
 
+def dataset_from_text(text): # TODO test it
+    return TweetsDataSet(pd.DataFrame({'Text': [text]}))
+
+
 def count_nr_of_feature_occurrences(df):
     return [(col, (df.loc[df[col] == True, col].count())) for col in df]
 

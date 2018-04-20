@@ -5,7 +5,7 @@ from parameterized import parameterized
 from markets.market_predicting_model import get_misclassified_on_set, get_indexes_before_splitting, \
     sort_misclassified, Classifier, format_result
 import numpy as np
-from markets.helpers import k_split
+from markets.utils import k_split
 from sklearn.naive_bayes import MultinomialNB
 import pandas as pd
 
