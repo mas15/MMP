@@ -2,6 +2,11 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
 
+
+def unzip(list_of_tuples):
+    return zip(*list_of_tuples)
+
+
 app = Flask(__name__, static_url_path='/static')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config['DEBUG'] = True
@@ -15,12 +20,9 @@ db = SQLAlchemy(app)
 app.analysers = dict()
 app.currencies = []
 
-
-def unzip(list_of_tuples):
-    return zip(*list_of_tuples)
-
-
 app.jinja_env.filters['unzip'] = unzip
 
 import webpage.views
 import webpage.models
+
+

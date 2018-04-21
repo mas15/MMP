@@ -14,10 +14,10 @@ class TweetTextForm(FlaskForm):
 @app.route('/', methods=['POST', 'GET'], defaults={'currency': 'USD'})
 @app.route('/currency/<currency>', methods=['POST', 'GET'])
 def index(currency):
-    form = TweetTextForm()  # todo validate currency
+    form = TweetTextForm()
     prediction_results = dict()
     try:
-        currency_details = Currency.get_currency(currency) # todo raise exception
+        currency_details = Currency.get_currency(currency)  # todo raise exception
         analyser = app.analysers[currency]
 
         if form.validate_on_submit():
@@ -32,3 +32,4 @@ def index(currency):
                                rules_data=analyser.get_rules_data())
     except KeyError:
         abort(404)
+
