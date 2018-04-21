@@ -36,16 +36,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('index', currency='USD') }}">Dollar <span
-                        class="sr-only">(current)</span></a>
-            </li>
+            {% for c in currencies %}
             <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('index', currency='EUR') }}">Euro</a>
+                <a class="nav-link {% if currency_details.name == c.name %} active {% endif %}"
+                   href="{{ url_for('index', currency=c.name) }}">{{c.name}}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('index', currency='MEX') }}">Mexico</a>
-            </li>
+            {% endfor %}
         </ul>
     </div>
 </nav>

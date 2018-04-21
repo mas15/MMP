@@ -1,15 +1,7 @@
-from flask import Flask
 import unittest
-from selenium import webdriver
-from flask import url_for
-# from flask_testing import TestCase
-import urllib
-from urllib.request import urlopen
 from webpage import app, db
 from parameterized import parameterized
-import tempfile
 import os
-from flask_sqlalchemy import SQLAlchemy
 from webpage.models import Currency
 from markets.currency_analyser import CurrencyAnalyser
 from markets.rules import RulesSet, Rule
@@ -43,7 +35,7 @@ class FlaskTestCase(unittest.TestCase):
         dates = ['2018-03-06 11:22:33', '2018-03-07 22:33:44']
         tweets = ["First", "Second"]
         tweets_per_date = {'2018-03-06 11:22:33': ["First"], '2018-03-07 22:33:44': ["Second"]}
-        # r1, r2 = Rule("antecedants antecedent_support consequents consequent_support lift")
+        # r1, r2 = Rule("antecedants antecedent_support consequents consequent_support lift") # TODO to trzeba ogarnac?
         # rules_data = [RulesSet({'a,' 'b', 'c'}, 11, 12, [r1, r2])]
         coefs = {"Down": [("Bad", 20), ("Taxes", 15)],
                  "NC": [("Apple", 20), ("Banana", 15)],

@@ -24,6 +24,7 @@ def index(currency):
             prediction_results = analyser.analyse_tweet(request.form["tweet_content"])  # todo co jak exception?
 
         return render_template('currency.html',
+                               currencies=Currency.get_all(),
                                prediction=prediction_results,
                                currency_details=currency_details,
                                form=form,
