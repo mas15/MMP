@@ -38,6 +38,7 @@ class AnalysisResult:
         result = dict(self.probabilities)
         result["Sentiment"] = "Positive" if self.sentiment_value > 0.5 else "Negative"
         result["Features"] = ", ".join(self.features) if self.features else "No features found in the tweet"
+        result["Prediction"] = self.prediction # TODO test it
         return result
 
 
@@ -78,6 +79,9 @@ class MarketPredictingModel:
 
     @staticmethod
     def _analyse_on_model(dataset, model):
+        print("TUTAJ")
+        print(dataset.features)
+        print(dataset.df.to_dict())
         x = dataset.get_x()
         probabilities = model.analyse(x)
         return AnalysisResult(probabilities, dataset.get_sentiment()[0], dataset.get_marked_features())

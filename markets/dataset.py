@@ -54,6 +54,7 @@ class TweetsDataSet:
         return row
 
     def get_x(self):
+        self._keep_sentiment_at_the_end() # TODO nie tutaj
         return self.df.drop(columns=["Text"]).values
 
     def get_x_y(self):

@@ -1,4 +1,4 @@
-from behave import given, when, then, step
+from behave import given
 
 
 @given('we have texts: {texts}')
