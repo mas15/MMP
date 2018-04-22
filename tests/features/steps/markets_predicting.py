@@ -15,20 +15,20 @@ import numpy as np
 def step_impl(context):
     def predict_proba(x):
         """
-        Mocked out Scikit learns predict proba which normally returns array of arrays
+        Mocked out Scikit-learns predict proba which normally returns array of arrays
         with predictions for each class. We mock out the result based on words found
         """
-        if x[0][0]:  # Mexico
-            result = [0.8, 0.5, 0.2]
-        elif x[0][1]:  # Apples
+        if x[0][0]:  # Apples
             result = [0.3, 0.5, 0.4]
-        elif x[0][2]:  # Good
+        elif x[0][1]:  # Good
             result = [0.1, 0.2, 0.9]
+        elif x[0][2]:  # Mexico
+            result = [0.8, 0.5, 0.2]
         else:  # no features found
             result = [0.2, 0.2, 0.2]
 
-        if len(x) == 5:  # if all features model used
-            if x[0][3] and x[0][4]:  # pizza and banana found
+        if len(x[0]) > 4:  # if all features model used
+            if x[0][3] and x[0][4]:  # pizza and snack found
                 result = [0.2, 0.1, 1]
             else:  # no features found
                 result = [0.4, 0.4, 0.4]
@@ -46,11 +46,16 @@ def step_impl(context):
 @given('all the features are: {features}')
 def step_impl(context, features):
     context.a._model.all_features = features.split(", ")
+    print("ALL FEATUREs")
+    print(context.a._model.all_features)
 
 
 @given('the main features are: {features}')
 def step_impl(context, features):
     context.a._model.main_features = features.split(", ")
+    print("MAIN FEATUREs")
+    print(context.a._model.main_features)
+
 
 
 #
@@ -71,6 +76,8 @@ def step_impl(context, text):
 
 @then('the result is {expected_result}')
 def step_impl(context, expected_result):
+    print("context.result")
+    print(context.result["Prediction"])
     assert context.result["Prediction"] == expected_result
 
 

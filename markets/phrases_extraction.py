@@ -25,7 +25,7 @@ def get_stopwords_regex():
 class PhrasesExtractor: # todo self greeedy?
     def __init__(self, min_keyword_frequency=2):
         """ Features set containing unique words"""
-        self._vocabulary = set()
+        self._vocabulary = SortedSet()
         self._phrases = SortedSet(key=phrases_sorting_key)
         self.stop_word_regex = get_stopwords_regex()
 
@@ -35,7 +35,7 @@ class PhrasesExtractor: # todo self greeedy?
         self.min_word_length = 3
 
     def set_words_and_phrases(self, words, phrases):
-        self._vocabulary = set(words)
+        self._vocabulary = SortedSet(words)
         self._phrases = SortedSet(phrases, key=phrases_sorting_key)
 
     def set_features(self, features):
@@ -101,7 +101,7 @@ class PhrasesExtractor: # todo self greeedy?
                 rest.add(c)
 
         # TODO czy to konieczne?
-        rest_with_removed_phrases = set()  # remove phrases from non matching candidates
+        rest_with_removed_phrases = SortedSet()  # remove phrases from non matching candidates
         for r in rest:
             r, _ = extract_phrases_from_text(r, phrases)
             rest_with_removed_phrases.update(r.split())
