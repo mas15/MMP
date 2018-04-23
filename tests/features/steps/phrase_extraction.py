@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, os.path.pardir)
 
 from behave import given, when, then
-from markets.phrases_extractor import PhrasesExtractor
+from markets.phrases_extraction import PhrasesExtractor
 
 
 @given('we created a phrases extractor')

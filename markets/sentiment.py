@@ -4,7 +4,7 @@ import nltk
 import csv
 from nltk import NaiveBayesClassifier
 from markets.utils import get_x_y_from_list_of_tuples, k_split
-from markets.phrases_extractor import PhrasesExtractor
+from markets.phrases_extraction import PhrasesExtractor
 
 SENTIMENT_MODEL_FILE = os.path.join(os.path.dirname(__file__), "pickled_models/sentiment_model.pickle")
 CORPUS_FILE = os.path.join(os.path.dirname(__file__), "data/sentimental_tweets.csv")
@@ -86,11 +86,11 @@ if __name__ == "__main__":
     tweets_with_sent = get_tweets_with_sentiment_from_file(CORPUS_FILE)
     sent = SentimentAnalyser()
 
-    # average_of_n = sum([sent.cross_validate(tweets_with_sent, i) for i in range(40)])/40
-    # print("VOCABULARY:")
-    # print(sent.extr._vocabulary)
-    # print(sent.extr._phrases)
-    # print("AV OF 40: " + str(average_of_n))
+    average_of_n = sum([sent.cross_validate(tweets_with_sent, i) for i in range(40)])/40
+    print("VOCABULARY:")
+    print(sent.extr._vocabulary)
+    print(sent.extr._phrases)
+    print("AV OF 40: " + str(average_of_n))
 
     print("TRAINING ON ALL AND SAVING CL")
     sent.train(tweets_with_sent)
@@ -99,3 +99,4 @@ if __name__ == "__main__":
     sent.load()
     print(sent.predict_score("Make america great again"))
     print(sent.predict_score("Bad Mexico"))
+    print(sent.cl.show_most_informative_features(50))

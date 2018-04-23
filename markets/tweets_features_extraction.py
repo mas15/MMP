@@ -1,5 +1,5 @@
 import os
-from markets.phrases_extractor import PhrasesExtractor
+from markets.phrases_extraction import PhrasesExtractor
 from markets.sentiment import SentimentAnalyser
 from markets.dataset import TweetsDataSet, dataset_from_text
 from markets.utils import read_all_tweets
