@@ -31,6 +31,7 @@ class AnalysisResult:
 
     def combine_with(self, other):
         self.probabilities = {t: (v + other.probabilities[t]) * 0.5 for t, v in self.probabilities.items()}
+        self.probabilities = {t: round(v, 2) for t, v in self.probabilities.items()}  # round after float operations
         self.sentiment_value = (self.sentiment_value + other.sentiment_value) * 0.5
         self.prediction = max(self.probabilities, key=self.probabilities.get)
 
@@ -38,7 +39,7 @@ class AnalysisResult:
         result = dict(self.probabilities)
         result["Sentiment"] = "Positive" if self.sentiment_value > 0.5 else "Negative"
         result["Features"] = ", ".join(self.features) if self.features else "No features found in the tweet"
-        result["Prediction"] = self.prediction # TODO test it
+        result["Prediction"] = self.prediction if self.prediction != "NC" else "No change"  # TODO test it
         return result
 
 
@@ -49,9 +50,9 @@ def format_result(probabilities, dataset):
 
 
 class MarketPredictingModel:
-    def __init__(self):
-        self.main_model = Classifier()
-        self.rest_model = Classifier()
+    def __init__(self, main_model=None, rest_model=None):
+        self.main_model = main_model or Classifier()
+        self.rest_model = rest_model or Classifier()
         self.all_features = []
         self.main_features = []
 
@@ -79,9 +80,6 @@ class MarketPredictingModel:
 
     @staticmethod
     def _analyse_on_model(dataset, model):
-        print("TUTAJ")
-        print(dataset.features)
-        print(dataset.df.to_dict())
         x = dataset.get_x()
         probabilities = model.analyse(x)
         return AnalysisResult(probabilities, dataset.get_sentiment()[0], dataset.get_marked_features())
@@ -138,52 +136,22 @@ class Classifier:
         for x_train, x_test, y_train, y_test in utils.k_split(x, y, k_folds, random_state):
             self.model.fit(x_train, y_train)
 
-            accu_on_test, misclass_on_test = self.test_model_on_dataset(x_test, y_test)
-            accu_on_train, misclass_on_train = self.test_model_on_dataset(x_train, y_train)
-
-            # indexes_of_mis_train = get_indexes_before_splitting(train_index, misclass_on_train)
-            # indexes_of_mis_test = get_indexes_before_splitting(test_index, misclass_on_test)
-            # misclass_in_all_cvs.update(indexes_of_mis_train.tolist())
-            # misclass_in_all_cvs.update(indexes_of_mis_test.tolist())
+            accu_on_test = self.test_model_on_dataset(x_test, y_test)
+            accu_on_train = self.test_model_on_dataset(x_train, y_train)
 
             sum_test_accuracy += accu_on_test
             sum_train_accuracy += accu_on_train
 
-        return sum_test_accuracy / k_folds, sum_train_accuracy / k_folds  # todo best of 10?
+        return sum_test_accuracy / k_folds, sum_train_accuracy / k_folds
 
     def test_model_on_dataset(self, x, y):
         predicted = self.model.predict(x)
         accuracy = metrics.accuracy_score(y, predicted)
-        misclassified_objects = get_misclassified_on_set(y, predicted)
-        return accuracy, misclassified_objects
+        return accuracy
 
-    def analyse(self, x): # todo co jak nie ma modelu
+    def analyse(self, x):  # todo co jak nie ma modelu
         propabs_vals = self.model.predict_proba(x)
         propabs_vals = propabs_vals[0].tolist()
         propabs = dict(zip(self.model.classes_, propabs_vals))
         return propabs
 
-
-def print_misclassified(df, misclassified_objects):
-    print()
-    print("misclassified_objects")
-    for object_index, number_of_misclassifiations in sort_misclassified(misclassified_objects):
-        print(number_of_misclassifiations)
-        row = df.iloc[object_index][["Text", "Market_change"]]
-        print(row["Market_change"] + " " + row["Text"])
-    print()
-
-
-def sort_misclassified(misclassified_objects):
-    misclassified_objects = sorted(misclassified_objects.items(), key=lambda x: x[1], reverse=True)
-    misclassified_objects = [m for m in misclassified_objects if m[1]]
-    return misclassified_objects
-
-
-def get_indexes_before_splitting(before, after):
-    return before[after]
-
-
-def get_misclassified_on_set(y, predicted):
-    misclassified_objects = np.where(y != predicted)
-    return misclassified_objects

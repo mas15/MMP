@@ -2,7 +2,7 @@
 from webpage import app, db
 from flask_script import Manager, prompt_bool
 from webpage.models import Currency
-from markets.currency_analyser import CurrencyAnalyser
+from markets.currency_analysis import CurrencyAnalyser
 
 manager = Manager(app)
 

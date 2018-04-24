@@ -2,71 +2,70 @@ import unittest
 from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
-from markets.market_predicting_model import get_misclassified_on_set, get_indexes_before_splitting, \
-    sort_misclassified, Classifier, format_result
-import numpy as np
+from markets.market_predicting_model import AnalysisResult, Classifier, format_result, MarketPredictingModel
 from markets.utils import k_split
-from sklearn.naive_bayes import MultinomialNB
+from markets.dataset import TweetsDataSet
 import pandas as pd
 
 
 class TestMarketPredictingModel(unittest.TestCase):
 
     def setUp(self):
-        features = ["F1", "F2", "F3", "F4", "F5"]
+        main_model = create_autospec(Classifier)
+        rest_model = create_autospec(Classifier)
+        main_model.analyse.return_value = {"Down": 0.1, "NC": 0.5, "Up": 0.2}
+        rest_model.analyse.return_value = {"Down": 0.9, "NC": 0.1, "Up": 0.4}
+        self.pred_model = MarketPredictingModel(main_model, rest_model)
+        self.pred_model.main_features = ["A", "B", "C"]
+        self.pred_model.all_features = ["A", "B", "C", "D", "E"]
 
-        mock_model = create_autospec(MultinomialNB)
-        mock_model.classes_ = ["Up", "Down", "NC"]
-        mock_model.coef_ = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1], [10, 11, 12, 13, 14]]
+        self.tweet_dataset = create_autospec(TweetsDataSet)
+        self.sifted_dataset = create_autospec(TweetsDataSet)
+        self.tweet_dataset.get_sentiment.return_value = [0.2]
+        self.sifted_dataset.get_sentiment.return_value = [0.8]
 
-        mock_model.predict.return_value = np.array(["NC"])
-        mock_model.predict_proba.return_value = np.array([[0.3, 0.2, 0.5]])
+    def test_analyse_tweet_with_main_features(self):
+        self.tweet_dataset.get_marked_features.return_value = ["B", "C"]
+        self.sifted_dataset.get_marked_features.return_value = ["B", "C"]
 
-        self.pred_model = Classifier(features, mock_model)
+        result = self.pred_model.analyse(self.tweet_dataset, self.sifted_dataset)
 
-    # TODO te nie uzywane
+        expected_result = {"Sentiment": "Positive", "Features": "B, C",
+                           "Down": 0.1, "NC": 0.5, "Up": 0.2, 'Prediction': 'No change'}
+        self.assertEqual(expected_result, result.to_dict())
 
-    # def test_get_misclassified_objects(self):
-    #     y = np.array(["Up", "NC", "Down", "Up"])
-    #     predicted = np.array(["NC", "NC", "Down", "Down"])
-    #     result = get_misclassified_on_set(y, predicted)
-    #     self.assertEqual([0, 3], result[0].tolist())  # mozoe niech zwaraca z [0]?
+    def test_analyse_tweet_with_rest_features(self):
+        self.tweet_dataset.get_marked_features.return_value = ["D", "E"]
+        self.sifted_dataset.get_marked_features.return_value = []
 
-    # @parameterized.expand([
-    #     (np.array([0, 1, 3, 5, 6, 7, 8]), np.array([2, 3, 6]), [3, 5, 8]),
-    #     (np.array([2, 4, 9]), np.array([1]), [4]),
-    # ])
-    # def test_get_indexes_before_splitting(self, indexes, misclassified, exp_result):
-    #     res = get_indexes_before_splitting(indexes, misclassified)
-    #     self.assertEqual(exp_result, res.tolist())
+        result = self.pred_model.analyse(self.tweet_dataset, self.sifted_dataset)
 
-    # def test_sort_misclassified(self):
-    #     misclassified_objects = dict([(1, 12), (2, 0), (3, 343), (4, 1), (5, 100)])
-    #     res = sort_misclassified(misclassified_objects)
-    #     exp_res = [(3, 343), (5, 100), (1, 12), (4, 1)]
-    #     self.assertEqual(exp_res, res)
+        expected_result = {"Sentiment": "Negative", "Features": "D, E",
+                           "Down": 0.9, "NC": 0.1, "Up": 0.4, 'Prediction': 'Down'}
+        self.assertEqual(expected_result, result.to_dict())
 
-    def test_train(self):  # todo missclassified?
-        df = pd.DataFrame({"Text": ["Dummy", "Frame"], "Feature": [1, 0], "Target": [0, 1]})
+    def test_analyse_tweet_with_no_features(self):
+        self.tweet_dataset.get_marked_features.return_value = []
+        self.sifted_dataset.get_marked_features.return_value = []
 
-        mock_split_sets = iter([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]])
-        mock_accuracies = [10, 20, 12, 25, 19, 11, 15, 28]
+        result = self.pred_model.analyse(self.tweet_dataset, self.sifted_dataset)
 
-        with mock.patch("sklearn.metrics.accuracy_score", side_effect=mock_accuracies, autospec=True) as _:
-            with mock.patch("markets.helpers.k_split", return_value=mock_split_sets, autospec=True) as _:
-                res = self.pred_model.train(df, k_folds=4)
-
-                self.assertEqual((14.0, 21.0), res)
-                self.assertEqual(4, self.pred_model.model.fit.call_count)
-
-    # mock_extr = create_autospec(TweetFeaturesExtractor)
-    # def test_analyse(self): # todo kiedys
-    #     res = self.pred_model.analyse("Tweet content")
-    #     expected_res = {'Down': 0.2, 'NC': 0.5, 'Up': 0.3,
-    #                     'features': [],
-    #                     'prediction': 'NC',
-    #                     'sentiment': 'Positive'}
-    #     self.assertEqual(expected_res, res)
+        expected_result = {"Sentiment": "Negative", "Features": 'No features found in the tweet',
+                           "Down": 0.5, "NC": 0.3, "Up": 0.3, 'Prediction': 'Down'}
+        self.assertEqual(expected_result, result.to_dict())
+    #
+    # def test_train(self):  # todo missclassified?
+    #     df = pd.DataFrame({"Text": ["Dummy", "Frame"], "Feature": [1, 0], "Target": [0, 1]})
+    #
+    #     mock_split_sets = iter([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4]])
+    #     mock_accuracies = [10, 20, 12, 25, 19, 11, 15, 28]
+    #
+    #     with mock.patch("sklearn.metrics.accuracy_score", side_effect=mock_accuracies, autospec=True) as _:
+    #         with mock.patch("markets.helpers.k_split", return_value=mock_split_sets, autospec=True) as _:
+    #             res = self.pred_model.train(df, k_folds=4)
+    #
+    #             self.assertEqual((14.0, 21.0), res)
+    #             self.assertEqual(4, self.pred_model.model.fit.call_count)
 
     def test_get_most_coefficient_features(self):
         res = self.pred_model.get_most_coefficient_features()
@@ -81,17 +80,32 @@ class TestMarketPredictingModel(unittest.TestCase):
             self.pred_model.get_most_coefficient_features()
 
 
-class TestOtherFunctions(unittest.TestCase):
-    def test_format_result(self):
-        features = pd.DataFrame({'f1': [0], 'f2': [1], 'f3': [0], 'f4': [1], "Tweet_sentiment": [0.23]})
-        propabilities = [("Down", 0.1), ("NC", 0.5), ("Up", 0.2)]
-        prediction = "NC"
-        res = format_result(prediction, propabilities, features)
-        self.assertEqual("Negative", res.sentiment)
-        self.assertEqual(['f2', 'f4'], res.features)
-        self.assertEqual("NC", res.prediction)
-        self.assertEqual((0.2, 0.1, 0.5), (res.up, res.down, res.nc))
+class TestAnalysisResult(unittest.TestCase):
+    def setUp(self):
+        probabilities = dict([("Down", 0.1), ("NC", 0.5), ("Up", 0.2)])
+        self.result = AnalysisResult(probabilities, 0.34, ["f1", "f2", "f3"])
 
+    def test_constructor(self):
+        self.assertEqual("NC", self.result.prediction)
+
+    def test_to_dict(self):
+        expected_result = {"Sentiment": "Negative", "Features": "f1, f2, f3",
+                           "Down": 0.1, "NC": 0.5, "Up": 0.2, 'Prediction': 'No change'}
+        self.assertEqual(expected_result, self.result.to_dict())
+
+    def test_to_dict_when_no_features(self):
+        self.result.features = []
+        self.assertEqual("No features found in the tweet", self.result.to_dict()["Features"])
+
+    def test_combine_with(self):
+        other = AnalysisResult({"Down": 0.9, "NC": 0.0, "Up": 0.4}, 0.76, [])
+        self.result.combine_with(other)
+        expected_result = {"Sentiment": "Positive", "Features": "f1, f2, f3",
+                           "Down": 0.5, "NC": 0.25, "Up": 0.3, 'Prediction': 'Down'}
+        self.assertEqual(expected_result, self.result.to_dict())
+
+    def test_format_result(self):
+        pass # TODO
 
 if __name__ == '__main__':
     unittest.main()
