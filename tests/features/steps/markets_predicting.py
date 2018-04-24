@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.pardir)
 
 from behave import given, when, then, step
-from markets.currency_analyser import CurrencyAnalyser
+from markets.currency_analysis import CurrencyAnalyser
 from markets.market_predicting_model import MarketPredictingModel
 from unittest import mock
 from sklearn.naive_bayes import MultinomialNB

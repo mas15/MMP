@@ -3,7 +3,7 @@ from webpage import app, db
 from parameterized import parameterized
 import os
 from webpage.models import Currency
-from markets.currency_analyser import CurrencyAnalyser
+from markets.currency_analysis import CurrencyAnalyser
 from markets.rules import RulesSet, Rule
 from unittest import mock
 
