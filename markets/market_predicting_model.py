@@ -113,7 +113,8 @@ class MarketPredictingModel:
 
 class Classifier:
     def __init__(self, model=None):
-        self.model = model or MultinomialNB()  # LogisticRegressionCV(random_state=123, cv=10, Cs=3)
+        self.model = model or MultinomialNB()
+        #self.model = model or LogisticRegressionCV(random_state=123, cv=10, Cs=3)
 
     def get_coefficient_features(self):
         return zip(self.model.coef_, self.model.classes_)
