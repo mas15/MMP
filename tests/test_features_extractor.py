@@ -4,7 +4,7 @@ import pandas as pd
 from parameterized import parameterized
 from unittest.mock import create_autospec
 from markets.tweets_features_extraction import build_dataset_with_one_tweet, extract_features, remark_features
-from markets.phrases_extractor import PhrasesExtractor
+from markets.phrases_extraction import PhrasesExtractor
 from markets.sentiment import SentimentAnalyser
 from markets.dataset import TweetsDataSet
 

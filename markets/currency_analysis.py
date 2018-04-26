@@ -51,7 +51,7 @@ class CurrencyAnalyser:
         return read_rules_sets(self.rules_filename)
 
     def get_most_coefficient_features(self):
-        self._check_if_model_is_build()  # TODO test it
+        self._check_if_model_is_build()
         result = self._model.get_most_coefficient_features()
         return result
 
@@ -79,7 +79,7 @@ class CurrencyAnalyser:
 
     def build_main_model_to_predict_markets(self, main_df, all_df):
         self._model = MarketPredictingModel()
-        main_result, rest_result = self._model.train(main_df, all_df)  # todo use rest_result
+        main_result, rest_result = self._model.train(main_df, all_df)
         self._model.save(self.model_filename)
 
         return AnalyseResult(self._currency,

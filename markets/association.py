@@ -45,7 +45,7 @@ def save_sifted_tweets_with_date(sifted, tweets_filename, prices_filename, outpu
     result = get_tweets_with_currency_prices(tweets_filename, prices_filename, False)
     result.filter_by_tweets(sifted.get_all_tweets())
     result.df["Date"] = result.df["Date"].dt.strftime('%Y-%m-%d')
-    result.df.to_csv(output_filename, index=False)  # todo test czy z dobra nazwa wywoalane
+    result.df.to_csv(output_filename, index=False)
     return result.df
 
 
@@ -55,7 +55,7 @@ def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_
 
     ds = TweetsDataSet(all_tweets)
     ds.set_date_with_effect()
-    ds.merge_tweets_with_dollar_prices(currency_prices, drop_open_and_date)  # todo to jest średnie
+    ds.merge_tweets_with_dollar_prices(currency_prices, drop_open_and_date)
     return ds
 
 

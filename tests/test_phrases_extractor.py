@@ -1,4 +1,4 @@
-from markets.phrases_extractor import PhrasesExtractor, extract_phrases_from_text, preprocess
+from markets.phrases_extraction import PhrasesExtractor, extract_phrases_from_text, preprocess
 import unittest
 from parameterized import parameterized
 
@@ -9,13 +9,13 @@ class TestPhrasesExtractor(unittest.TestCase):
 
     @parameterized.expand([(True,), (False,)])
     def test_extract_features(self, greedy):
-        self.extr._vocabulary = ["hello", "another", "feature", "great"]  # todo again?
+        self.extr._vocabulary = ["hello", "another", "feature", "great"]
         self.extr._phrases = ["whole phrases here", "make america great", "tax cuts", "hilary clinton"]
 
         res = self.extr.extract_features("Make America great again", greedy)
         exp_res = {k: False for k in self.extr._vocabulary + self.extr._phrases}
         exp_res["make america great"] = True
-        exp_res["great"] = False if greedy else True  # TU JEST ZMIENIONE TODO CZY DOBRZE CZY ZLE?
+        exp_res["great"] = False if greedy else True
         self.assertEqual(res, exp_res)
 
     def test_generate_phrases(self):
@@ -28,7 +28,7 @@ class TestPhrasesExtractor(unittest.TestCase):
         (["fake news media", "hillary clinton"],
          "bad fake news media",
          "bad ",
-         ["fake news media"]),  # todo czemu tu spacja po bad?
+         ["fake news media"]),
         (["tax cuts", "fake news media", "hillary clinton"],
          "bad fake news media about hillary clinton and more text",
          "bad  about  and more text",
@@ -77,7 +77,7 @@ class TestPhrasesExtractor(unittest.TestCase):
         for t, exp_res in zip(self.dataset, self.exp_features):
             extracted = self.extr.extract_features(t)
             found = [f for f, is_found in extracted.items() if is_found]
-            self.assertEqual(exp_res, sorted(found))  # todo usunac sorted ale dac ordered set
+            self.assertEqual(exp_res, sorted(found))
 
     @parameterized.expand([
         ("Just cannot  believe a judge would put our country in such peril "

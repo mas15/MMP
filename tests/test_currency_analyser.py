@@ -3,11 +3,11 @@ import unittest
 from unittest import mock
 from unittest.mock import patch
 from parameterized import parameterized
-from markets.currency_analyser import CurrencyAnalyser
+from markets.currency_analysis import CurrencyAnalyser
 import markets
 
 
-@patch("markets.currency_analyser.DATA_PATH", "data_path_here")
+@patch("markets.currency_analysis.DATA_PATH", "data_path_here")
 class TestCurrencyAnalyser(unittest.TestCase):
     def setUp(self):
         self.analyser = CurrencyAnalyser("ABC")

@@ -22,8 +22,6 @@ class TweeterScrapper:
     def get_status(self, id):
         return self.api.get_status(id)
 
-# jak CSV: https://gist.github.com/yanofsky/5436496
-
     def get_all_since(self, date):
         def store(tweets, writer):
             for t in tweets:
@@ -34,40 +32,26 @@ class TweeterScrapper:
 
         with open('all_tweets.csv', 'a', encoding='utf-8') as f:
             writer = csv.writer(f)
-            last_id = 913004378486984704# 970650759091163137
+            last_id = 913004378486984704  # 970650759091163137 # todo fetch last users tweet id
             last_date = datetime.today()
             while last_date > date:
                 # while len(tweets) > 0:
-                tweets = scrapper.api.user_timeline("realDonaldTrump", count=200, tweet_mode="extended", max_id=last_id)
+                tweets = self.api.user_timeline("realDonaldTrump", count=200, tweet_mode="extended", max_id=last_id)
                 store(tweets[1:], writer)
                 last_id = tweets[199].id
                 last_date = tweets[199].created_at
 
+    def get_one_tweet(self, id):
+        t = self.get_status(id)
+        print(t.full_text)
+
+        fields = [t.id_str, t.full_text, t.created_at, 'neg']
+        with open('sentimental_tweets.csv', 'a', encoding='utf8') as f:
+            writer = csv.writer(f, newline='')
+            writer.writerow(fields)
+
 
 if __name__ == "__main__":
-    # scrapper = TweeterScrapper()
+    scrapper = TweeterScrapper()
     # scrapper.get_all_since(datetime(2017,1,1,0,0,0))
-    #
-    # for id in [816260343391514624]:
-    #     t = scrapper.get_status(id)
-    #     print(t.full_text)
-    #
-    #     fields = [t.id_str, t.full_text, t.created_at, 'neg']
-    #     with open('sentimental_tweets.csv', 'a', encoding='utf8') as f:
-    #         writer = csv.writer(f, newline='')
-    #         writer.writerow(fields)
-
-    import re
-    i=0
-    with open('temp.csv', 'w', encoding='utf-8', newline='') as fw:
-        writer = csv.writer(fw)
-        with open('all_tweets.csv', 'r', encoding='utf8') as fr:
-            reader = csv.reader(fr, delimiter=",")
-            for line in reader:
-                i+=1
-                try:
-                    #line[1] = re.sub(r'\S?https\S+', '', line[1])
-                    #line[1] = line[1].replace("\n", "")
-                    writer.writerow(line)
-                except IndexError:
-                    pass
+    scrapper.get_one_tweet(816260343391514624)

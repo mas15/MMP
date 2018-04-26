@@ -47,7 +47,7 @@ class PhrasesExtractor: # todo self greeedy?
     def features(self):
         return list(self._phrases) + list(self._vocabulary)
 
-    def extract_features(self, tweet, greedy=True): # lepiej jest bez false
+    def extract_features(self, tweet, greedy=True):
         features = dict.fromkeys(self._phrases, False)
         sentences = preprocess(tweet)
 
@@ -100,7 +100,6 @@ class PhrasesExtractor: # todo self greeedy?
             else:
                 rest.add(c)
 
-        # TODO czy to konieczne?
         rest_with_removed_phrases = SortedSet()  # remove phrases from non matching candidates
         for r in rest:
             r, _ = extract_phrases_from_text(r, phrases)
@@ -138,7 +137,7 @@ def phrases_sorting_key(text):
     return -len(text.split()), -len(text)
 
 
-def extract_phrases_from_text(text, phrases, greedy=True): # todo co jak na false?
+def extract_phrases_from_text(text, phrases, greedy=True):
     found = []
     for p in phrases:
         if greedy:
@@ -153,7 +152,8 @@ def extract_phrases_from_text(text, phrases, greedy=True): # todo co jak na fals
 
 
 def clear_from_punct(phrase):
-    """ # todo usuwa tez se środka
+    """
+    Removes punctuation from text
     >>> clear_from_punct("Hello!")
     'Hello'
     >>> clear_from_punct(".")

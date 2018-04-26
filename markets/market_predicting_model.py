@@ -39,7 +39,7 @@ class AnalysisResult:
         result = dict(self.probabilities)
         result["Sentiment"] = "Positive" if self.sentiment_value > 0.5 else "Negative"
         result["Features"] = ", ".join(self.features) if self.features else "No features found in the tweet"
-        result["Prediction"] = self.prediction if self.prediction != "NC" else "No change"  # TODO test it
+        result["Prediction"] = self.prediction if self.prediction != "NC" else "No change"
         return result
 
 

@@ -37,7 +37,7 @@ class TestSentimentAnalyser(unittest.TestCase):
     def test_get_tweets_with_sentiment_from_file(self):
         data = "1234,\"First tweet\",2016-12-30 19:41:33,pos\n1235,\"Second tweet\",2016-12-30 19:41:33,neg"
         m = mock.mock_open(read_data=data)
-        m.return_value.__iter__ = lambda self: iter(self.readline, '') # https://github.com/gsauthof/utility/blob/6489c7215dac341be4e40e5348e64d69461766dd/user-installed.py#L176-L179
+        m.return_value.__iter__ = lambda self: iter(self.readline, '')
         with mock.patch("builtins.open", m) as _:
             result = get_tweets_with_sentiment_from_file("any_filename")
             self.assertEqual([("First tweet", "pos"), ("Second tweet", "neg")], result)
@@ -45,8 +45,8 @@ class TestSentimentAnalyser(unittest.TestCase):
     def test_get_tweets_with_sentiment_from_file_raises_when_wrong_sent(self):
         data = "1234,\"First tweet\",2016-12-30 19:41:33,pos\n1235,\"Second tweet\",2016-12-30 19:41:33,abc"
         m = mock.mock_open(read_data=data)
-        m.return_value.__iter__ = lambda self: iter(self.readline, '') # https://github.com/gsauthof/utility/blob/6489c7215dac341be4e40e5348e64d69461766dd/user-installed.py#L176-L179
-        with self.assertRaises(Exception): # todo jakie exception i jaka wiadomosc?
+        m.return_value.__iter__ = lambda self: iter(self.readline, '')
+        with self.assertRaises(Exception):
             with mock.patch("builtins.open", m) as _:
                 get_tweets_with_sentiment_from_file("any_filename")
 

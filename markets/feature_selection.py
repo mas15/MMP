@@ -14,16 +14,15 @@ def read_features_from_file(filename):
     return [line.strip() for line in open(filename, 'r')]
 
 
-def select_features(df, filename=None):
-    has_got_faeture_already_selected = filename and os.path.isfile(filename)  # todo is file not empty
-    if has_got_faeture_already_selected:
+def select_features(df, filename):
+    if os.path.isfile(filename):
         features = read_features_from_file(filename)
     else:
         features = get_features_from_weka(df)
         save_selected_features(features, filename)
 
     main_df = filter_features(df, features)
-    print(main_df.df["Market_change"].size)
+    # print(main_df.df["Market_change"].size)
     return main_df
 
 
@@ -34,7 +33,7 @@ def save_selected_features(list_of_features, filename):
 
 def filter_features(dataset, features_to_leave, with_dropping=True):
     sifted_dataset = TweetsDataSet(dataset.get_no_features_df())
-    remark_features(sifted_dataset, features_to_leave, with_dropping)  # tu jak sie nie zamarkuje od nowa to lepsze accuracy ale mnniej tweetow
+    remark_features(sifted_dataset, features_to_leave, with_dropping)
     return sifted_dataset
 
 

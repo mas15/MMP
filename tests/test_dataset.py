@@ -1,5 +1,5 @@
 import pandas as pd
-from markets.dataset import TweetsDataSet, count_nr_of_feature_occurrences, get_date_to_check_affect
+from markets.dataset import TweetsDataSet, count_nr_of_feature_occurrences, get_date_to_check_affect, dataset_from_text
 from markets.sentiment import SentimentAnalyser
 import unittest
 from unittest import mock
@@ -41,7 +41,7 @@ class TestTweetsDataSet(unittest.TestCase):
         self.assertEqual(["F1", "F3"], self.dataset.features)
 
     def test_remove_features_raises_if_feature_not_in_dataset(self):
-        with self.assertRaises(Exception):  # todo test message
+        with self.assertRaises(Exception):
             self.dataset.remove_features(["F999"])
 
     def test_get_feature_occurrences(self):
@@ -97,3 +97,7 @@ class TestTweetsDataSet(unittest.TestCase):
         exp_res = pd.Timestamp('2017-01-03')
         res = get_date_to_check_affect(d)
         self.assertEqual(exp_res, res)
+
+    def test_dataset_from_text(self):
+        res = dataset_from_text("Tweet content")
+        self.assertEqual({'Text': {0: 'Tweet content'}}, res.df.to_dict())

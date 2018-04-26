@@ -54,11 +54,11 @@ class TweetsDataSet:
         return row
 
     def get_x(self):
-        self._keep_sentiment_at_the_end() # TODO nie tutaj
+        self._keep_sentiment_at_the_end()
         return self.df.drop(columns=["Text"]).values
 
     def get_x_y(self):
-        self._keep_sentiment_at_the_end() # TODO nie tutaj
+        self._keep_sentiment_at_the_end()
         y = self.df["Market_change"].values.ravel()
         x = self.df.drop(columns=["Market_change", "Text"]).values
         return x, y
@@ -106,7 +106,7 @@ class TweetsDataSet:
         self.df.drop(columns=columns_to_drop, inplace=True)
 
 
-def dataset_from_text(text): # TODO test it
+def dataset_from_text(text):
     return TweetsDataSet(pd.DataFrame({'Text': [text]}))
 
 
