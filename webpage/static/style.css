@@ -3,9 +3,15 @@
    box-shadow: 0px 1px 1px rgba(47,48,69, 0.075) inset, 0px 0px 8px rgba(47,48,69, 0.5);
 }
 
+/* override btn-x classes */
 .btn-primary {
   background-color: rgb(47,48,69);
   border-color: rgb(47,48,69);
+}
+
+.btn-primary:hover, .btn-primary:focus{
+  background-color: rgb(0, 77, 0) !important;
+  border-color: rgb(0, 77, 0) !important;
 }
 
 .hidden_table_row {

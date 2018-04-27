@@ -12,6 +12,17 @@ var tweets_per_date = {
     {% endfor %}
 }
 
+// get chart canvas
+var canvas = document.getElementById("currencyChart");
+
+canvas.style.width='100%';
+canvas.width  = canvas.offsetWidth;
+
+var ctx = canvas.getContext("2d");
+
+var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+gradient.addColorStop(0, 'rgba(204, 255, 153,1)');
+gradient.addColorStop(1, 'rgba(51, 102, 0,0.6)');
 
 var chartData = {
   labels : [{% for d in labels %}
@@ -20,15 +31,15 @@ var chartData = {
   datasets : [{
       fill: true,
       lineTension: 0.1,
-      backgroundColor: "rgba(154, 174, 94,0.8)",
-      borderColor: "rgba(91,98,65,1)",
+      backgroundColor: gradient,
+      borderColor: "rgba(0, 128, 0,1)",
       borderCapStyle: 'butt',
       borderJoinStyle: 'miter',
-      pointBorderColor: "rgba(91,98,65,1)",
+      pointBorderColor: "rgba(0, 128, 0,1)",
       pointBackgroundColor: "#fff",
       pointBorderWidth: 1,
       pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(91,98,65,1)",
+      pointHoverBackgroundColor: "rgba(0, 128, 0,1)",
       pointHoverBorderColor: "rgba(220,220,220,1)",
       pointHoverBorderWidth: 2,
       pointRadius: 1,
@@ -41,14 +52,8 @@ var chartData = {
   }]
 }
 
-// get chart canvas
-var canvas = document.getElementById("currencyChart");
-
-canvas.style.width='100%';
-canvas.width  = canvas.offsetWidth;
-
 // create the chart using the chart canvas
-var currencyChart = new Chart(canvas.getContext("2d"), {
+var currencyChart = new Chart(ctx, {
   type: 'line',
   data: chartData,
   options: {
@@ -78,16 +83,34 @@ var currencyChart = new Chart(canvas.getContext("2d"), {
       }
 });
 
+
+
+
 {% for change in ["Down", "NC", "Up"] %}
     {% set features_with_values = features_data[change] %}
     {% set features, values = features_with_values|unzip %}
+
+    var canvas = document.getElementById("featuresChart{{ change }}");
+    var ctx = canvas.getContext("2d");
+
+    var chartColors = []
+    var r = 70;
+    var g = 128;
+    var b = 0;
+    for(var i=0; i<20;i++){
+        chartColors[i] = 'rgba('+ r +', '+ g +', '+ b +', 0.8)'
+        r += 4;
+        g += 2;
+        b += 2;
+    };
+
 
     var featuresChartData = {
       labels : [{% for f in features %}
                 "{{f}}",
                 {% endfor %}],
       datasets : [{
-          backgroundColor: "rgba(154, 174, 94,0.8)",
+          backgroundColor: chartColors,
           borderColor: "rgba(91,98,65,1)",
           borderCapStyle: 'butt',
           borderJoinStyle: 'miter',
@@ -106,12 +129,10 @@ var currencyChart = new Chart(canvas.getContext("2d"), {
       }]
     }
 
-    var canvas = document.getElementById("featuresChart{{ change }}");
-
     canvas.style.width='100%';
     canvas.width  = canvas.offsetWidth;
 
-    var featuresChart{{ change }} = new Chart(canvas.getContext("2d"), {
+    var featuresChart{{ change }} = new Chart(ctx, {
       type: 'doughnut',
       data: featuresChartData,
       options: {
@@ -122,3 +143,5 @@ var currencyChart = new Chart(canvas.getContext("2d"), {
     });
 {% endfor %}
 }
+
+
