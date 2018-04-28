@@ -62,11 +62,6 @@ class SentimentAnalyser:
         return sum_in_runs / nr_folds
 
 
-def calculate_sentiment(tweets_df, sent):
-    tweets_df["Tweet_sentiment"] = tweets_df["Text"].apply(sent.predict_score)
-    return tweets_df
-
-
 def get_tweets_with_sentiment_from_file(filename):
     result = []
     with open(filename, encoding='utf8') as f:

@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
-from markets.market_predicting_model import AnalysisResult, Classifier, format_result, MarketPredictingModel
+from markets.market_predicting_model import AnalysisResult, Classifier, format_classification_result, MarketPredictingModel
 from markets.utils import k_split
 from markets.dataset import TweetsDataSet
 import pandas as pd
@@ -31,7 +31,7 @@ class TestMarketPredictingModel(unittest.TestCase):
         result = self.pred_model.analyse(self.tweet_dataset, self.sifted_dataset)
 
         expected_result = {"Sentiment": "Positive", "Features": "B, C",
-                           "Down": 0.1, "NC": 0.5, "Up": 0.2, 'Prediction': 'No change'}
+                           "Down": 10, "NC": 50, "Up": 20, 'Prediction': 'No change'}
         self.assertEqual(expected_result, result.to_dict())
 
     def test_analyse_tweet_with_rest_features(self):
@@ -41,7 +41,7 @@ class TestMarketPredictingModel(unittest.TestCase):
         result = self.pred_model.analyse(self.tweet_dataset, self.sifted_dataset)
 
         expected_result = {"Sentiment": "Negative", "Features": "D, E",
-                           "Down": 0.9, "NC": 0.1, "Up": 0.4, 'Prediction': 'Down'}
+                           "Down": 90, "NC": 10, "Up": 40, 'Prediction': 'Down'}
         self.assertEqual(expected_result, result.to_dict())
 
     def test_analyse_tweet_with_no_features(self):
@@ -51,12 +51,17 @@ class TestMarketPredictingModel(unittest.TestCase):
         result = self.pred_model.analyse(self.tweet_dataset, self.sifted_dataset)
 
         expected_result = {"Sentiment": "Negative", "Features": 'No features found in the tweet',
-                           "Down": 0.5, "NC": 0.3, "Up": 0.3, 'Prediction': 'Down'}
+                           "Down": 50, "NC": 30, "Up": 30, 'Prediction': 'Down'}
         self.assertEqual(expected_result, result.to_dict())
 
     def test_get_most_coefficient_features(self):
-        res = self.pred_model.main_model.get_most_coefficient_features()
-        # TODO
+        most_coeffs = zip([[15, 20, 30], [20, 20, 20], [50, 30, 15]], ["Down", "NC", "Up"])
+        self.pred_model.main_model.get_coefficient_features.return_value = most_coeffs
+        result = self.pred_model.get_most_coefficient_features()
+        expected_result = {"Down":[('C', -0.67), ('B', -1.0), ('A', -1.33)],
+                           'NC': [('A', -1.0), ('B', -1.0), ('C', -1.0)],
+                           'Up': [('A', -0.4), ('B', -0.67), ('C', -1.33)]}
+        self.assertEqual(expected_result, result)
 
 
 class TestAnalysisResult(unittest.TestCase):
@@ -87,9 +92,9 @@ class TestAnalysisResult(unittest.TestCase):
         dataset = create_autospec(TweetsDataSet)
         dataset.get_sentiment.return_value = [0.2]
         dataset.get_marked_features.return_value = ["f1", "f2", "f3"]
-        result = format_result(self.probabilities, dataset)
+        result = format_classification_result(self.probabilities, dataset)
         expected_result = {"Sentiment": "Negative", "Features": "f1, f2, f3",
-                           "Down": 0.1, "NC": 0.5, "Up": 0.2, 'Prediction': 'No change'}
+                           "Down": 10, "NC": 50, "Up": 20, 'Prediction': 'No change'}
         self.assertEqual(expected_result, result.to_dict())
 
 

@@ -30,7 +30,7 @@ class TestTweetFeaturesExtractor(unittest.TestCase):
                                    'Tweet_sentiment': {0: 0.3, 1: 0.6},
                                    "Market_change": {0: 0.2, 1: 0.5}}
                 self.assertEqual(expected_result, result.df.to_dict())
-                # TODO asset feature extractor called with set features etc
+                self.mock_extr.set_features.assert_called_once_with(["F1", "F2"])
 
     def test_build_dataset_with_one_tweet(self):
             with mock.patch("markets.tweets_features_extraction.PhrasesExtractor", return_value=self.mock_extr):
@@ -39,7 +39,7 @@ class TestTweetFeaturesExtractor(unittest.TestCase):
                     self.assertEqual(["First"], dataset.get_all_tweets())
                     self.assertEqual(["F1", "F2"], dataset.features)
                     self.assertEqual([[1, 0, 0.3]], dataset.get_x().tolist())
-                # TODO asset feature extractor called with set features etc
+                    self.mock_extr.set_features.assert_called_once_with(["F1", "F2"])
 
     @parameterized.expand([(True,), (False,)])
     def test_remark_features(self, with_dropping):

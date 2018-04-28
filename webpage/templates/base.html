@@ -38,8 +38,7 @@
         <ul class="navbar-nav">
             {% for c in currencies %}
             <li class="nav-item">
-                <a class="nav-link {% if currency_details.name == c.name %} active {% endif %}"
-                   href="{{ url_for('index', currency=c.name) }}">{{c.name}}</a>
+                <a class="nav-link {% if currency_details.name == c.name %}active{% endif %}" href="{{ url_for('index', currency=c.name) }}">{{c.name}}</a>
             </li>
             {% endfor %}
         </ul>

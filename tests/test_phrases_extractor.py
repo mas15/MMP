@@ -7,6 +7,13 @@ class TestPhrasesExtractor(unittest.TestCase):
     def setUp(self):
         self.extr = PhrasesExtractor()
 
+    def test_set_features(self):
+        vocabulary = ["hello", "another", "feature", "great"]
+        phrases = ["whole phrases here", "make america great", "tax cuts", "hilary clinton"]
+        self.extr.set_features(vocabulary + phrases)
+        self.assertEqual(sorted(vocabulary), sorted(self.extr._vocabulary))
+        self.assertEqual(sorted(phrases), sorted(self.extr._phrases))
+
     @parameterized.expand([(True,), (False,)])
     def test_extract_features(self, greedy):
         self.extr._vocabulary = ["hello", "another", "feature", "great"]

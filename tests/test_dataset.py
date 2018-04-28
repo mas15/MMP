@@ -32,6 +32,11 @@ class TestTweetsDataSet(unittest.TestCase):
         expected_df = pd.DataFrame({"F1": [0, 0, 0], "F2": [1, 1, 0], "F3": [1, 0, 0], })
         self.assertEqual(expected_df.to_dict(), self.dataset.get_features_df().to_dict())
 
+    def test_get_no_features_df(self):
+        expected_df = pd.DataFrame({"Text": ["First", "Second", "No features tweet"],
+                                    'Tweet_sentiment': [0.3, 0.6, 0.9], "Market_change": [0.2, 0.5, 0.9]})
+        self.assertEqual(expected_df.to_dict(), self.dataset.get_no_features_df().to_dict())
+
     def test_drop_instances_without_features(self):
         self.dataset.drop_instances_without_features()
         self.assertEqual(['First', 'Second'], self.dataset.get_all_tweets())
@@ -101,3 +106,13 @@ class TestTweetsDataSet(unittest.TestCase):
     def test_dataset_from_text(self):
         res = dataset_from_text("Tweet content")
         self.assertEqual({'Text': {0: 'Tweet content'}}, res.df.to_dict())
+
+    def test_get_sentiment(self):
+        self.assertEqual({0: 0.3, 1: 0.6, 2: 0.9}, self.dataset.get_sentiment().to_dict())
+
+    def test_get_market_change(self):
+        self.assertEqual({0: 0.2, 1: 0.5, 2: 0.9}, self.dataset.get_market_change().to_dict())
+
+    def test_set_market_change(self):
+        self.dataset.set_market_change(lambda x: x*2)
+        self.assertEqual({0: 0.4, 1: 1, 2: 1.8}, self.dataset.get_market_change().to_dict())

@@ -13,15 +13,6 @@ ModelTrainingResult = namedtuple('ModelTrainingResult', 'test_accuracy train_acc
 N_MOST_COEFFICIENT_FEATURES = 20
 
 
-def get_zero_r_from_y(y):
-    """
-    >>> get_zero_r_from_y(np.array(["Up", "Up", "Down", "NC", "Up"]))
-    0.6
-    """
-    counted = Counter(y)
-    return counted.most_common()[0][1] / y.size
-
-
 class AnalysisResult:
     def __init__(self, probabilities, sentiment_value, features):
         self.probabilities = probabilities
@@ -41,12 +32,6 @@ class AnalysisResult:
         result["Features"] = ", ".join(self.features) if self.features else "No features found in the tweet"
         result["Prediction"] = self.prediction if self.prediction != "NC" else "No change"
         return result
-
-
-def format_result(probabilities, dataset):
-    sentiment_value = dataset.get_sentiment()[0]
-    features = dataset.get_marked_features()
-    return AnalysisResult(probabilities, sentiment_value, features)
 
 
 class MarketPredictingModel:
@@ -82,7 +67,7 @@ class MarketPredictingModel:
     def _analyse_on_model(dataset, model):
         x = dataset.get_x()
         probabilities = model.analyse(x)
-        return AnalysisResult(probabilities, dataset.get_sentiment()[0], dataset.get_marked_features())
+        return format_classification_result(probabilities, dataset)
 
     def save(self, model_filename):
         with open(model_filename, "wb") as f:
@@ -127,7 +112,7 @@ class Classifier:
             sum_test += test_accuracy
             sum_train += train_accuracy
 
-        result = ModelTrainingResult(sum_test / nr_of_runs, sum_train / nr_of_runs, get_zero_r_from_y(y))
+        result = format_training_result(sum_test / nr_of_runs, sum_train / nr_of_runs, get_zero_r_from_y(y))
         print("Accuracy {0} ({1}) and zeroR {2}".format(result.test_accuracy, result.train_accuracy, result.base_rate_accuracy))
         return result
 
@@ -150,9 +135,36 @@ class Classifier:
         accuracy = metrics.accuracy_score(y, predicted)
         return accuracy
 
-    def analyse(self, x):  # todo co jak nie ma modelu
+    def analyse(self, x):
         propabs_vals = self.model.predict_proba(x)
         propabs_vals = propabs_vals[0].tolist()
         propabs = dict(zip(self.model.classes_, propabs_vals))
         return propabs
 
+
+def get_zero_r_from_y(y):
+    """
+    >>> get_zero_r_from_y(np.array(["Up", "Up", "Down", "NC", "Up"]))
+    0.6
+    """
+    counted = Counter(y)
+    return counted.most_common()[0][1] / y.size
+
+
+def format_accuracy(x):
+    """
+    >>> format_accuracy(0.54321)
+    54.32
+    """
+    return round(x*100, 2)
+
+
+def format_classification_result(probabilities, dataset):
+    sentiment_value = dataset.get_sentiment()[0]
+    features = dataset.get_marked_features()
+    probabilities = dict((k, format_accuracy(v)) for k, v in probabilities.items())
+    return AnalysisResult(probabilities, sentiment_value, features)
+
+
+def format_training_result(test_accuracy, train_accuracy, zero_r):
+    return ModelTrainingResult(format_accuracy(test_accuracy), format_accuracy(train_accuracy), format_accuracy(zero_r))

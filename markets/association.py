@@ -4,7 +4,7 @@ from markets.dataset import TweetsDataSet
 pd.set_option('display.width', 1500)
 
 
-def read_tweets_with_features(tweets_filename):  # todo https://stackoverflow.com/questions/17465045/can-pandas-automatically-recognize-dates
+def read_tweets_with_features(tweets_filename):
     all_tweets = pd.read_csv(tweets_filename)
     all_tweets['Date'] = pd.to_datetime(all_tweets['Date'], format='%Y-%m-%d %H:%M:%S')
     return all_tweets

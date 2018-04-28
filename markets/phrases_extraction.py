@@ -191,9 +191,3 @@ def preprocess(tweet):
     sentences = [re.sub(chars_to_remove, "", s) for s in sentences]
     sentences = [re.sub(chars_to_replace, " ", s) for s in sentences]
     return sentences
-
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()

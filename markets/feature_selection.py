@@ -22,7 +22,6 @@ def select_features(df, filename):
         save_selected_features(features, filename)
 
     main_df = filter_features(df, features)
-    # print(main_df.df["Market_change"].size)
     return main_df
 
 
@@ -67,7 +66,6 @@ def run_weka_with_file(temp_filename):
 
 def get_features_from_weka(df):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as fp:
-        print(fp.name)
         save_features_with_target_to_file(df, fp.name)
         features = run_weka_with_file(fp.name)
     return features
