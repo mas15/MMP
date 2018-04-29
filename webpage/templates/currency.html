@@ -4,7 +4,7 @@
 <div class="row mt-5">
     <div class="col-md-8">
         <form class="form-group" method="POST">
-            <h4>Predict tweet affect on market</h4>
+            <h4>Predict tweet effect on market</h4>
             {% with errors = form.tweet_content.errors %}
             {% if errors %}
             <div class="alert alert-warning" role="alert"> {{ errors|join("\n") }}</div>
@@ -13,8 +13,10 @@
 
             {{ form.csrf_token }}
             {{ form.tweet_content(class_="form-control ", id="tweet_input_form" , rows="3") }}
-            <input class="btn btn-primary my-2 my-sm-0 float-md-right" id="submit-btn" type="submit" aria-label="Submit"
-                   style="margin-top: 5px;">
+            <span class="input-group-btn">
+                <button class="btn btn-primary my-2 my-sm-0 float-md-right" id="submit-btn"
+                        type="submit">Analyse</button>
+            </span>
         </form>
 
 
@@ -36,7 +38,7 @@
 
 <div class="row mt-5">
     <div class="col-md-12">
-        <h4>Tweets affect on {{ currency_details.name }} </h4>
+        <h4>Tweets effect on {{ currency_details.name }} </h4>
 
         <script type="text/javascript">
                 {% include "mychart.js" %}

@@ -7,11 +7,13 @@
 .btn-primary {
   background-color: rgb(47,48,69);
   border-color: rgb(47,48,69);
+  margin: 10px;
 }
 
 .btn-primary:hover, .btn-primary:focus{
   background-color: rgb(0, 77, 0) !important;
   border-color: rgb(0, 77, 0) !important;
+  margin: 10px;
 }
 
 .hidden_table_row {
