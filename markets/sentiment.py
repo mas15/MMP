@@ -57,7 +57,7 @@ class SentimentAnalyser:
             accuracy = self.check_accuracy(test_data)
             sum_in_runs += accuracy
 
-        print("Accuracy: " + str(sum_in_runs / nr_folds))
+        # print("Accuracy: " + str(sum_in_runs / nr_folds))
         # print(self.cl.show_most_informative_features(20))
         return sum_in_runs / nr_folds
 

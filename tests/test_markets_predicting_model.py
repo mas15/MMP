@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
-from markets.market_predicting_model import AnalysisResult, Classifier, format_classification_result, MarketPredictingModel
+from markets.market_predicting import AnalysisResult, Classifier, format_classification_result, MarketPredictingModel
 from markets.utils import k_split
 from markets.dataset import TweetsDataSet
 import pandas as pd

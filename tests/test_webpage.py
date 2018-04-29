@@ -53,7 +53,7 @@ class FlaskTestCase(unittest.TestCase):
     def test_index(self):
         response = self.client.get("/")
         self.assertEqual(200, response.status_code)
-        self.assertIn(b'Tweets affect on USD', response.data)
+        self.assertIn(b'Tweets effect on USD', response.data)
         self.assertIn(b'<a class="nav-link " href="/currency/EUR">EUR</a>', response.data)
         self.assertIn(b'<a class="nav-link active" href="/">USD</a>', response.data)
 
@@ -67,7 +67,7 @@ class FlaskTestCase(unittest.TestCase):
     def test_currency_another(self, path):
         response = self.client.get(path)
         self.assertEqual(200, response.status_code)
-        self.assertIn(b'Tweets affect on EUR', response.data)
+        self.assertIn(b'Tweets effect on EUR', response.data)
         self.assertIn(b'<a class="nav-link active" href="/currency/EUR">EUR</a>', response.data)
         self.assertIn(b'<a class="nav-link " href="/">USD</a>', response.data)
 

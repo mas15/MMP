@@ -4,7 +4,7 @@ from collections import namedtuple, defaultdict
 from markets.feature_selection import select_features, filter_features
 from markets.association import build_df_with_tweets_and_affect, save_sifted_tweets_with_date
 from markets.rules import extract_rules_to_file, read_rules_sets
-from markets.market_predicting_model import MarketPredictingModel
+from markets.market_predicting import MarketPredictingModel
 from markets.tweets_features_extraction import TWEETS_WITH_FEATURES_FILENAME, build_dataset_with_one_tweet
 
 

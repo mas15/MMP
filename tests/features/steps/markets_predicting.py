@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.pardir)
 
 from behave import given, when, then, step
 from markets.currency_analysis import CurrencyAnalyser
-from markets.market_predicting_model import MarketPredictingModel
+from markets.market_predicting import MarketPredictingModel
 from unittest import mock
 from sklearn.naive_bayes import MultinomialNB
 import numpy as np
@@ -38,7 +38,7 @@ def step_impl(context):
     mock_model = mock.create_autospec(MultinomialNB)
     mock_model.classes_ = ["Down", "NC", "Up"]
     mock_model.predict_proba = predict_proba
-    with mock.patch("markets.market_predicting_model.MultinomialNB", return_value=mock_model):
+    with mock.patch("markets.market_predicting.MultinomialNB", return_value=mock_model):
         context.a = CurrencyAnalyser("abc")
         context.a._model = MarketPredictingModel()
 
