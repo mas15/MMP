@@ -1,23 +1,23 @@
 import pandas as pd
+import os
 import unittest
 from unittest import mock
 from unittest.mock import patch
 from parameterized import parameterized
 from markets.currency_analysis import CurrencyAnalyser
-import markets
+from markets import currency_analysis
 
 
-@patch("markets.currency_analysis.DATA_PATH", "data_path_here")
 class TestCurrencyAnalyser(unittest.TestCase):
     def setUp(self):
+        currency_analysis.DATA_PATH = "data_path_here"
         self.analyser = CurrencyAnalyser("ABC")
-    #
-    # def test_constructor(self):
-    #     self.assertEqual(r"data_path_here\ABC_rules.csv", self.analyser.rules_filename)
-    #     self.assertEqual(r"data_path_here\ABC_graph_data.csv", self.analyser.graph_filename)
-    #     self.assertEqual(r"data_path_here\ABCIndex.csv", self.analyser.currency_prices_filename)
-    #     self.assertEqual(r"data_path_here\ABC_rules.csv", self.analyser.rules_filename)
-    #     self.assertEqual(r"data_path_here\ABC_rules.csv", self.analyser.model_filename)
+
+    def test_constructor(self):
+        self.assertEqual(os.path.join("data_path_here", "ABC_rules.csv"), self.analyser.rules_filename)
+        self.assertEqual(os.path.join("data_path_here", "ABC_graph_data.csv"), self.analyser.graph_filename)
+        self.assertEqual(os.path.join("data_path_here", "ABCIndex.csv"), self.analyser.currency_prices_filename)
+        self.assertEqual(os.path.join("data_path_here", "ABC_rules.csv"), self.analyser.rules_filename)
 
     def test_get_graph_data(self):
         mock_data = pd.DataFrame({"Text": ["First", "Second", "Third"],
@@ -32,8 +32,8 @@ class TestCurrencyAnalyser(unittest.TestCase):
 
     def test_get_most_coefficient_features_raises_if_no_model_yet(self):
         with self.assertRaises(Exception):
-            self._model.get_most_coefficient_features()
+            self.analyser._model.get_most_coefficient_features()
 
     def test_analyse_tweet_raises_if_no_model_yet(self):
         with self.assertRaises(Exception):
-            self._model.analyse_tweet("aaa")
+            self.analyser._model.analyse_tweet("aaa")
