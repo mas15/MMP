@@ -16,7 +16,7 @@ class TweeterScrapper:
 
         self.api = tweepy.API(auth)
 
-    def get_tweets(self, user, count):  # cant get more than 200 at once - count=200,max_id=201)
+    def get_tweets(self, user, count):  # cant get more than 200 at once
         return self.api.user_timeline(user, count=count, tweet_mode="extended", )
 
     def get_status(self, id):
@@ -30,28 +30,31 @@ class TweeterScrapper:
                 fields = [t.id_str, t.full_text, t.created_at]
                 writer.writerow(fields)
 
-        with open('all_tweets.csv', 'a', encoding='utf-8') as f:
+        with open('testing_all.csv', 'a', encoding='utf-8', newline='') as f:
             writer = csv.writer(f)
-            last_id = 913004378486984704  # 970650759091163137 # todo fetch last users tweet id
+            last_id = 913004378486984704  # last users tweet id, ideally would be retrieved from the api
             last_date = datetime.today()
-            while last_date > date:
-                # while len(tweets) > 0:
-                tweets = self.api.user_timeline("realDonaldTrump", count=200, tweet_mode="extended", max_id=last_id)
-                store(tweets[1:], writer)
-                last_id = tweets[199].id
-                last_date = tweets[199].created_at
+            try:
+                while last_date > date:
+                    tweets = self.api.user_timeline("realDonaldTrump", count=200, tweet_mode="extended", max_id=last_id)
+                    store(tweets[1:], writer)
+                    last_id = tweets[-1].id
+                    last_date = tweets[-1].created_at
+            except IndexError:
+                pass
+            print("Scraping finished")
 
     def get_one_tweet(self, id):
         t = self.get_status(id)
-        print(t.full_text)
+        print(t.text)
 
-        fields = [t.id_str, t.full_text, t.created_at, 'neg']
-        with open('sentimental_tweets.csv', 'a', encoding='utf8') as f:
-            writer = csv.writer(f, newline='')
+        fields = [t.id_str, t.text, t.created_at, 'neg']
+        with open('tweets_with_sentiment.csv', 'a', encoding='utf8', newline='') as f:
+            writer = csv.writer(f)
             writer.writerow(fields)
 
 
 if __name__ == "__main__":
     scrapper = TweeterScrapper()
-    # scrapper.get_all_since(datetime(2017,1,1,0,0,0))
-    scrapper.get_one_tweet(816260343391514624)
+    scrapper.get_all_since(datetime(2017, 1, 1, 0, 0, 0))
+    # scrapper.get_one_tweet(816260343391514624)

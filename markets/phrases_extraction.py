@@ -1,3 +1,5 @@
+# based on https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
+
 import re
 import string
 import os
@@ -19,8 +21,6 @@ def get_stopwords_regex():
     words_to_remove_with_reg.append(r"\$?\d+[^\s]*")  # match number, $, %
     return re.compile('|'.join(words_to_remove_with_reg), re.IGNORECASE)
 
-
-# rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
 
 class PhrasesExtractor:
     def __init__(self, min_keyword_frequency=2):
