@@ -1,3 +1,6 @@
+"""
+The main package module that connects all of the analysis functionalities.
+"""
 import os
 import pandas as pd
 from collections import namedtuple, defaultdict
@@ -6,7 +9,6 @@ from markets.association import build_df_with_tweets_and_affect, save_sifted_twe
 from markets.rules import extract_rules_to_file, read_rules_sets
 from markets.market_predicting import MarketPredictingModel
 from markets.tweets_features_extraction import TWEETS_WITH_FEATURES_FILENAME, build_dataset_with_one_tweet
-
 
 PICKLED_MODEL_PATH = os.path.join(os.path.dirname(__file__), "pickled_models")
 PREDICTING_MODEL_PREFIX = "assoc_model"
@@ -18,6 +20,12 @@ AnalyseResult = namedtuple('AnalyseResult',
 
 
 class CurrencyAnalyser:
+    """
+    Class that is used to analyse a CSV file of stock prices and provides results for this analysis,
+    such as association rules, model to predict markets or the most coefficient features.
+    It holds the functionality of reading files and saving the results.
+    """
+
     def __init__(self, currency):
         self._currency = currency
         self._model = None
@@ -27,17 +35,19 @@ class CurrencyAnalyser:
         self.currency_prices_filename = os.path.join(DATA_PATH, self._currency + "Index.csv")
         self.model_filename = os.path.join(PICKLED_MODEL_PATH, PREDICTING_MODEL_PREFIX + self._currency + ".pickle")
 
-    def load(self):  # TODO test?
+    def load(self):
         self._model = MarketPredictingModel()
         if not os.path.isfile(self.model_filename):
             raise Exception("Cannot find a pickled model file")
         self._model.load(self.model_filename)
 
     def analyse(self):
-        tweets_with_affect_df = build_df_with_tweets_and_affect(TWEETS_WITH_FEATURES_FILENAME, self.currency_prices_filename)
+        tweets_with_affect_df = build_df_with_tweets_and_affect(TWEETS_WITH_FEATURES_FILENAME,
+                                                                self.currency_prices_filename)
         sifted_tweets_df = select_features(tweets_with_affect_df, self.selected_features_filename)
         training_result = self.build_main_model_to_predict_markets(sifted_tweets_df, tweets_with_affect_df)
-        save_sifted_tweets_with_date(sifted_tweets_df, ALL_TWEETS_FILE, self.currency_prices_filename, self.graph_filename)
+        save_sifted_tweets_with_date(sifted_tweets_df, ALL_TWEETS_FILE, self.currency_prices_filename,
+                                     self.graph_filename)
 
         print("Model build for {0}".format(self._currency))
 

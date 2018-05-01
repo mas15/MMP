@@ -3,6 +3,10 @@ from datetime import timedelta
 
 
 class TweetsDataSet:
+    """
+    Class that wraps around a Pandas DataFrame and represents a set of tweets,
+    their features, sentiments, and market effect.
+    """
     non_text_feature_columns = ["Text", "Market_change", "Tweet_sentiment", "Date"]
 
     def __init__(self, df):

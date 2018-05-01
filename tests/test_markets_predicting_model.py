@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 from unittest.mock import create_autospec
 from parameterized import parameterized
-from markets.market_predicting import AnalysisResult, Classifier, format_classification_result, MarketPredictingModel
+from markets.market_predicting import AnalyseResult, Classifier, format_classification_result, MarketPredictingModel
 from markets.utils import k_split
 from markets.dataset import TweetsDataSet
 import pandas as pd
@@ -67,7 +67,7 @@ class TestMarketPredictingModel(unittest.TestCase):
 class TestAnalysisResult(unittest.TestCase):
     def setUp(self):
         self.probabilities = dict([("Down", 0.1), ("NC", 0.5), ("Up", 0.2)])
-        self.result = AnalysisResult(self.probabilities, 0.34, ["f1", "f2", "f3"])
+        self.result = AnalyseResult(self.probabilities, 0.34, ["f1", "f2", "f3"])
 
     def test_constructor(self):
         self.assertEqual("NC", self.result.prediction)
@@ -82,7 +82,7 @@ class TestAnalysisResult(unittest.TestCase):
         self.assertEqual("No features found in the tweet", self.result.to_dict()["Features"])
 
     def test_combine_with(self):
-        other = AnalysisResult({"Down": 0.9, "NC": 0.0, "Up": 0.4}, 0.76, [])
+        other = AnalyseResult({"Down": 0.9, "NC": 0.0, "Up": 0.4}, 0.76, [])
         self.result.combine_with(other)
         expected_result = {"Sentiment": "Positive", "Features": "f1, f2, f3",
                            "Down": 0.5, "NC": 0.25, "Up": 0.3, 'Prediction': 'Down'}

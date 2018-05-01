@@ -1,3 +1,7 @@
+"""
+Module holding all of the code that is responsible for reading stock
+prices from files and merging them with tweets datasets.
+"""
 import pandas as pd
 from markets.dataset import TweetsDataSet
 

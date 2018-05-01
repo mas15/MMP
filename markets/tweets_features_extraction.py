@@ -1,3 +1,7 @@
+"""
+Module contains all the functions used to extract features from the tweet such as sentiment
+and phrases/words in the tweet. To gather that information, it uses SentimentAnalyser and PhrasesExtractor instances.
+"""
 import os
 from markets.phrases_extraction import PhrasesExtractor
 from markets.sentiment import SentimentAnalyser

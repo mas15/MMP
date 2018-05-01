@@ -1,3 +1,6 @@
+"""
+Contains functions used to do association rules learning.
+"""
 import pickle
 from itertools import groupby
 from collections import namedtuple

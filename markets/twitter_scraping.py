@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+"""
+Module used to scrape tweets from Twitter.
+"""
 import tweepy
 from datetime import datetime
 import csv

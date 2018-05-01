@@ -1,4 +1,7 @@
-# based on https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
+"""
+PhrasesExtractor implementation based on
+https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
+"""
 
 import re
 import string
@@ -6,6 +9,7 @@ import os
 from nltk.stem import WordNetLemmatizer
 from sortedcontainers import SortedSet
 
+"""Stop words file from ftp://ftp.cs.cornell.edu/pub/smart/english.stop."""
 STOP_LIST_FILE = os.path.join(os.path.dirname(__file__), "data/SmartStoplist.txt")
 PUNCT_REMOVE_TRANSLATOR = str.maketrans('', '', string.punctuation)
 
@@ -23,6 +27,10 @@ def get_stopwords_regex():
 
 
 class PhrasesExtractor:
+    """
+    Builds a vocabulary of phrases and words found in the set of texts
+    and then extracts those features from particular tweets.
+    """
     def __init__(self, min_keyword_frequency=2):
         """ Features set containing unique words"""
         self._vocabulary = SortedSet()

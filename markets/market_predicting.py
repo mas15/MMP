@@ -1,3 +1,6 @@
+"""
+Module contains all of the code that is responsible for training a classifier that predicts stock changes.
+"""
 import numpy as np
 import pickle
 from collections import Counter
@@ -13,7 +16,10 @@ ModelTrainingResult = namedtuple('ModelTrainingResult', 'test_accuracy train_acc
 N_MOST_COEFFICIENT_FEATURES = 20
 
 
-class AnalysisResult:
+class AnalyseResult:
+    """
+    Represents a result of a single tweet analysis
+    """
     def __init__(self, probabilities, sentiment_value, features):
         self.probabilities = probabilities
         self.sentiment_value = sentiment_value
@@ -35,6 +41,9 @@ class AnalysisResult:
 
 
 class MarketPredictingModel:
+    """
+    Stores two Classifier objects and decides which one to use to do a prediction.
+    """
     def __init__(self, main_model=None, rest_model=None):
         self.main_model = main_model or Classifier()
         self.rest_model = rest_model or Classifier()
@@ -97,6 +106,9 @@ class MarketPredictingModel:
 
 
 class Classifier:
+    """
+    Represents a classifier model (MultinomialNB by default) and wraps all of its functionality
+    """
     def __init__(self, model=None):
         self.model = model or MultinomialNB()
         #self.model = model or LogisticRegressionCV(random_state=123, cv=10, Cs=3)
@@ -163,7 +175,7 @@ def format_classification_result(probabilities, dataset):
     sentiment_value = dataset.get_sentiment()[0]
     features = dataset.get_marked_features()
     probabilities = dict((k, format_accuracy(v)) for k, v in probabilities.items())
-    return AnalysisResult(probabilities, sentiment_value, features)
+    return AnalyseResult(probabilities, sentiment_value, features)
 
 
 def format_training_result(test_accuracy, train_accuracy, zero_r):

@@ -1,3 +1,9 @@
+"""
+Module containing a class responsible for tweets sentiment analysis. It wraps NaiveBayesClassifier
+from NLTK library and uses a PhrasesExtractor to extract features from tweets which are then used to
+train a model or predict a value of the particular tweet. All of the functionality was wrapped
+in a class because it is more convenient to load and save the Analyser and perform any tests.
+"""
 import os
 import pickle
 import nltk

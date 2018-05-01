@@ -1,3 +1,6 @@
+"""
+Module containing functions responsible for selecting an informative subset of features, to obtain the best accuracy.
+"""
 import os
 import pandas as pd
 import subprocess
