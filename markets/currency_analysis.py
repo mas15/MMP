@@ -34,7 +34,6 @@ class CurrencyAnalyser:
         self._model.load(self.model_filename)
 
     def analyse(self):
-        # todo test co jak nie ma pliku?
         tweets_with_affect_df = build_df_with_tweets_and_affect(TWEETS_WITH_FEATURES_FILENAME, self.currency_prices_filename)
         sifted_tweets_df = select_features(tweets_with_affect_df, self.selected_features_filename)
         training_result = self.build_main_model_to_predict_markets(sifted_tweets_df, tweets_with_affect_df)

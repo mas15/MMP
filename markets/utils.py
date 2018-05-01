@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.model_selection import StratifiedKFold
 
 
-def k_split(x, y, nr_folds, random_state):  # todo test
+def k_split(x, y, nr_folds, random_state):
     kf = StratifiedKFold(n_splits=nr_folds, random_state=random_state, shuffle=True)
     for train_index, test_index in kf.split(x, y):
         x_train, x_test = x[train_index], x[test_index]

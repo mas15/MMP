@@ -49,7 +49,7 @@ def save_sifted_tweets_with_date(sifted, tweets_filename, prices_filename, outpu
     return result.df
 
 
-def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_and_date=True):  # todo test?
+def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_and_date=True):
     all_tweets = read_tweets_with_features(tweets_filename)
     currency_prices = read_currency_prices(prices_filename)
 
@@ -59,7 +59,7 @@ def get_tweets_with_currency_prices(tweets_filename, prices_filename, drop_open_
     return ds
 
 
-def build_df_with_tweets_and_affect(tweets_filename, prices_filename):  # todo test
+def build_df_with_tweets_and_affect(tweets_filename, prices_filename):
     result = get_tweets_with_currency_prices(tweets_filename, prices_filename)
     set_currency_change(result)
     return result

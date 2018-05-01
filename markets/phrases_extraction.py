@@ -22,7 +22,7 @@ def get_stopwords_regex():
 
 # rake z https://www.researchgate.net/publication/227988510_Automatic_Keyword_Extraction_from_Individual_Documents
 
-class PhrasesExtractor: # todo self greeedy?
+class PhrasesExtractor:
     def __init__(self, min_keyword_frequency=2):
         """ Features set containing unique words"""
         self._vocabulary = SortedSet()
